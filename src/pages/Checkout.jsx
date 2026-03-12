@@ -8,7 +8,7 @@ function Checkout() {
   const [cartItems, setCartItems] = useState([]);
 
   const [form, setForm] = useState({
-    name: "",
+    fullName: "",   // changed from name → fullName
     email: "",
     phone: "",
     address: ""
@@ -22,7 +22,7 @@ function Checkout() {
   }, []);
 
   const total = cartItems.reduce(
-    (sum, item) => sum + Number(item.price),
+    (sum, item) => sum + Number(item.price) * item.quantity,
     0
   );
 
@@ -75,7 +75,7 @@ function Checkout() {
 
         <input
           type="text"
-          name="name"
+          name="fullName"   // changed from name → fullName
           placeholder="Full Name"
           required
           onChange={handleChange}

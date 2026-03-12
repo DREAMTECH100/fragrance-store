@@ -13,19 +13,19 @@ function Collections() {
       .then((data) => {
         setProducts(data);
 
-        // Sort newest first (based on createdAt)
+        // Sort newest first
         const sortedByDate = [...data].sort(
           (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
         );
-        setNewArrivals(sortedByDate.slice(0, 4)); // latest 4 products
+        setNewArrivals(sortedByDate.slice(0, 4));
 
-        // Cheap products (lowest price)
-        const sortedByPriceLow = [...data].sort((a, b) => a.price - b.price);
-        setCheapProducts(sortedByPriceLow.slice(0, 4));
+        // CHEAP PRODUCTS (below 50k)
+        const cheap = data.filter((product) => Number(product.price) < 50000);
+        setCheapProducts(cheap.slice(0, 4));
 
-        // Expensive products (highest price)
-        const sortedByPriceHigh = [...data].sort((a, b) => b.price - a.price);
-        setExpensiveProducts(sortedByPriceHigh.slice(0, 4));
+        // EXPENSIVE PRODUCTS (50k and above)
+        const expensive = data.filter((product) => Number(product.price) >= 50000);
+        setExpensiveProducts(expensive.slice(0, 4));
       })
       .catch((err) => console.error("Error fetching products:", err));
   }, []);

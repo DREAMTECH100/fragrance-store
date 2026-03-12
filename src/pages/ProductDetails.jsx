@@ -7,6 +7,7 @@ function ProductDetails() {
   const navigate = useNavigate();
 
   const [product, setProduct] = useState(null);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
 
@@ -24,11 +25,28 @@ function ProductDetails() {
   if (!product) return <div className="p-10">Loading...</div>;
 
 
+  const increase = () => {
+    setQuantity(prev => prev + 1);
+  };
+
+  const decrease = () => {
+    if (quantity > 1) {
+      setQuantity(prev => prev - 1);
+    }
+  };
+
+
   const handleAddToCart = () => {
 
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    cart.push(product);
+    const existing = cart.find(item => item._id === product._id);
+
+    if (existing) {
+      existing.quantity += quantity;
+    } else {
+      cart.push({ ...product, quantity });
+    }
 
     localStorage.setItem("cart", JSON.stringify(cart));
 
@@ -42,9 +60,9 @@ function ProductDetails() {
     <div className="p-10 grid md:grid-cols-2 gap-12">
 
       <img
-        src={product.image}
+        src={`http://localhost:5000${product.image}`}
         alt={product.name}
-        className="w-full rounded-lg"
+        className="w-full h-[500px] object-cover rounded-lg"
       />
 
       <div>
@@ -58,6 +76,32 @@ function ProductDetails() {
         <p className="mt-6 text-gray-600">
           {product.description}
         </p>
+
+
+        {/* Quantity Selector */}
+
+        <div className="flex items-center gap-4 mt-6">
+
+          <button
+            onClick={decrease}
+            className="px-4 py-2 bg-gray-200 text-xl"
+          >
+            -
+          </button>
+
+          <span className="text-lg font-medium">
+            {quantity}
+          </span>
+
+          <button
+            onClick={increase}
+            className="px-4 py-2 bg-orange-400 text-white text-xl"
+          >
+            +
+          </button>
+
+        </div>
+
 
         <button
           onClick={handleAddToCart}

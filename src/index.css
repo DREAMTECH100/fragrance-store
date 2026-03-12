@@ -2,41 +2,60 @@
 @tailwind components;
 @tailwind utilities;
 
-body{
-  background:#f8f9fb;
-  color:#111;
+/* Global body */
+body {
+  background: #f8f9fb;
+  color: #111;
+  font-family: 'Inter', sans-serif; /* Base font for body text */
+  margin: 0;
+}
+
+/* Hero / page titles */
+.hero-title {
+  font-family: 'Playfair Display', serif; /* Luxury serif for headings */
+  letter-spacing: 3px;
+}
+
+/* Hero / paragraph text */
+.hero-text {
+  font-family: 'Cormorant Garamond', serif; /* Elegant serif for description text */
+}
+
+/* Headings globally */
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', serif;
+  letter-spacing: 0.03em; /* Subtle spacing for luxury feel */
+  margin: 0;
+}
+
+/* Paragraphs globally */
+p {
   font-family: 'Inter', sans-serif;
+  line-height: 1.6;
 }
 
-
-.hero-title{
-font-family:'Playfair Display', serif;
-letter-spacing:3px;
+/* Cart Summary Box */
+.cart-summary {
+  margin-top: 40px;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  max-width: 300px;
 }
 
-.hero-text{
-font-family:'Cormorant Garamond', serif;
+/* Checkout Button */
+.checkout-btn {
+  width: 100%;
+  padding: 12px;
+  background: black;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-top: 10px;
 }
 
-.cart-summary{
-  margin-top:40px;
-  padding:20px;
-  border:1px solid #ddd;
-  border-radius:10px;
-  max-width:300px;
-}
-
-.checkout-btn{
-  width:100%;
-  padding:12px;
-  background:black;
-  color:white;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  margin-top:10px;
-}
-
+/* Floating animation */
 @keyframes float {
   0% { transform: translateY(0px); }
   50% { transform: translateY(-12px); }

@@ -1,70 +1,95 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react"
+import { Link } from "react-router-dom"
 
-function Fragrances() {
-
-  const [products, setProducts] = useState([]);
+function Fragrances({ addToWishlist }) {
+  const [fragrances, setFragrances] = useState([])
 
   useEffect(() => {
-
     fetch("http://localhost:5000/api/products")
       .then(res => res.json())
       .then(data => {
-        console.log("Products:", data);
-        setProducts(data);
-      });
 
-  }, []);
+        const filtered = data.filter(product => {
+          const category = product.category?.toLowerCase()
+          return category === "fragrance" || category === "fragrances"
+        })
 
+        setFragrances(filtered)
 
-  
+      })
+      .catch(err => console.error("Error fetching fragrances:", err))
+  }, [])
+
   return (
+    <div className="bg-softwhite">
 
-  <div>
+      {/* HERO */}
+      <div className="bg-gray-100 py-24 text-center">
+        <h1 className="text-4xl font-luxury tracking-[0.4em]">
+          FRAGRANCES
+        </h1>
+        <p className="mt-4 text-gray-500">
+          Discover scents crafted for elegance and presence
+        </p>
+      </div>
 
-    {/* PAGE HERO */}
-    <div className="bg-gray-100 py-24 text-center">
-      <h1 className="text-4xl tracking-[0.4em] font-light">
-        FRAGRANCES
-      </h1>
-      <p className="mt-4 text-gray-500">
-        Discover scents crafted for elegance and presence
-      </p>
-    </div>
+      {/* GRID */}
+      <div className="max-w-7xl mx-auto px-6 py-16">
 
+        {fragrances.length === 0 ? (
+          <p className="text-center text-gray-500">
+            No fragrances available yet.
+          </p>
+        ) : (
 
-    <div className="max-w-7xl mx-auto px-6 py-16">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-10">
+            {fragrances.map(product => (
 
-        {products.map(product => (
+              <div key={product._id} className="relative">
 
-          <Link key={product._id} to={`/product/${product._id}`}>
+                {/* WISHLIST BUTTON */}
+                <button
+                  onClick={() => addToWishlist(product)}
+                  className="absolute top-3 right-3 bg-white rounded-full p-2 shadow hover:bg-red-50 transition z-10"
+                >
+                  ❤️
+                </button>
 
-           <div className="border p-4 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition duration-300">
-              <img
-                src={product.image}
-                alt={product.name}
-                className="h-48 w-full object-cover hover:scale-105 transition duration-300"
-              />
+                <Link to={`/product/${product._id}`}>
 
-              <h2 className="text-xl mt-3">{product.name}</h2>
+                  <div className="border p-4 rounded-lg shadow hover:shadow-xl hover:-translate-y-1 transition duration-300">
 
-              <p className="text-gray-500">₦{product.price}</p>
+                    <img
+                      src={`http://localhost:5000${product.image}`}
+                      alt={product.name}
+                      className="h-48 w-full object-cover hover:scale-105 transition duration-300"
+                    />
 
-            </div>
+                    <h2 className="text-lg mt-3 font-medium">
+                      {product.name}
+                    </h2>
 
-          </Link>
+                    <p className="text-red-600 mt-1 font-semibold">
+                      ₦{product.price}
+                    </p>
 
-        ))}
+                  </div>
+
+                </Link>
+
+              </div>
+
+            ))}
+
+          </div>
+
+        )}
 
       </div>
 
     </div>
-
-  </div>
-
-);
+  )
 }
 
-export default Fragrances;
+export default Fragrances

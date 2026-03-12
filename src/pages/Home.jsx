@@ -2,8 +2,13 @@ import { useEffect, useState } from "react"
 import { Link } from "react-router-dom"
 import ProductCard from "../components/ProductCard"
 
-function Home() {
+function Home({ addToWishlist }) {
   const [products, setProducts] = useState([])
+
+  // Filter accessories from all products
+  const accessories = products.filter(
+    product => product.category?.toLowerCase() === "accessories"
+  )
 
   useEffect(() => {
     fetch("http://localhost:5000/api/products")
@@ -54,19 +59,28 @@ function Home() {
         </div>
       </section>
 
-      {/* FEATURED FRAGRANCES (summary - max 4 products) */}
-      <section className="py-20 px-6">
-        <div className="max-w-7xl mx-auto">
-          <h2 className="text-3xl font-luxury tracking-widest text-center mb-12">
-            FEATURED FRAGRANCES
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {products.slice(0, 4).map((product) => (
-              <ProductCard key={product._id} product={product} />
-            ))}
-          </div>
-        </div>
-      </section>
+    {/* FEATURED FRAGRANCES */}
+    
+<section className="py-20 px-6">
+  <div className="max-w-7xl mx-auto">
+    <h2 className="text-3xl font-luxury tracking-widest text-center mb-12">
+      FEATURED FRAGRANCES
+    </h2>
+
+    <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {products.slice(0, 4).map((product) => (
+        <Link key={product._id} to={`/product/${product._id}`}>
+          <ProductCard
+            product={product}
+            addToWishlist={addToWishlist}
+            buttonText="SHOP NOW"
+          />
+        </Link>
+      ))}
+    </div>
+
+  </div>
+</section>
 
       {/* EXPLORE FRAGRANCES SUMMARY */}
       <section className="py-16 bg-softwhite">
@@ -75,12 +89,12 @@ function Home() {
             EXPLORE FRAGRANCES
           </h2>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-6">
-            {products.slice(0, 3).map((product) => (
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {products.slice(0, 4).map((product) => (
               <Link key={product._id} to={`/product/${product._id}`}>
                 <div className="group overflow-hidden rounded-lg shadow hover:shadow-xl transition p-2">
                   <img
-                    src={product.image}
+                    src={`http://localhost:5000${product.image}`}
                     alt={product.name}
                     className="h-[220px] w-full object-cover group-hover:scale-105 transition duration-500"
                   />
@@ -90,10 +104,20 @@ function Home() {
               </Link>
             ))}
           </div>
+
+          <div className="text-center mt-10">
+            <Link
+              to="/fragrances"
+              className="border border-black px-8 py-3 tracking-widest hover:bg-black hover:text-white transition"
+            >
+              VIEW ALL FRAGRANCES
+            </Link>
+          </div>
+
         </div>
       </section>
 
-      {/* ACCESSORIES (placeholder, no products yet) */}
+      {/* ACCESSORIES */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
           <h2 className="text-3xl font-luxury text-center tracking-[0.3em] mb-12">
@@ -101,20 +125,35 @@ function Home() {
           </h2>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            <div className="shadow-lg p-6 text-center hover:shadow-xl transition">
-              <img src="https://images.unsplash.com/photo-1541643600914-78b084683601" className="h-[200px] mx-auto object-contain" />
-              <h3 className="mt-4 font-luxury tracking-widest">Travel Atomizers</h3>
-            </div>
+            {accessories.slice(0,4).map((product) => (
+              <Link key={product._id} to={`/product/${product._id}`}>
+                <div className="shadow-lg p-6 text-center hover:shadow-xl transition">
+                  <img
+                    src={`http://localhost:5000${product.image}`}
+                    alt={product.name}
+                    className="h-[200px] mx-auto object-cover"
+                  />
+                  <h3 className="mt-4 font-luxury tracking-widest">
+                    {product.name}
+                  </h3>
+                  <p className="text-red-600 mt-2 font-semibold">
+                    ₦{product.price}
+                  </p>
+                  <div className="mt-4 bg-red-600 text-white py-2 tracking-widest hover:bg-red-700 transition">
+                    SHOP NOW
+                  </div>
+                </div>
+              </Link>
+            ))}
+          </div>
 
-            <div className="shadow-lg p-6 text-center hover:shadow-xl transition">
-              <img src="/accessory2.jpg" className="h-[200px] mx-auto object-contain" />
-              <h3 className="mt-4 font-luxury tracking-widest">Luxury Gift Boxes</h3>
-            </div>
-
-            <div className="shadow-lg p-6 text-center hover:shadow-xl transition">
-              <img src="/https://images.unsplash.com/photo-1615634260167-c8cdede054de" className="h-[200px] mx-auto object-contain" />
-              <h3 className="mt-4 font-luxury tracking-widest">Perfume Storage</h3>
-            </div>
+          <div className="text-center mt-10">
+            <Link
+              to="/accessories"
+              className="border border-black px-8 py-3 tracking-widest hover:bg-black hover:text-white transition"
+            >
+              VIEW ALL ACCESSORIES
+            </Link>
           </div>
         </div>
       </section>
