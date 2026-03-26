@@ -4,15 +4,19 @@ import { useState } from "react";
 import StoreLayout from "./layouts/StoreLayout";
 import Home from "./pages/Home";
 import Fragrances from "./pages/Fragrances";
+import Makeup from "./pages/Makeup";
+import Skincare from "./pages/Skincare";
 import Accessories from "./pages/Accessories";
 import Collections from "./pages/Collections";
+import Gifts from "./pages/Gifts";
+import NewArrivals from "./pages/New";
 import About from "./pages/About";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 import ProductDetails from "./pages/ProductDetails";
 import OrderSuccess from "./pages/OrderSuccess";
 import Wishlist from "./pages/Wishlist";
-
+import SalesPopup from "./components/SalesPopup";
 import AdminLayout from "./admin/AdminLayout";
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
@@ -21,50 +25,74 @@ import Products from "./admin/Products";
 import AddProduct from "./admin/AddProduct";
 
 function App() {
-
- const [wishlist, setWishlist] = useState([]);
-const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState([]);
+  const [cart, setCart] = useState([]);
 
   const addToWishlist = (product) => {
-
-    const exists = wishlist.find(item => item._id === product._id);
-
+    const exists = wishlist.find((item) => item._id === product._id);
     if (!exists) {
       setWishlist([...wishlist, product]);
     }
-
   };
 
   return (
     <Router>
-
-    <div className="pt-14">
-
+      <div className="pt-0">
         <Routes>
-
           {/* STORE */}
           <Route element={<StoreLayout wishlist={wishlist} cart={cart} />}>
-
             <Route path="/" element={<Home />} />
 
+            {/* MAIN + SUBCATEGORY ROUTES */}
             <Route
               path="/fragrances"
               element={<Fragrances addToWishlist={addToWishlist} />}
+            />
+            <Route
+              path="/fragrances/:subcategory"
+              element={<Fragrances addToWishlist={addToWishlist} />}
+            />
+
+            <Route
+              path="/makeup"
+              element={<Makeup addToWishlist={addToWishlist} />}
+            />
+            <Route
+              path="/makeup/:subcategory"
+              element={<Makeup addToWishlist={addToWishlist} />}
+            />
+
+            <Route
+              path="/skincare"
+              element={<Skincare addToWishlist={addToWishlist} />}
+            />
+            <Route
+              path="/skincare/:subcategory"
+              element={<Skincare addToWishlist={addToWishlist} />}
             />
 
             <Route
               path="/accessories"
               element={<Accessories addToWishlist={addToWishlist} />}
             />
-
-            <Route path="/collections" element={<Collections />} />
+            <Route
+              path="/collections"
+              element={<Collections addToWishlist={addToWishlist} />}
+            />
+            <Route
+              path="/gifts"
+              element={<Gifts addToWishlist={addToWishlist} />}
+            />
+            <Route
+              path="/new"
+              element={<NewArrivals addToWishlist={addToWishlist} />}
+            />
 
             <Route path="/about" element={<About />} />
 
             <Route path="/product/:id" element={<ProductDetails />} />
 
             <Route path="/cart" element={<Cart />} />
-
             <Route path="/checkout" element={<Checkout />} />
 
             <Route
@@ -73,28 +101,19 @@ const [cart, setCart] = useState([]);
             />
 
             <Route path="/order-success" element={<OrderSuccess />} />
-
           </Route>
 
           {/* ADMIN */}
           <Route path="/admin-login" element={<AdminLogin />} />
-
           <Route path="/admin" element={<AdminLayout />}>
-
             <Route index element={<AdminDashboard />} />
-
             <Route path="orders" element={<Orders />} />
-
             <Route path="products" element={<Products />} />
-
             <Route path="add-product" element={<AddProduct />} />
-
           </Route>
-
         </Routes>
-
+        <SalesPopup/>
       </div>
-
     </Router>
   );
 }

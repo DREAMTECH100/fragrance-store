@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { useSearchParams, useParams } from "react-router-dom";
 
-function Fragrances({ addToWishlist, addToCart }) {
+function Skincare({ addToWishlist, addToCart }) {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,12 +19,11 @@ function Fragrances({ addToWishlist, addToCart }) {
   const sub =
     normalize(subcategory) || normalize(searchParams.get("sub")) || "";
 
-  // Fetch products
   useEffect(() => {
     setLoading(true);
     setError(null);
 
-    let url = `http://localhost:5000/api/products?category=fragrances`;
+    let url = `http://localhost:5000/api/products?category=skincare`;
     if (sub) url += `&subCategory=${encodeURIComponent(sub)}`;
 
     fetch(url)
@@ -36,7 +35,6 @@ function Fragrances({ addToWishlist, addToCart }) {
         setProducts(data);
         setFilteredProducts(data);
 
-        // Pick up to 5 random images for hero
         const images = data
           .map((p) => p.image && `http://localhost:5000${p.image}`)
           .filter(Boolean);
@@ -45,7 +43,6 @@ function Fragrances({ addToWishlist, addToCart }) {
           [images[i], images[j]] = [images[j], images[i]];
         }
         setHeroImages(images.slice(0, 5));
-
         setLoading(false);
       })
       .catch((err) => {
@@ -55,7 +52,6 @@ function Fragrances({ addToWishlist, addToCart }) {
       });
   }, [sub]);
 
-  // Hero slideshow
   useEffect(() => {
     if (heroImages.length <= 1) return;
     const interval = setInterval(() => {
@@ -87,23 +83,21 @@ function Fragrances({ addToWishlist, addToCart }) {
   };
 
   const clearFilters = () => setSelectedSubCategories([]);
-  const displayTitle = sub ? sub.replace(/-/g, " ").toUpperCase() : "FRAGRANCES";
+  const displayTitle = sub ? sub.replace(/-/g, " ").toUpperCase() : "SKINCARE";
   const heroImage = heroImages[currentHeroIndex] || null;
 
-  // Example dynamic hero subtitles
   const heroSubtitles = [
-    "Crafted for timeless elegance and unforgettable presence",
-    "Luxury in every note, sophistication in every drop",
-    "A fragrance that defines your essence",
-    "Exquisite scents, unforgettable impressions",
-    "Where art meets aroma"
+    "Nourish your skin with care and sophistication",
+    "Luxury skincare for every complexion",
+    "Hydration, glow, and elegance",
+    "Gentle formulas, powerful results",
+    "Where science meets beauty"
   ];
   const currentSubtitle =
     heroSubtitles[currentHeroIndex % heroSubtitles.length];
 
   return (
     <div className="bg-softwhite min-h-screen">
-      {/* HERO */}
       <section
         className="relative h-[50vh] md:h-[65vh] flex items-center justify-center text-center transition-all duration-1000"
         style={
@@ -123,10 +117,8 @@ function Fragrances({ addToWishlist, addToCart }) {
         </div>
       </section>
 
-      {/* MAIN LAYOUT */}
       <section className="max-w-7xl mx-auto px-6 py-16">
         <div className="grid md:grid-cols-[250px_1fr] gap-10">
-          {/* SIDEBAR */}
           <aside className="text-sm self-start space-y-8 bg-softwhite z-30 shadow-md p-4">
             <p className="uppercase tracking-widest">{filteredProducts.length} Products</p>
             {selectedSubCategories.length > 0 && (
@@ -153,7 +145,6 @@ function Fragrances({ addToWishlist, addToCart }) {
             </div>
           </aside>
 
-          {/* MAIN CONTENT */}
           <main>
             <div className="flex justify-between items-center mb-10">
               <p className="text-sm text-darktext/60">
@@ -195,4 +186,4 @@ function Fragrances({ addToWishlist, addToCart }) {
   );
 }
 
-export default Fragrances;
+export default Skincare;

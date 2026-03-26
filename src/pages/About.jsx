@@ -61,7 +61,7 @@ function About() {
       <section className="bg-gray-50 py-20 fade-up">
         <div className="max-w-7xl mx-auto px-6 text-center space-y-6">
           <h2 className="text-3xl font-luxury tracking-widest">Meet Our Founder</h2>
-          <img src="/images/ceo.jpg" alt="CEO" className="w-48 h-48 mx-auto rounded-full object-cover shadow-lg" />
+          <img src="/images/CEO.jpeg" alt="CEO" className="w-48 h-48\ mx-auto rounded-full object-cover shadow-lg" />
           <h3 className="text-xl font-semibold mt-4">Jane Doe</h3>
           <p className="text-gray-700 max-w-xl mx-auto mt-2">
             Jane Doe is the visionary behind Fragrance Solution. With years of experience in 

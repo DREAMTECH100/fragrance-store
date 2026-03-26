@@ -30,17 +30,38 @@ function Collections() {
       .catch((err) => console.error("Error fetching products:", err));
   }, []);
 
+// Add this ABOVE return()
+const heroImage =
+  products.length > 0
+    ? `http://localhost:5000${products[0].image}`
+    : null;
+
   return (
     <div className="bg-softwhite">
 
       {/* PAGE HERO */}
-      <div className="bg-gray-100 py-24 text-center">
-        <h1 className="text-4xl font-luxury tracking-[0.4em]">COLLECTIONS</h1>
-        <p className="mt-4 text-gray-500">
-          Browse products by New Arrivals, Price, and more
-        </p>
-      </div>
-
+<section
+  className="relative h-[50vh] md:h-[65vh] flex items-center justify-center text-center"
+  style={
+    heroImage
+      ? {
+          backgroundImage: `url(${heroImage})`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }
+      : {}
+  }
+>
+  <div className="absolute inset-0 bg-black/40" />
+  <div className="relative z-10 px-6">
+    <h1 className="text-4xl md:text-6xl font-luxury tracking-[0.4em] text-white">
+      COLLECTIONS
+    </h1>
+    <p className="mt-4 text-white/80">
+      Browse products by New Arrivals, Price, and more
+    </p>
+  </div>
+</section>
       {/* NEW ARRIVALS */}
       <section className="py-16 px-6 max-w-7xl mx-auto">
         <h2 className="text-2xl font-luxury tracking-[0.3em] text-center mb-8">
@@ -56,7 +77,7 @@ function Collections() {
       {/* CHEAP PRODUCTS */}
       <section className="py-16 px-6 max-w-7xl mx-auto">
         <h2 className="text-2xl font-luxury tracking-[0.3em] text-center mb-8">
-          CHEAP PRODUCTS
+          AFFORDABLE PRODUCTS
         </h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {cheapProducts.map((product) => (

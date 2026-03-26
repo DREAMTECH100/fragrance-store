@@ -1,119 +1,263 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useCart } from "../context/CartContext";
+import ProductCard from "../components/ProductCard";
 
 function ProductDetails() {
-
   const { id } = useParams();
   const navigate = useNavigate();
+  const { addToCart } = useCart();
 
   const [product, setProduct] = useState(null);
+  const [related, setRelated] = useState([]);
+  const [reviews, setReviews] = useState([]);
+
   const [quantity, setQuantity] = useState(1);
+  const [selectedSize, setSelectedSize] = useState(null);
 
+  const [showReviewModal, setShowReviewModal] = useState(false);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewName, setReviewName] = useState("");
+
+  // ================= FETCH PRODUCT =================
   useEffect(() => {
-
     fetch("http://localhost:5000/api/products")
       .then(res => res.json())
       .then(data => {
-
         const found = data.find(p => p._id === id);
         setProduct(found);
 
-      });
+        if (found?.sizes?.length > 0) {
+          setSelectedSize(found.sizes[0]);
+        }
 
+        // related products
+        const filtered = data.filter(
+          p => p.category === found.category && p._id !== found._id
+        );
+        setRelated(filtered);
+      });
   }, [id]);
 
-  if (!product) return <div className="p-10">Loading...</div>;
+  // ================= FETCH REVIEWS =================
+  useEffect(() => {
+    fetch(`http://localhost:5000/api/reviews/${id}`)
+      .then(res => res.json())
+      .then(data => setReviews(data))
+      .catch(() => setReviews([]));
+  }, [id]);
 
+  // ================= LOADING =================
+  if (!product) {
+    return (
+      <div className="p-10 text-center text-gray-500">
+        Loading product...
+      </div>
+    );
+  }
 
-  const increase = () => {
-    setQuantity(prev => prev + 1);
-  };
+  // ================= LOGIC =================
+  const increase = () => setQuantity(q => q + 1);
 
   const decrease = () => {
-    if (quantity > 1) {
-      setQuantity(prev => prev - 1);
-    }
+    if (quantity > 1) setQuantity(q => q - 1);
   };
 
+  const activePrice = selectedSize?.price || product.price;
 
   const handleAddToCart = () => {
-
-    const cart = JSON.parse(localStorage.getItem("cart")) || [];
-
-    const existing = cart.find(item => item._id === product._id);
-
-    if (existing) {
-      existing.quantity += quantity;
-    } else {
-      cart.push({ ...product, quantity });
-    }
-
-    localStorage.setItem("cart", JSON.stringify(cart));
+    addToCart({
+      ...product,
+      quantity,
+      selectedSize,
+      price: activePrice,
+    });
 
     navigate("/cart");
-
   };
 
+  // ================= SUBMIT REVIEW =================
+  const submitReview = async () => {
+    if (!reviewText || !reviewName) return;
+
+    const res = await fetch("http://localhost:5000/api/reviews", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        productId: id,
+        name: reviewName,
+        comment: reviewText,
+      }),
+    });
+
+    const data = await res.json();
+
+    setReviews(prev => [data, ...prev]);
+    setReviewText("");
+    setReviewName("");
+    setShowReviewModal(false);
+  };
 
   return (
+    <div className="max-w-6xl mx-auto px-6 py-12">
 
-    <div className="p-10 grid md:grid-cols-2 gap-12">
+      {/* ================= TOP ================= */}
+      <div className="grid md:grid-cols-2 gap-12">
 
-      <img
-        src={`http://localhost:5000${product.image}`}
-        alt={product.name}
-        className="w-full h-[500px] object-cover rounded-lg"
-      />
+        {/* IMAGE */}
+        <img
+          src={`http://localhost:5000${product.image}`}
+          alt={product.name}
+          className="w-full h-[520px] object-cover rounded-lg"
+        />
 
-      <div>
+        {/* DETAILS */}
+        <div>
 
-        <h1 className="text-4xl font-bold">{product.name}</h1>
+          <h1 className="text-4xl uppercase">{product.name}</h1>
 
-        <p className="text-2xl text-red-600 mt-4">
-          ₦{product.price}
-        </p>
+          <p className="text-2xl mt-4 font-semibold">
+            ₦{activePrice?.toLocaleString()}
+          </p>
 
-        <p className="mt-6 text-gray-600">
-          {product.description}
-        </p>
+          <p className="mt-4 text-gray-600">
+            {product.description}
+          </p>
 
+          {/* ================= SIZES ================= */}
+          {product.sizes?.length > 0 && (
+            <div className="mt-6">
+              <p className="text-sm mb-2 uppercase">Select Size</p>
 
-        {/* Quantity Selector */}
+              <div className="flex gap-3 flex-wrap">
+                {product.sizes.map((size, i) => (
+                  <button
+                    key={i}
+                    onClick={() => setSelectedSize(size)}
+                    className={`px-4 py-2 border ${
+                      selectedSize?.label === size.label
+                        ? "bg-black text-white"
+                        : "hover:border-black"
+                    }`}
+                  >
+                    {size.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
 
-        <div className="flex items-center gap-4 mt-6">
+          {/* ================= QUANTITY ================= */}
+          <div className="flex items-center gap-4 mt-6">
+            <button onClick={decrease} className="px-3 border">-</button>
+            <span>{quantity}</span>
+            <button onClick={increase} className="px-3 border">+</button>
+          </div>
 
+          {/* ================= ADD TO CART ================= */}
           <button
-            onClick={decrease}
-            className="px-4 py-2 bg-gray-200 text-xl"
+            onClick={handleAddToCart}
+            className="mt-6 bg-black text-white px-6 py-3 w-full"
           >
-            -
+            Add To Bag
           </button>
 
-          <span className="text-lg font-medium">
-            {quantity}
-          </span>
-
-          <button
-            onClick={increase}
-            className="px-4 py-2 bg-orange-400 text-white text-xl"
-          >
-            +
-          </button>
+          {/* ================= MOBILE HINT ================= */}
+          <p className="text-xs text-gray-400 mt-3 text-center">
+            Tap product to explore details
+          </p>
 
         </div>
-
-
-        <button
-          onClick={handleAddToCart}
-          className="mt-6 bg-red-600 text-white px-6 py-3 rounded"
-        >
-          Add To Cart
-        </button>
-
       </div>
 
-    </div>
+      {/* ================= RELATED ================= */}
+      {related.length > 0 && (
+        <div className="mt-20">
+          <h2 className="text-2xl mb-6 uppercase">
+            Shop Similar Products
+          </h2>
 
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+            {related.slice(0, 4).map(item => (
+              <ProductCard key={item._id} product={item} />
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* ================= REVIEWS ================= */}
+      <div className="mt-20">
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-2xl uppercase">Customer Reviews</h2>
+
+          <button
+            onClick={() => setShowReviewModal(true)}
+            className="border px-4 py-2 text-sm"
+          >
+            Write Review
+          </button>
+        </div>
+
+        {reviews.length === 0 ? (
+          <p className="text-gray-500">
+            No reviews yet.
+          </p>
+        ) : (
+          <div className="space-y-4">
+            {reviews.map((r, i) => (
+              <div key={i} className="border p-4">
+                <p className="font-semibold">{r.name}</p>
+                <p className="text-gray-600 text-sm mt-1">
+                  {r.comment}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+
+      {/* ================= REVIEW MODAL ================= */}
+      {showReviewModal && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+          <div className="bg-white p-6 w-[90%] max-w-md">
+
+            <h3 className="text-lg mb-4">Write a Review</h3>
+
+            <input
+              placeholder="Your Name"
+              value={reviewName}
+              onChange={e => setReviewName(e.target.value)}
+              className="w-full border p-2 mb-3"
+            />
+
+            <textarea
+              placeholder="Your Review"
+              value={reviewText}
+              onChange={e => setReviewText(e.target.value)}
+              className="w-full border p-2 mb-3"
+            />
+
+            <div className="flex justify-end gap-3">
+              <button onClick={() => setShowReviewModal(false)}>
+                Cancel
+              </button>
+
+              <button
+                onClick={submitReview}
+                className="bg-black text-white px-4 py-2"
+              >
+                Submit
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+    </div>
   );
 }
 

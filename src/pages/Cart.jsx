@@ -1,128 +1,171 @@
-import { useEffect, useState } from "react";
+import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 
 function Cart() {
-  const [cartItems, setCartItems] = useState([]);
+
+  const {
+    cart,
+    removeFromCart,
+    increaseQty,
+    decreaseQty
+  } = useCart();
+
   const navigate = useNavigate();
 
-  useEffect(() => {
-    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
-    setCartItems(storedCart);
-  }, []);
-
-  const updateCart = (updatedCart) => {
-    setCartItems(updatedCart);
-    localStorage.setItem("cart", JSON.stringify(updatedCart));
-  };
-
-  const removeItem = (index) => {
-    const updatedCart = [...cartItems];
-    updatedCart.splice(index, 1);
-    updateCart(updatedCart);
-  };
-
-  const increaseQty = (index) => {
-    const updatedCart = [...cartItems];
-    updatedCart[index].quantity += 1;
-    updateCart(updatedCart);
-  };
-
-  const decreaseQty = (index) => {
-    const updatedCart = [...cartItems];
-    if (updatedCart[index].quantity > 1) {
-      updatedCart[index].quantity -= 1;
-      updateCart(updatedCart);
-    }
-  };
-
-  const total = cartItems.reduce(
+  const total = cart.reduce(
     (sum, item) => sum + Number(item.price) * item.quantity,
     0
   );
 
   return (
-    <div className="p-10 max-w-5xl mx-auto">
-      <h1 className="text-4xl font-luxury mb-8 text-center">Your Cart</h1>
+    <div className="px-6 md:px-12 py-16 max-w-6xl mx-auto">
 
-      {cartItems.length === 0 ? (
-        <p className="text-center text-gray-500">Your cart is empty</p>
+      {/* HEADER */}
+      <h1 className="text-4xl md:text-5xl font-luxury text-center mb-12 tracking-wide">
+        Your Bag
+      </h1>
+
+      {cart.length === 0 ? (
+        <div className="text-center py-20">
+          <p className="text-gray-500 text-lg mb-6">Your Bag is empty</p>
+
+          <button
+            onClick={() => navigate("/fragrances")}
+            className="border px-8 py-3 tracking-widest hover:bg-black hover:text-white transition"
+          >
+            Continue Shopping
+          </button>
+        </div>
       ) : (
-        <div className="space-y-6">
-          {cartItems.map((item, index) => (
-            <div
-              key={index}
-              className="flex flex-col md:flex-row items-center gap-6 border p-4 rounded shadow hover:shadow-lg transition"
-            >
-              <img
-                src={`http://localhost:5000${item.image}`}
-                alt={item.name}
-                className="w-32 h-32 object-cover rounded"
-              />
+        <div className="space-y-10">
 
-              <div className="flex-1">
-                <h2 className="text-2xl font-semibold">{item.name}</h2>
-                <p className="text-red-600 text-lg mt-1">
-                  ₦{item.price * item.quantity}
-                </p>
+          {cart.map((item, index) => {
+            const sizeKey = item.selectedSize?.label || "default";
 
-                {/* Quantity Controls */}
-                <div className="flex items-center gap-3 mt-3">
+            return (
+              <div
+                key={`${item._id}-${sizeKey}`}
+                className="flex flex-col md:flex-row gap-6 border-b pb-8 group"
+              >
+
+                {/* IMAGE */}
+                <div className="relative w-full md:w-40 h-40 overflow-hidden">
+                  <img
+                    src={`http://localhost:5000${item.image}`}
+                    alt={item.name}
+                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                  />
+
+                  {/* subtle overlay */}
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition" />
+                </div>
+
+                {/* DETAILS */}
+                <div className="flex-1 flex flex-col justify-between">
+
+                  <div>
+
+                    {/* NAME */}
+                    <h2 className="text-xl md:text-2xl font-medium uppercase tracking-wide">
+                      {item.name}
+                    </h2>
+
+                    {/* SIZE (🔥 NEW BUT SAFE) */}
+                    {item.selectedSize && (
+                      <p className="text-sm text-gray-500 mt-1 tracking-widest">
+                        Size: {item.selectedSize.label}
+                      </p>
+                    )}
+
+                    {/* UNIT PRICE */}
+                    <p className="text-sm text-gray-400 mt-2">
+                      ₦{Number(item.price).toLocaleString()} each
+                    </p>
+
+                    {/* TOTAL PRICE */}
+                    <p className="text-lg text-red-600 font-semibold mt-2">
+                      ₦{(item.price * item.quantity).toLocaleString()}
+                    </p>
+
+                  </div>
+
+                  {/* QUANTITY */}
+                  <div className="flex items-center gap-4 mt-4">
+
+                    <button
+                      onClick={() => decreaseQty(item._id, sizeKey)}
+                      className="w-10 h-10 border flex items-center justify-center hover:bg-black hover:text-white transition"
+                    >
+                      −
+                    </button>
+
+                    <span className="text-lg font-medium">
+                      {item.quantity}
+                    </span>
+
+                    <button
+                      onClick={() => increaseQty(item._id, sizeKey)}
+                      className="w-10 h-10 border flex items-center justify-center hover:bg-black hover:text-white transition"
+                    >
+                      +
+                    </button>
+
+                  </div>
+
+                </div>
+
+                {/* REMOVE */}
+                <div className="flex items-center">
                   <button
-                    onClick={() => decreaseQty(index)}
-                    className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300 transition"
+                    onClick={() => removeFromCart(item._id, sizeKey)}
+                    className="text-sm tracking-widest text-red-500 hover:text-red-700 transition"
                   >
-                    -
-                  </button>
-                  <span className="font-medium">{item.quantity}</span>
-                  <button
-                    onClick={() => increaseQty(index)}
-                    className="px-3 py-1 bg-black text-white rounded hover:bg-gray-800 transition"
-                  >
-                    +
+                    REMOVE
                   </button>
                 </div>
 
-                {/* Category Dropdown */}
-                <div className="mt-3">
-                  <select
-                    value={item.category || ""}
-                    onChange={(e) => {
-                      const updatedCart = [...cartItems];
-                      updatedCart[index].category = e.target.value;
-                      updateCart(updatedCart);
-                    }}
-                    className="border p-2 rounded w-full md:w-64"
-                  >
-                    <option value="">Select category</option>
-                    <option value="fragrances">Fragrances</option>
-                    <option value="accessories">Accessories</option>
-                  </select>
-                </div>
               </div>
+            );
+          })}
+
+          {/* TOTAL SECTION */}
+          <div className="pt-10 border-t">
+
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-lg tracking-widest">Subtotal</span>
+              <span className="text-2xl font-semibold">
+                ₦{total.toLocaleString()}
+              </span>
+            </div>
+
+            <p className="text-sm text-gray-500 mb-6">
+              Shipping and taxes calculated at checkout.
+            </p>
+
+            {/* CTA */}
+            <div className="flex flex-col md:flex-row gap-4">
 
               <button
-                onClick={() => removeItem(index)}
-                className="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition mt-4 md:mt-0"
+                onClick={() => navigate("/fragrances")}
+                className="border px-8 py-4 w-full tracking-widest hover:bg-black hover:text-white transition"
               >
-                Remove
+                Continue Shopping
               </button>
+
+              <button
+                onClick={() => navigate("/checkout")}
+                className="bg-black text-white px-8 py-4 w-full tracking-widest hover:bg-red-700 transition"
+              >
+                Proceed To Checkout
+              </button>
+
             </div>
-          ))}
 
-          <div className="mt-10 text-right text-2xl font-bold">
-            Total: ₦{total}
           </div>
 
-          <div className="text-center mt-6">
-            <button
-              onClick={() => navigate("/checkout")}
-              className="bg-black text-white px-8 py-3 rounded shadow hover:bg-gray-900 transition"
-            >
-              Proceed To Checkout
-            </button>
-          </div>
         </div>
       )}
+
     </div>
   );
 }
