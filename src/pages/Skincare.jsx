@@ -184,6 +184,11 @@ function Skincare({ addToWishlist, addToCart }) {
           </main>
         </div>
       </section>
+      <SectionVideo
+  src="/videos/skincare.mp4"
+  title="Skincare"
+  subtitle="Where discipline meets glow — and skin becomes legacy."
+/>
     </div>
   );
 }

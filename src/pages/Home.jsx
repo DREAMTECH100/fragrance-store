@@ -214,6 +214,9 @@ const baseURL = import.meta.env.VITE_API_URL;
   <div className="text-center mb-20 relative z-10">
     <div className="w-24 h-[2px] bg-primary/70 mx-auto mb-8"></div>
 
+    <h2 className="text-5xl md:text-7xl font-luxury font-semibold uppercase tracking-[0.25em] text-darktext"> 
+      LUXURY </h2>
+
     <p className="text-darktext/80 mt-6 tracking-[0.2em] max-w-2xl mx-auto text-sm md:text-base font-medium italic leading-relaxed">
       Crafted for presence. Designed to be remembered.  
       A signature that enters before you do — and lingers after you leave.

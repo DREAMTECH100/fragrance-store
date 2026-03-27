@@ -168,16 +168,7 @@ function Fragrances({ addToWishlist, addToCart }) {
                 <option value="price-desc">PRICE HIGH-LOW</option>
               </select>
             </div>
- <SectionVideo
-  src="/videos/fragrance.mp4"
-  title="Fragrance"
-  subtitle="A signature that enters before you do — and lingers after you leave."
-/>
-  
-  
-   <h2 className="text-xl md:text-5xl font-luxury font-semibold uppercase tracking-[0.25em] text-darktext">
-      Shop All Fragrances
-    </h2>
+ 
             {loading ? (
               <div className="text-center py-20 animate-pulse">Loading collection...</div>
             ) : error ? (
@@ -203,6 +194,12 @@ function Fragrances({ addToWishlist, addToCart }) {
           </main>
         </div>
       </section>
+      <SectionVideo
+  src="/videos/fragrance.mp4"
+  title="Fragrance"
+  subtitle="A signature that enters before you do — and lingers after you leave."
+/>
+  
     </div>
   );
 }

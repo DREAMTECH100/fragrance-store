@@ -189,6 +189,11 @@ function Makeup({ addToWishlist, addToCart }) {
           </main>
         </div>
       </section>
+      <SectionVideo
+  src="/videos/makeup.mp4"
+  title="Makeup"
+  subtitle="Sculpt. Define. Command attention without speaking."
+/>
     </div>
   );
 }
