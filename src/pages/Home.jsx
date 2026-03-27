@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+import SectionVideo from "../components/SectionVideo";
 function pickRandom(arr, n) {
   if (!arr || arr.length === 0) return [];
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
