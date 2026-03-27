@@ -317,6 +317,12 @@ const baseURL = import.meta.env.VITE_API_URL;
   </div>
 </section>
 
+<SectionVideo
+  src="/videos/makeup.mp4"
+  title="Makeup"
+  subtitle="Sculpt. Define. Command attention without speaking."
+/>
+
 {/* ================= MAKEUP ================= */}
 {makeup[0] && (
  <section
@@ -416,6 +422,13 @@ const baseURL = import.meta.env.VITE_API_URL;
     </div>
   </section>
 )}
+
+
+<SectionVideo
+  src="/videos/skincare.mp4"
+  title="Skincare"
+  subtitle="Where discipline meets glow — and skin becomes legacy."
+/>
 
 {/* ================= SKINCARE ================= */}
 {skincare[0] && (
