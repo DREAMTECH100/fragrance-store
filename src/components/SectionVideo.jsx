@@ -25,4 +25,4 @@ function SectionVideo({ src, title, subtitle }) {
   );
 }
 
-export default SectionVideo; // ✅ THIS LINE IS THE FIX
+export default SectionVideo; 
