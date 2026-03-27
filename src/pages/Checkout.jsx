@@ -5,7 +5,6 @@ function Checkout() {
   const navigate = useNavigate();
 
   const [cartItems, setCartItems] = useState([]);
-
   const [form, setForm] = useState({
     fullName: "",
     email: "",
@@ -38,47 +37,28 @@ function Checkout() {
     const lowerAddress = address.toLowerCase();
     const lowerState = state.toLowerCase();
 
-    // FREE DELIVERY
     if (total >= 1000000) return 0;
     if (lowerState === "lagos" && total >= 300000) return 0;
 
     const isLagos = lowerState === "lagos";
-
     const islandAreas = ["lekki", "ajah", "ikoyi", "victoria island", "vi"];
     const mainlandAreas = [
-      "ikeja",
-      "yaba",
-      "surulere",
-      "maryland",
-      "ogba",
-      "alimosho",
-      "festac",
-      "oshodi"
+      "ikeja", "yaba", "surulere", "maryland", "ogba", "alimosho", "festac", "oshodi"
     ];
 
-    const isIsland = islandAreas.some(area =>
-      lowerAddress.includes(area)
-    );
-
-    const isMainland = mainlandAreas.some(area =>
-      lowerAddress.includes(area)
-    );
+    const isIsland = islandAreas.some(area => lowerAddress.includes(area));
+    const isMainland = mainlandAreas.some(area => lowerAddress.includes(area));
 
     let baseByQty = 7000;
     if (quantity === 3) baseByQty = 8500;
     if (quantity >= 4) baseByQty = 9000;
 
-    // OUTSIDE LAGOS
     if (!isLagos) return 7000;
-
-    // ISLAND
     if (isIsland) {
       if (quantity <= 2) return 5000;
       if (quantity === 3) return 5500;
       if (quantity >= 4) return 6000;
     }
-
-    // MAINLAND
     if (isMainland) {
       if (quantity <= 2) return 7000;
       if (quantity === 3) return 7500;
@@ -102,16 +82,12 @@ function Checkout() {
     if (!form.state) return "";
 
     const lowerAddress = form.address.toLowerCase();
-
     const islandAreas = ["lekki", "ajah", "ikoyi", "victoria island", "vi"];
     const mainlandAreas = ["ikeja", "yaba", "surulere", "maryland"];
 
     if (form.state.toLowerCase() !== "lagos") return "Outside Lagos";
-
     if (islandAreas.some(a => lowerAddress.includes(a))) return "Lagos Island";
-
     if (mainlandAreas.some(a => lowerAddress.includes(a))) return "Lagos Mainland";
-
     return "Lagos (Unspecified)";
   };
 
@@ -119,60 +95,67 @@ function Checkout() {
 
   // ================= INPUT =================
   const handleChange = (e) => {
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
+    setForm({ ...form, [e.target.name]: e.target.value });
   };
 
   // ================= SUBMIT =================
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    // save checkout info locally (for reference if needed)
-    localStorage.setItem(
-      "checkout",
-      JSON.stringify(form)
-    );
+    try {
+      // save checkout info locally
+      localStorage.setItem("checkout", JSON.stringify(form));
 
-    const baseURL = import.meta.env.VITE_API_URL;
+      const baseURL = import.meta.env.VITE_API_URL;
 
-const response = await fetch(
-  `${baseURL}/api/payment/initialize`,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      fullName: form.fullName,
-      email: form.email,
-      phone: form.phone,
-      address: form.address,
-      state: form.state,
+      // Initialize payment via backend
+      const response = await fetch(`${baseURL}/api/payment/initialize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: form.fullName,
+          email: form.email,
+          phone: form.phone,
+          address: form.address,
+          state: form.state,
+          items: cartItems.map(item => ({
+            ...item,
+            size: item.selectedSize?.label || item.size || null
+          })),
+          subtotal,
+          shippingFee,
+          totalAmount
+        })
+      });
 
-      items: cartItems.map(item => ({
-        ...item,
-        size: item.selectedSize?.label || item.size || null
-      })),
+      const data = await response.json();
 
-      subtotal,
-      shippingFee,
-      totalAmount
-    })
-  }
-);
-    const data = await response.json();
+      if (data.status && data.data.authorization_url) {
+        // Use Paystack inline popup
+        const handler = window.PaystackPop.setup({
+          key: import.meta.env.VITE_PAYSTACK_PUBLIC_KEY,
+          email: form.email,
+          amount: totalAmount * 100, // in kobo
+          ref: `PS-${Date.now()}`,
+          callback: function (response) {
+            // After successful payment, your webhook will handle verification
+            // Redirect user to success page
+            navigate("/ordersuccess");
+          },
+          onClose: function () {
+            alert("Payment was not completed.");
+          }
+        });
 
-    if (data.status && data.data.authorization_url) {
-      window.location.href = data.data.authorization_url;
+        handler.openIframe();
+      } else {
+        alert("Payment initialization failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert("An error occurred while processing your payment.");
     }
-
-  } catch (error) {
-    console.error("Payment error:", error);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 px-6 py-14">
@@ -193,43 +176,12 @@ const response = await fetch(
 
             <select name="state" required onChange={handleChange} className="w-full border-b py-3">
               <option value="">Select State</option>
-              <option value="Abia">Abia</option>
-              <option value="Adamawa">Adamawa</option>
-              <option value="Akwa Ibom">Akwa Ibom</option>
-              <option value="Anambra">Anambra</option>
-              <option value="Bauchi">Bauchi</option>
-              <option value="Bayelsa">Bayelsa</option>
-              <option value="Benue">Benue</option>
-              <option value="Borno">Borno</option>
-              <option value="Cross River">Cross River</option>
-              <option value="Delta">Delta</option>
-              <option value="Ebonyi">Ebonyi</option>
-              <option value="Edo">Edo</option>
-              <option value="Ekiti">Ekiti</option>
-              <option value="Enugu">Enugu</option>
-              <option value="Gombe">Gombe</option>
-              <option value="Imo">Imo</option>
-              <option value="Jigawa">Jigawa</option>
-              <option value="Kaduna">Kaduna</option>
-              <option value="Kano">Kano</option>
-              <option value="Katsina">Katsina</option>
-              <option value="Kebbi">Kebbi</option>
-              <option value="Kogi">Kogi</option>
-              <option value="Kwara">Kwara</option>
-              <option value="Lagos">Lagos</option>
-              <option value="Nasarawa">Nasarawa</option>
-              <option value="Niger">Niger</option>
-              <option value="Ogun">Ogun</option>
-              <option value="Ondo">Ondo</option>
-              <option value="Osun">Osun</option>
-              <option value="Oyo">Oyo</option>
-              <option value="Plateau">Plateau</option>
-              <option value="Rivers">Rivers</option>
-              <option value="Sokoto">Sokoto</option>
-              <option value="Taraba">Taraba</option>
-              <option value="Yobe">Yobe</option>
-              <option value="Zamfara">Zamfara</option>
-              <option value="FCT">FCT (Abuja)</option>
+              {["Abia","Adamawa","Akwa Ibom","Anambra","Bauchi","Bayelsa","Benue","Borno","Cross River",
+               "Delta","Ebonyi","Edo","Ekiti","Enugu","Gombe","Imo","Jigawa","Kaduna","Kano","Katsina",
+               "Kebbi","Kogi","Kwara","Lagos","Nasarawa","Niger","Ogun","Ondo","Osun","Oyo","Plateau",
+               "Rivers","Sokoto","Taraba","Yobe","Zamfara","FCT"].map((state) => (
+                <option key={state} value={state}>{state}</option>
+              ))}
             </select>
 
             <button className="w-full bg-black text-white py-4">
