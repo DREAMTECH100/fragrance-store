@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import SectionVideo from "../components/SectionVideo";
+
 function pickRandom(arr, n) {
   if (!arr || arr.length === 0) return [];
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
@@ -124,14 +124,12 @@ const baseURL = import.meta.env.VITE_API_URL;
         `}</style>
       </section>
 
-<section className="py-12 relative">
-  {/* Top and bottom accent lines */}
+   <section className="py-12 relative">
   <div className="absolute top-0 left-0 w-full h-[3px] bg-red-600/80"></div>
   <div className="absolute bottom-0 left-0 w-full h-[3px] bg-red-600/80"></div>
 
-  {/* Scroll carousel */}
-  <div className="overflow-hidden w-full">
-    <div className="flex gap-6 animate-scroll w-max">
+  <div className="overflow-hidden">
+    <div className="flex animate-scroll gap-6 px-6 md:px-16">
       {[
         ...pickRandom(fragrances, 2),
         ...pickRandom(makeup, 2),
@@ -145,20 +143,20 @@ const baseURL = import.meta.env.VITE_API_URL;
         >
           {/* IMAGE */}
           <div className="relative w-full h-64 overflow-hidden">
-            <img
-              src={p?.image ? `${baseURL}${p.image}` : "/images/placeholder.png"}
-              className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
-              alt={p?.name}
-            />
+           <img
+  src={p?.image ? `${baseURL}${p.image}` : "/images/placeholder.png"}
+  className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
+  alt={p?.name}
+/>
 
-            {/* NEW badge */}
+            {/* NEW BADGE top-left white rounded */}
             {p?.isNew && (
               <span className="absolute top-2 left-2 bg-white text-black text-[10px] font-semibold px-2 py-1 rounded tracking-widest shadow-md select-none">
                 NEW
               </span>
             )}
 
-            {/* 5-star rating */}
+            {/* 5-STAR RATING bottom-left black box */}
             <div className="absolute bottom-2 left-2 bg-black bg-opacity-75 text-white rounded-md px-2 py-[2px] flex items-center space-x-1 select-none">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -176,8 +174,13 @@ const baseURL = import.meta.env.VITE_API_URL;
 
           {/* DETAILS */}
           <div className="p-4 text-black">
+            {/* NAME */}
             <h3 className="uppercase font-semibold tracking-wider text-sm leading-tight">{p?.name}</h3>
+
+            {/* DESCRIPTION */}
             <p className="text-xs text-gray-600 mt-2 line-clamp-2">{p?.description}</p>
+
+            {/* PRICE */}
             <p className="mt-3 font-semibold text-sm">{formatNaira(p?.price)}</p>
           </div>
         </Link>
@@ -185,25 +188,20 @@ const baseURL = import.meta.env.VITE_API_URL;
     </div>
   </div>
 
-  {/* SCROLL ANIMATION */}
   <style>{`
     @keyframes scroll {
       0% { transform: translateX(0); }
       100% { transform: translateX(-50%); }
     }
-
     .animate-scroll {
       display: flex;
-      width: max-content;
       animation: scroll 55s linear infinite;
     }
   `}</style>
+
+  
 </section>
- <SectionVideo
-  src="/videos/fragrance.mp4"
-  title="Fragrance"
-  subtitle="A signature that enters before you do — and lingers after you leave."
-/>
+
  {/* ================= FRAGRANCES ================= */}
 <section className="py-28 px-6 md:px-16 bg-gradient-to-b from-softwhite to-white relative overflow-hidden">
   {/* Subtle section vignette for depth */}
@@ -319,12 +317,6 @@ const baseURL = import.meta.env.VITE_API_URL;
   </div>
 </section>
 
-<SectionVideo
-  src="/videos/makeup.mp4"
-  title="Makeup"
-  subtitle="Sculpt. Define. Command attention without speaking."
-/>
-
 {/* ================= MAKEUP ================= */}
 {makeup[0] && (
  <section
@@ -424,12 +416,6 @@ const baseURL = import.meta.env.VITE_API_URL;
     </div>
   </section>
 )}
-
-<SectionVideo
-  src="/videos/skincare.mp4"
-  title="Skincare"
-  subtitle="Where discipline meets glow — and skin becomes legacy."
-/>
 
 {/* ================= SKINCARE ================= */}
 {skincare[0] && (
