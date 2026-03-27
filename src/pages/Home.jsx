@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-
+import SectionVideo from "../components/SectionVideo";
 function pickRandom(arr, n) {
   if (!arr || arr.length === 0) return [];
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
@@ -198,8 +198,13 @@ const baseURL = import.meta.env.VITE_API_URL;
       animation: scroll 55s linear infinite;
     }
   `}</style>
+ 
 </section>
-
+ <SectionVideo
+  src="/videos/fragrance.mp4"
+  title="Fragrance"
+  subtitle="A signature that enters before you do — and lingers after you leave."
+/>
  {/* ================= FRAGRANCES ================= */}
 <section className="py-28 px-6 md:px-16 bg-gradient-to-b from-softwhite to-white relative overflow-hidden">
   {/* Subtle section vignette for depth */}
@@ -221,7 +226,7 @@ const baseURL = import.meta.env.VITE_API_URL;
   </div>
 
   {/* Big featured */}
-  <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
+  <div className="w-full max-w-[1400px] mx-auto grid md:grid-cols-2 gap-2 mb-16">
     {fragrances.slice(0, 4).map(product => (
       <Link
         key={product._id}
@@ -315,6 +320,12 @@ const baseURL = import.meta.env.VITE_API_URL;
   </div>
 </section>
 
+<SectionVideo
+  src="/videos/makeup.mp4"
+  title="Makeup"
+  subtitle="Sculpt. Define. Command attention without speaking."
+/>
+
 {/* ================= MAKEUP ================= */}
 {makeup[0] && (
  <section
@@ -341,7 +352,7 @@ const baseURL = import.meta.env.VITE_API_URL;
       </div>
 
       {/* BIG FEATURED */}
-      <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
+      <div className="w-full max-w-[1400px] mx-auto grid md:grid-cols-2 gap-2 mb-16">
         {makeup.slice(0, 2).map(product => (
           <Link
             key={product._id}
@@ -415,6 +426,12 @@ const baseURL = import.meta.env.VITE_API_URL;
   </section>
 )}
 
+<SectionVideo
+  src="/videos/skincare.mp4"
+  title="Skincare"
+  subtitle="Where discipline meets glow — and skin becomes legacy."
+/>
+
 {/* ================= SKINCARE ================= */}
 {skincare[0] && (
   <section className="py-28 px-6 md:px-16 bg-white">
@@ -437,7 +454,7 @@ const baseURL = import.meta.env.VITE_API_URL;
     </div>
 
     {/* BIG FEATURED */}
-   <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
+   <div className="w-full max-w-[1400px] mx-auto grid md:grid-cols-2 gap-2 mb-16">
       {skincare.slice(0, 2).map(product => (
         <Link
           key={product._id}
