@@ -565,14 +565,7 @@ const baseURL = import.meta.env.VITE_API_URL;
             ))}
           </div>
 
-          <div className="text-center mt-20">
-            <Link
-              to="/editorial"
-              className="inline-block border border-primary/60 px-12 py-5 uppercase tracking-[0.3em] text-sm hover:bg-primary/10 hover:border-primary transition-all duration-500 backdrop-blur-sm shadow-gold-sm hover:shadow-gold"
-            >
-              Enter the Archive
-            </Link>
-          </div>
+  
         </div>
       </section>
 
