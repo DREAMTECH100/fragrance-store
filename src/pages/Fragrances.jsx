@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { useSearchParams, useParams } from "react-router-dom";
-
+import SectionVideo from "../components/SectionVideo";
 function Fragrances({ addToWishlist, addToCart }) {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -168,7 +168,11 @@ function Fragrances({ addToWishlist, addToCart }) {
                 <option value="price-desc">PRICE HIGH-LOW</option>
               </select>
             </div>
-
+ <SectionVideo
+  src="/videos/fragrance.mp4"
+  title="Fragrance"
+  subtitle="A signature that enters before you do — and lingers after you leave."
+/>
             {loading ? (
               <div className="text-center py-20 animate-pulse">Loading collection...</div>
             ) : error ? (
