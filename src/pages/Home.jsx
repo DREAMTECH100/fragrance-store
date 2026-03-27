@@ -74,7 +74,7 @@ const baseURL = import.meta.env.VITE_API_URL;
   ];
 
   return (
-    <div className="bg-softwhite text-darktext relative">
+    <div className="overflow-x-hidden bg-softwhite text-darktext relative">
       {/* ── Global luxurious overlay (subtle film grain / depth) ── */}
       <div className="fixed inset-0 pointer-events-none bg-[url('https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=2000&q=10&fm=jpg')] opacity-[0.015] mix-blend-overlay z-[-1]" />
 
