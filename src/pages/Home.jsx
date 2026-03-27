@@ -198,8 +198,6 @@ const baseURL = import.meta.env.VITE_API_URL;
       animation: scroll 55s linear infinite;
     }
   `}</style>
-
-  
 </section>
 
  {/* ================= FRAGRANCES ================= */}
