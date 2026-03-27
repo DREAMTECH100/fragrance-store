@@ -1,78 +1,72 @@
-import { useEffect, useState } from "react"
-import { useNavigate } from "react-router-dom"
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function AdminDashboard() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [orders, setOrders] = useState([])
-  const [products, setProducts] = useState([])
+  const [orders, setOrders] = useState([]);
+  const [products, setProducts] = useState([]);
+
+  const baseURL = import.meta.env.VITE_API_URL; // <-- use .env.production
 
   // 🔐 1. VERIFY TOKEN FIRST (SECURITY GATE)
   useEffect(() => {
-    const token = localStorage.getItem("adminToken")
+    const token = localStorage.getItem("adminToken");
 
     if (!token) {
-      navigate("/admin-login")
-      return
+      navigate("/admin-login");
+      return;
     }
 
-    fetch("http://localhost:5000/api/auth/verify-token", {
+    fetch(`${baseURL}/api/auth/verify-token`, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then(res => {
         if (res.status !== 200) {
-          localStorage.removeItem("adminToken")
-          navigate("/admin-login")
+          localStorage.removeItem("adminToken");
+          navigate("/admin-login");
         }
       })
       .catch(() => {
-        localStorage.removeItem("adminToken")
-        navigate("/admin-login")
-      })
-
-  }, [navigate])
-
+        localStorage.removeItem("adminToken");
+        navigate("/admin-login");
+      });
+  }, [navigate, baseURL]);
 
   // 📊 2. FETCH DATA (ONLY IF TOKEN EXISTS)
   useEffect(() => {
-    const token = localStorage.getItem("adminToken")
+    const token = localStorage.getItem("adminToken");
 
-    if (!token) return
+    if (!token) return;
 
     // ORDERS (PROTECTED)
-    fetch("http://localhost:5000/api/admin/orders", {
+    fetch(`${baseURL}/api/admin/orders`, {
       headers: {
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     })
       .then(res => {
         if (res.status === 401) {
-          localStorage.removeItem("adminToken")
-          navigate("/admin-login")
-          return []
+          localStorage.removeItem("adminToken");
+          navigate("/admin-login");
+          return [];
         }
-        return res.json()
+        return res.json();
       })
       .then(data => setOrders(data))
-      .catch(err => console.error("Orders error:", err))
+      .catch(err => console.error("Orders error:", err));
 
     // PRODUCTS (PUBLIC)
-    fetch("http://localhost:5000/api/products")
+    fetch(`${baseURL}/api/products`)
       .then(res => res.json())
       .then(data => setProducts(data))
-      .catch(err => console.error("Products error:", err))
-
-  }, [navigate])
-
+      .catch(err => console.error("Products error:", err));
+  }, [navigate, baseURL]);
 
   // 💰 TOTAL REVENUE (FIXED)
-  const totalRevenue = orders.reduce(
-    (sum, order) => sum + (order.totalAmount || 0),
-    0
-  )
-
+  const totalRevenue = orders.reduce((sum, order) => sum + (order.totalAmount || 0), 0);
 
   return (
     <div>
@@ -120,10 +114,7 @@ function AdminDashboard() {
 
           <tbody>
             {orders.slice(0, 5).map(order => (
-              <tr
-                key={order._id}
-                className="border-b hover:bg-gray-50 transition"
-              >
+              <tr key={order._id} className="border-b hover:bg-gray-50 transition">
                 <td className="p-3">{order.fullName}</td>
                 <td className="p-3">{order.email}</td>
                 <td className="p-3">₦{order.totalAmount}</td>
@@ -134,7 +125,7 @@ function AdminDashboard() {
         </table>
       </div>
     </div>
-  )
+  );
 }
 
-export default AdminDashboard
+export default AdminDashboard;

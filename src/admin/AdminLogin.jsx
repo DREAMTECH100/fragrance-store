@@ -10,6 +10,7 @@ function AdminLogin() {
   const [loading, setLoading] = useState(false)
 
   const navigate = useNavigate()
+  const baseURL = import.meta.env.VITE_API_URL // <-- use .env.production
 
   // STEP 1 → LOGIN
   const handleLogin = async (e) => {
@@ -17,7 +18,7 @@ function AdminLogin() {
     setLoading(true)
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/admin-login", {
+      const res = await fetch(`${baseURL}/api/auth/admin-login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
@@ -47,7 +48,7 @@ function AdminLogin() {
     setLoading(true)
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/verify-otp", {
+      const res = await fetch(`${baseURL}/api/auth/verify-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

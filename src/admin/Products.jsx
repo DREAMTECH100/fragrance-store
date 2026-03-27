@@ -2,19 +2,25 @@ import { useEffect, useState } from "react";
 
 function Products() {
   const [products, setProducts] = useState([]);
+  const baseURL = import.meta.env.VITE_API_URL; // 🔑 production base URL
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch(`${baseURL}/api/products`)
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error(err));
-  }, []);
+  }, [baseURL]);
 
   const deleteProduct = async (id) => {
-    await fetch(`http://localhost:5000/api/products/${id}`, {
-      method: "DELETE",
-    });
-    setProducts(products.filter(p => p._id !== id));
+    try {
+      await fetch(`${baseURL}/api/products/${id}`, {
+        method: "DELETE",
+      });
+      setProducts(products.filter(p => p._id !== id));
+    } catch (err) {
+      console.error("Failed to delete product:", err);
+      alert("Error deleting product");
+    }
   };
 
   return (

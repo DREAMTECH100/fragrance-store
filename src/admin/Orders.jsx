@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 
 function Orders() {
   const [orders, setOrders] = useState([]);
+  const baseURL = import.meta.env.VITE_API_URL; // 🔑 from .env.production
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/orders")
+    fetch(`${baseURL}/api/orders`)
       .then(res => res.json())
       .then(data => setOrders(data))
       .catch(err => console.log(err));
-  }, []);
+  }, [baseURL]);
 
   return (
     <div className="p-10 max-w-7xl mx-auto">
