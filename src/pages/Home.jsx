@@ -221,7 +221,7 @@ const baseURL = import.meta.env.VITE_API_URL;
   </div>
 
   {/* Big featured */}
-  <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-0 mb-16">
+  <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
     {fragrances.slice(0, 4).map(product => (
       <Link
         key={product._id}
@@ -341,7 +341,7 @@ const baseURL = import.meta.env.VITE_API_URL;
       </div>
 
       {/* BIG FEATURED */}
-      <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-0 mb-16">
+      <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
         {makeup.slice(0, 2).map(product => (
           <Link
             key={product._id}
@@ -437,7 +437,7 @@ const baseURL = import.meta.env.VITE_API_URL;
     </div>
 
     {/* BIG FEATURED */}
-   <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-0 mb-16">
+   <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
       {skincare.slice(0, 2).map(product => (
         <Link
           key={product._id}
@@ -565,7 +565,14 @@ const baseURL = import.meta.env.VITE_API_URL;
             ))}
           </div>
 
-  
+          <div className="text-center mt-20">
+            <Link
+              to="/editorial"
+              className="inline-block border border-primary/60 px-12 py-5 uppercase tracking-[0.3em] text-sm hover:bg-primary/10 hover:border-primary transition-all duration-500 backdrop-blur-sm shadow-gold-sm hover:shadow-gold"
+            >
+              Enter the Archive
+            </Link>
+          </div>
         </div>
       </section>
 
