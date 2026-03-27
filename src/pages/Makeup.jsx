@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { useSearchParams, useParams } from "react-router-dom";
+import SectionVideo from "../components/SectionVideo";
 
 function Makeup({ addToWishlist, addToCart }) {
   const [products, setProducts] = useState([]);
