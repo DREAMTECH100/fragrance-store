@@ -19,12 +19,15 @@ function Fragrances({ addToWishlist, addToCart }) {
   const sub =
     normalize(subcategory) || normalize(searchParams.get("sub")) || "";
 
+  // BASE URL from environment variable
+  const baseURL = import.meta.env.VITE_API_URL;
+
   // Fetch products
   useEffect(() => {
     setLoading(true);
     setError(null);
 
-    let url = `${import.meta.env.VITE_API_URL}/api/products?category=fragrances`;
+    let url = `${baseURL}/api/products?category=fragrances`;
     if (sub) url += `&subCategory=${encodeURIComponent(sub)}`;
 
     fetch(url)
@@ -37,9 +40,9 @@ function Fragrances({ addToWishlist, addToCart }) {
         setFilteredProducts(data);
 
         // Pick up to 5 random images for hero
-       const images = data
-  .map((p) => p.image && `${import.meta.env.VITE_API_URL}${p.image}`)
-  .filter(Boolean);
+        const images = data
+          .map((p) => p.image && `${baseURL}${p.image}`)
+          .filter(Boolean);
         for (let i = images.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [images[i], images[j]] = [images[j], images[i]];
@@ -53,7 +56,7 @@ function Fragrances({ addToWishlist, addToCart }) {
         setError("Unable to load products. Please try again later.");
         setLoading(false);
       });
-  }, [sub]);
+  }, [sub, baseURL]);
 
   // Hero slideshow
   useEffect(() => {

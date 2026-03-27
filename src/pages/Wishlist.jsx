@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 
 function Wishlist({ wishlist }) {
 
+  const baseURL = import.meta.env.VITE_API_URL; // ✅ ADDED
+
   return (
 
     <div>
@@ -31,7 +33,7 @@ function Wishlist({ wishlist }) {
                 <div className="border p-4 rounded-lg shadow hover:shadow-xl transition">
 
                   <img
-                    src={`http://localhost:5000${product.image}`}
+                    src={`${baseURL}${product.image}`} // ✅ FIXED
                     alt={product.name}
                     className="h-48 w-full object-cover"
                   />

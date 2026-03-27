@@ -19,11 +19,13 @@ function Skincare({ addToWishlist, addToCart }) {
   const sub =
     normalize(subcategory) || normalize(searchParams.get("sub")) || "";
 
+  const baseURL = import.meta.env.VITE_API_URL; // ✅ dynamic API base
+
   useEffect(() => {
     setLoading(true);
     setError(null);
 
-    let url = `http://localhost:5000/api/products?category=skincare`;
+    let url = `${baseURL}/api/products?category=skincare`;
     if (sub) url += `&subCategory=${encodeURIComponent(sub)}`;
 
     fetch(url)
@@ -36,7 +38,7 @@ function Skincare({ addToWishlist, addToCart }) {
         setFilteredProducts(data);
 
         const images = data
-          .map((p) => p.image && `http://localhost:5000${p.image}`)
+          .map((p) => p.image && `${baseURL}${p.image}`)
           .filter(Boolean);
         for (let i = images.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));

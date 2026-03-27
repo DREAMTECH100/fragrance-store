@@ -8,7 +8,7 @@ export default function SalesPopup() {
     const interval = setInterval(() => {
       setVisible(true);
       setTimeout(() => setVisible(false), 3000); // hide after 5s
-    }, 60000); // every 10s
+    }, 180000); // every 10s
 
     return () => clearInterval(interval);
   }, []);
@@ -29,7 +29,7 @@ export default function SalesPopup() {
         <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-yellow-200 opacity-30 blur-3xl"></div>
         <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-red-200 opacity-30 blur-3xl"></div>
 
-        <h3 className="text-2xl font-bold mb-2 text-center">🎉 Easter Sale!</h3>
+        <h3 className="text-2xl font-bold mb-2 text-center"> Easter Sale!</h3>
         <p className="text-center mb-4 tracking-wide">
           Get <span className="font-extrabold text-lg">30% OFF</span> on all items! <br />
           Don’t miss out — shop now!

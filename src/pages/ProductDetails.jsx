@@ -1,3 +1,4 @@
+// src/pages/ProductDetails.jsx
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
@@ -19,12 +20,14 @@ function ProductDetails() {
   const [reviewText, setReviewText] = useState("");
   const [reviewName, setReviewName] = useState("");
 
+  const baseURL = import.meta.env.VITE_API_URL;
+
   // ================= FETCH PRODUCT =================
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
-      .then(res => res.json())
-      .then(data => {
-        const found = data.find(p => p._id === id);
+    fetch(`${baseURL}/api/products`)
+      .then((res) => res.json())
+      .then((data) => {
+        const found = data.find((p) => p._id === id);
         setProduct(found);
 
         if (found?.sizes?.length > 0) {
@@ -33,7 +36,7 @@ function ProductDetails() {
 
         // related products
         const filtered = data.filter(
-          p => p.category === found.category && p._id !== found._id
+          (p) => p.category === found.category && p._id !== found._id
         );
         setRelated(filtered);
       });
@@ -41,13 +44,12 @@ function ProductDetails() {
 
   // ================= FETCH REVIEWS =================
   useEffect(() => {
-    fetch(`http://localhost:5000/api/reviews/${id}`)
-      .then(res => res.json())
-      .then(data => setReviews(data))
+    fetch(`${baseURL}/api/reviews/${id}`)
+      .then((res) => res.json())
+      .then((data) => setReviews(data))
       .catch(() => setReviews([]));
   }, [id]);
 
-  // ================= LOADING =================
   if (!product) {
     return (
       <div className="p-10 text-center text-gray-500">
@@ -56,13 +58,10 @@ function ProductDetails() {
     );
   }
 
-  // ================= LOGIC =================
-  const increase = () => setQuantity(q => q + 1);
-
+  const increase = () => setQuantity((q) => q + 1);
   const decrease = () => {
-    if (quantity > 1) setQuantity(q => q - 1);
+    if (quantity > 1) setQuantity((q) => q - 1);
   };
-
   const activePrice = selectedSize?.price || product.price;
 
   const handleAddToCart = () => {
@@ -72,19 +71,15 @@ function ProductDetails() {
       selectedSize,
       price: activePrice,
     });
-
     navigate("/cart");
   };
 
-  // ================= SUBMIT REVIEW =================
   const submitReview = async () => {
     if (!reviewText || !reviewName) return;
 
-    const res = await fetch("http://localhost:5000/api/reviews", {
+    const res = await fetch(`${baseURL}/api/reviews`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         productId: id,
         name: reviewName,
@@ -94,7 +89,7 @@ function ProductDetails() {
 
     const data = await res.json();
 
-    setReviews(prev => [data, ...prev]);
+    setReviews((prev) => [data, ...prev]);
     setReviewText("");
     setReviewName("");
     setShowReviewModal(false);
@@ -102,35 +97,27 @@ function ProductDetails() {
 
   return (
     <div className="max-w-6xl mx-auto px-6 py-12">
-
       {/* ================= TOP ================= */}
       <div className="grid md:grid-cols-2 gap-12">
-
         {/* IMAGE */}
         <img
-          src={`http://localhost:5000${product.image}`}
+          src={`${baseURL}${product.image}`}
           alt={product.name}
           className="w-full h-[520px] object-cover rounded-lg"
         />
 
         {/* DETAILS */}
         <div>
-
           <h1 className="text-4xl uppercase">{product.name}</h1>
-
           <p className="text-2xl mt-4 font-semibold">
             ₦{activePrice?.toLocaleString()}
           </p>
+          <p className="mt-4 text-gray-600">{product.description}</p>
 
-          <p className="mt-4 text-gray-600">
-            {product.description}
-          </p>
-
-          {/* ================= SIZES ================= */}
+          {/* SIZES */}
           {product.sizes?.length > 0 && (
             <div className="mt-6">
               <p className="text-sm mb-2 uppercase">Select Size</p>
-
               <div className="flex gap-3 flex-wrap">
                 {product.sizes.map((size, i) => (
                   <button
@@ -149,14 +136,18 @@ function ProductDetails() {
             </div>
           )}
 
-          {/* ================= QUANTITY ================= */}
+          {/* QUANTITY */}
           <div className="flex items-center gap-4 mt-6">
-            <button onClick={decrease} className="px-3 border">-</button>
+            <button onClick={decrease} className="px-3 border">
+              -
+            </button>
             <span>{quantity}</span>
-            <button onClick={increase} className="px-3 border">+</button>
+            <button onClick={increase} className="px-3 border">
+              +
+            </button>
           </div>
 
-          {/* ================= ADD TO CART ================= */}
+          {/* ADD TO CART */}
           <button
             onClick={handleAddToCart}
             className="mt-6 bg-black text-white px-6 py-3 w-full"
@@ -164,23 +155,18 @@ function ProductDetails() {
             Add To Bag
           </button>
 
-          {/* ================= MOBILE HINT ================= */}
           <p className="text-xs text-gray-400 mt-3 text-center">
             Tap product to explore details
           </p>
-
         </div>
       </div>
 
       {/* ================= RELATED ================= */}
       {related.length > 0 && (
         <div className="mt-20">
-          <h2 className="text-2xl mb-6 uppercase">
-            Shop Similar Products
-          </h2>
-
+          <h2 className="text-2xl mb-6 uppercase">Shop Similar Products</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {related.slice(0, 4).map(item => (
+            {related.slice(0, 4).map((item) => (
               <ProductCard key={item._id} product={item} />
             ))}
           </div>
@@ -191,7 +177,6 @@ function ProductDetails() {
       <div className="mt-20">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl uppercase">Customer Reviews</h2>
-
           <button
             onClick={() => setShowReviewModal(true)}
             className="border px-4 py-2 text-sm"
@@ -201,17 +186,13 @@ function ProductDetails() {
         </div>
 
         {reviews.length === 0 ? (
-          <p className="text-gray-500">
-            No reviews yet.
-          </p>
+          <p className="text-gray-500">No reviews yet.</p>
         ) : (
           <div className="space-y-4">
             {reviews.map((r, i) => (
               <div key={i} className="border p-4">
                 <p className="font-semibold">{r.name}</p>
-                <p className="text-gray-600 text-sm mt-1">
-                  {r.comment}
-                </p>
+                <p className="text-gray-600 text-sm mt-1">{r.comment}</p>
               </div>
             ))}
           </div>
@@ -221,30 +202,23 @@ function ProductDetails() {
       {/* ================= REVIEW MODAL ================= */}
       {showReviewModal && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-
           <div className="bg-white p-6 w-[90%] max-w-md">
-
             <h3 className="text-lg mb-4">Write a Review</h3>
 
             <input
               placeholder="Your Name"
               value={reviewName}
-              onChange={e => setReviewName(e.target.value)}
+              onChange={(e) => setReviewName(e.target.value)}
               className="w-full border p-2 mb-3"
             />
-
             <textarea
               placeholder="Your Review"
               value={reviewText}
-              onChange={e => setReviewText(e.target.value)}
+              onChange={(e) => setReviewText(e.target.value)}
               className="w-full border p-2 mb-3"
             />
-
             <div className="flex justify-end gap-3">
-              <button onClick={() => setShowReviewModal(false)}>
-                Cancel
-              </button>
-
+              <button onClick={() => setShowReviewModal(false)}>Cancel</button>
               <button
                 onClick={submitReview}
                 className="bg-black text-white px-4 py-2"
@@ -252,11 +226,9 @@ function ProductDetails() {
                 Submit
               </button>
             </div>
-
           </div>
         </div>
       )}
-
     </div>
   );
 }

@@ -136,32 +136,33 @@ function Checkout() {
       JSON.stringify(form)
     );
 
-    const response = await fetch(
-      "http://localhost:5000/api/payment/initialize",
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          fullName: form.fullName,
-          email: form.email,
-          phone: form.phone,
-          address: form.address,
-          state: form.state,
+    const baseURL = import.meta.env.VITE_API_URL;
 
-          items: cartItems.map(item => ({
-            ...item,
-            size: item.selectedSize?.label || item.size || null
-          })),
+const response = await fetch(
+  `${baseURL}/api/payment/initialize`,
+  {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify({
+      fullName: form.fullName,
+      email: form.email,
+      phone: form.phone,
+      address: form.address,
+      state: form.state,
 
-          subtotal,
-          shippingFee,
-          totalAmount
-        })
-      }
-    );
+      items: cartItems.map(item => ({
+        ...item,
+        size: item.selectedSize?.label || item.size || null
+      })),
 
+      subtotal,
+      shippingFee,
+      totalAmount
+    })
+  }
+);
     const data = await response.json();
 
     if (data.status && data.data.authorization_url) {

@@ -19,11 +19,14 @@ function Makeup({ addToWishlist, addToCart }) {
   const sub =
     normalize(subcategory) || normalize(searchParams.get("sub")) || "";
 
+  // ✅ BASE URL from environment variable
+  const baseURL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
     setLoading(true);
     setError(null);
 
-    let url = `http://localhost:5000/api/products?category=makeup`;
+    let url = `${baseURL}/api/products?category=makeup`;
     if (sub) url += `&subCategory=${encodeURIComponent(sub)}`;
 
     fetch(url)
@@ -35,10 +38,12 @@ function Makeup({ addToWishlist, addToCart }) {
         setProducts(data);
         setFilteredProducts(data);
 
-        // Pick up to 5 random images for hero
+        // Pick up to 5 random images for hero dynamically
         const images = data
-          .map((p) => p.image && `http://localhost:5000${p.image}`)
+          .map((p) => p.image && `${baseURL}${p.image}`)
           .filter(Boolean);
+
+        // Shuffle images
         for (let i = images.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [images[i], images[j]] = [images[j], images[i]];
@@ -51,8 +56,9 @@ function Makeup({ addToWishlist, addToCart }) {
         setError("Unable to load products. Please try again later.");
         setLoading(false);
       });
-  }, [sub]);
+  }, [sub, baseURL]);
 
+  // Hero slideshow
   useEffect(() => {
     if (heroImages.length <= 1) return;
     const interval = setInterval(() => {

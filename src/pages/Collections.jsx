@@ -7,8 +7,10 @@ function Collections() {
   const [cheapProducts, setCheapProducts] = useState([]);
   const [expensiveProducts, setExpensiveProducts] = useState([]);
 
+  const baseURL = import.meta.env.VITE_API_URL;
+
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch(`${baseURL}/api/products`)
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -33,7 +35,7 @@ function Collections() {
 // Add this ABOVE return()
 const heroImage =
   products.length > 0
-    ? `http://localhost:5000${products[0].image}`
+    ? `${baseURL}${products[0].image}`
     : null;
 
   return (
@@ -62,6 +64,7 @@ const heroImage =
     </p>
   </div>
 </section>
+
       {/* NEW ARRIVALS */}
       <section className="py-16 px-6 max-w-7xl mx-auto">
         <h2 className="text-2xl font-luxury tracking-[0.3em] text-center mb-8">
