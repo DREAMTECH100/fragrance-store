@@ -53,7 +53,7 @@ function Skincare({ addToWishlist, addToCart }) {
         setError("Unable to load products. Please try again later.");
         setLoading(false);
       });
-  }, [sub]);
+  }, [sub, baseURL]);
 
   useEffect(() => {
     if (heroImages.length <= 1) return;
