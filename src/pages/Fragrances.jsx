@@ -173,6 +173,11 @@ function Fragrances({ addToWishlist, addToCart }) {
   title="Fragrance"
   subtitle="A signature that enters before you do — and lingers after you leave."
 />
+  
+  
+   <h2 className="text-xl md:text-5xl font-luxury font-semibold uppercase tracking-[0.25em] text-darktext">
+      Shop All Fragrances
+    </h2>
             {loading ? (
               <div className="text-center py-20 animate-pulse">Loading collection...</div>
             ) : error ? (
