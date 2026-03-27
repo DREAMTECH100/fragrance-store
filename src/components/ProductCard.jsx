@@ -4,6 +4,7 @@ import { useCart } from "../context/CartContext"
 
 function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", buttonLink }) {
   const { addToCart } = useCart()
+  const baseURL = import.meta.env.VITE_API_URL // ✅ ADD THIS
 
   const handleWishlist = (e) => {
     e.preventDefault()
@@ -32,7 +33,7 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
 
         {/* IMAGE */}
         <img
-          src={`http://localhost:5000${product.image}`}
+          src={`${baseURL}${product.image}`} 
           alt={product.name}
           className="w-full h-[220px] object-cover transform group-hover:scale-105 transition duration-500"
         />
