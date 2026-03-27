@@ -21,7 +21,7 @@ function Home({ addToWishlist }) {
   const [quoteIndex, setQuoteIndex] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products")
+    fetch(`${import.meta.env.VITE_API_URL}/api/products`)
       .then(res => res.json())
       .then(data => setProducts(data))
       .catch(err => console.error(err));

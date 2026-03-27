@@ -24,7 +24,7 @@ function Fragrances({ addToWishlist, addToCart }) {
     setLoading(true);
     setError(null);
 
-    let url = `http://localhost:5000/api/products?category=fragrances`;
+    let url = `${import.meta.env.VITE_API_URL}/api/products?category=fragrances`;
     if (sub) url += `&subCategory=${encodeURIComponent(sub)}`;
 
     fetch(url)
@@ -37,9 +37,9 @@ function Fragrances({ addToWishlist, addToCart }) {
         setFilteredProducts(data);
 
         // Pick up to 5 random images for hero
-        const images = data
-          .map((p) => p.image && `http://localhost:5000${p.image}`)
-          .filter(Boolean);
+       const images = data
+  .map((p) => p.image && `${import.meta.env.VITE_API_URL}${p.image}`)
+  .filter(Boolean);
         for (let i = images.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [images[i], images[j]] = [images[j], images[i]];
