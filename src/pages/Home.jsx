@@ -513,68 +513,68 @@ const baseURL = import.meta.env.VITE_API_URL;
 )}
       {/* ================= PRIVATE NOTES — EDITORIAL ================= */}
       <section className="py-28 px-6 md:px-16 bg-black text-white relative overflow-hidden">
-        {/* Subtle gold vignette */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 pointer-events-none opacity-30" />
+  <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 pointer-events-none opacity-30" />
 
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-20">
-            <div className="w-16 h-[1px] bg-primary/70 mx-auto mb-6"></div>
-            <h2 className="text-5xl md:text-6xl font-luxury uppercase tracking-[0.2em]">
-              Private Notes
-            </h2>
-            <p className="mt-6 text-white/70 tracking-widest max-w-2xl mx-auto font-light italic">
-              On scent as identity. Ritual as reverence. Products that linger long after the moment.
+  <div className="max-w-6xl mx-auto relative z-10">
+    <div className="text-center mb-20">
+      <div className="w-16 h-[1px] bg-primary/70 mx-auto mb-6"></div>
+      <h2 className="text-5xl md:text-6xl font-luxury uppercase tracking-[0.2em]">
+        Private Notes
+      </h2>
+      <p className="mt-6 text-white/70 tracking-widest max-w-2xl mx-auto font-light italic">
+        On scent as identity. Ritual as reverence. Products that linger long after the moment.
+      </p>
+      <div className="w-16 h-[1px] bg-primary/70 mx-auto mt-6"></div>
+    </div>
+
+    <div className="grid md:grid-cols-3 gap-10 lg:gap-16">
+      {editorialPosts.map(post => (
+        <Link
+          key={post.slug}
+          to={`/editorial/${post.slug}`} // ✅ already correct
+          className="group block relative rounded-xl overflow-hidden shadow-2xl hover:shadow-gold transition-shadow duration-700"
+        >
+          <div className="relative aspect-[4/5] overflow-hidden">
+            <img
+              src={post.image}
+              alt={post.title}
+              className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+          </div>
+
+          <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
+            <time className="text-xs uppercase tracking-widest text-white/60 block mb-3">
+              {post.date} • {post.readTime}
+            </time>
+
+            <h3 className="text-2xl font-luxury uppercase tracking-wide group-hover:text-primary transition-colors duration-500">
+              {post.title}
+            </h3>
+
+            <p className="text-white/80 text-sm leading-relaxed line-clamp-3 mt-3 opacity-90 group-hover:opacity-100 transition">
+              {post.excerpt}
             </p>
-            <div className="w-16 h-[1px] bg-primary/70 mx-auto mt-6"></div>
+
+            <span className="inline-block mt-6 text-xs uppercase tracking-[0.25em] border-b-2 border-primary/50 pb-1 group-hover:border-primary group-hover:text-primary transition duration-400">
+              Read in Full
+            </span>
           </div>
+        </Link>
+      ))}
+    </div>
 
-          <div className="grid md:grid-cols-3 gap-10 lg:gap-16">
-            {editorialPosts.map(post => (
-              <Link
-                key={post.slug}
-                to={`/editorial/${post.slug}`}
-                className="group block relative rounded-xl overflow-hidden shadow-2xl hover:shadow-gold transition-shadow duration-700"
-              >
-                <div className="relative aspect-[4/5] overflow-hidden">
-                  <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
-                </div>
-
-                <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
-                  <time className="text-xs uppercase tracking-widest text-white/60 block mb-3">
-                    {post.date} • {post.readTime}
-                  </time>
-
-                  <h3 className="text-2xl font-luxury uppercase tracking-wide group-hover:text-primary transition-colors duration-500">
-                    {post.title}
-                  </h3>
-
-                  <p className="text-white/80 text-sm leading-relaxed line-clamp-3 mt-3 opacity-90 group-hover:opacity-100 transition">
-                    {post.excerpt}
-                  </p>
-
-                  <span className="inline-block mt-6 text-xs uppercase tracking-[0.25em] border-b-2 border-primary/50 pb-1 group-hover:border-primary group-hover:text-primary transition duration-400">
-                    Read in Full
-                  </span>
-                </div>
-              </Link>
-            ))}
-          </div>
-
-          <div className="text-center mt-20">
-            <Link
-              to="/editorial"
-              className="inline-block border border-primary/60 px-12 py-5 uppercase tracking-[0.3em] text-sm hover:bg-primary/10 hover:border-primary transition-all duration-500 backdrop-blur-sm shadow-gold-sm hover:shadow-gold"
-            >
-              Enter the Archive
-            </Link>
-          </div>
-        </div>
-      </section>
+    {/* 🔥 FIXED BUTTON */}
+    <div className="text-center mt-20">
+      <Link
+        to="/editorial" // ✅ ONLY works if you create this route
+        className="inline-block border border-primary/60 px-12 py-5 uppercase tracking-[0.3em] text-sm hover:bg-primary/10 hover:border-primary transition-all duration-500 backdrop-blur-sm shadow-gold-sm hover:shadow-gold"
+      >
+        Enter the Archive
+      </Link>
+    </div>
+  </div>
+</section>
 
     </div>
   );

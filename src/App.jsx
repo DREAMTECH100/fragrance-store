@@ -23,6 +23,7 @@ import AdminDashboard from "./admin/AdminDashboard";
 import Orders from "./admin/Orders";
 import Products from "./admin/Products";
 import AddProduct from "./admin/AddProduct";
+import EditorialPost from "./pages/EditorialPost";
 
 function App() {
   const [wishlist, setWishlist] = useState([]);
@@ -87,6 +88,7 @@ function App() {
               path="/new"
               element={<NewArrivals addToWishlist={addToWishlist} />}
             />
+<Route path="/editorial/:slug" element={<EditorialPost />} />
 
             <Route path="/about" element={<About />} />
 

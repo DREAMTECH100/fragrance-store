@@ -127,52 +127,58 @@ function Checkout() {
 
   // ================= SUBMIT =================
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    // save checkout info locally (for reference if needed)
-    localStorage.setItem(
-      "checkout",
-      JSON.stringify(form)
-    );
+    try {
+      localStorage.setItem("checkout", JSON.stringify(form));
 
-    const baseURL = import.meta.env.VITE_API_URL;
+      const baseURL = import.meta.env.VITE_API_URL;
 
-const response = await fetch(
-  `${baseURL}/api/payment/initialize`,
-  {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json"
-    },
-    body: JSON.stringify({
-      fullName: form.fullName,
-      email: form.email,
-      phone: form.phone,
-      address: form.address,
-      state: form.state,
+      const response = await fetch(`${baseURL}/api/payment/initialize`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          fullName: form.fullName,
+          email: form.email,
+          phone: form.phone,
+          address: form.address,
+          state: form.state,
+          items: cartItems.map(item => ({
+            ...item,
+            size: item.selectedSize?.label || item.size || null
+          })),
+          subtotal,
+          shippingFee,
+          totalAmount
+        })
+      });
 
-      items: cartItems.map(item => ({
-        ...item,
-        size: item.selectedSize?.label || item.size || null
-      })),
+      const data = await response.json();
 
-      subtotal,
-      shippingFee,
-      totalAmount
-    })
-  }
-);
-    const data = await response.json();
+      if (data.status && data.data.authorization_url) {
+        // ================= PAYSTACK INLINE =================
+        const handler = window.PaystackPop.setup({
+          key: import.meta.env.VITE_PAYSTACK_KEY, // your public key
+          email: form.email,
+          amount: totalAmount * 100, // in kobo
+          currency: "NGN",
+          reference: data.reference,
+          callback: function (response) {
+            // Payment was successful, navigate to OrderSuccess page
+            navigate("/order-success");
+          },
+          onClose: function () {
+            alert("Payment was not completed.");
+          }
+        });
 
-    if (data.status && data.data.authorization_url) {
-      window.location.href = data.data.authorization_url;
+        handler.openIframe(); // open inline modal
+      }
+
+    } catch (error) {
+      console.error("Payment error:", error);
     }
-
-  } catch (error) {
-    console.error("Payment error:", error);
-  }
-};
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-gray-100 px-6 py-14">
@@ -185,7 +191,6 @@ const response = await fetch(
           </h1>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-
             <input name="fullName" placeholder="Full Name" required onChange={handleChange} className="w-full border-b py-3" />
             <input name="email" placeholder="Email" required onChange={handleChange} className="w-full border-b py-3" />
             <input name="phone" placeholder="Phone" required onChange={handleChange} className="w-full border-b py-3" />
@@ -235,7 +240,6 @@ const response = await fetch(
             <button className="w-full bg-black text-white py-4">
               Proceed to Payment
             </button>
-
           </form>
         </div>
 

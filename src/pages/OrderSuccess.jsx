@@ -1,82 +1,78 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function OrderSuccess() {
-  const [loading, setLoading] = useState(true);
-  const [success, setSuccess] = useState(false);
-  const [order, setOrder] = useState(null);
-
-  // Get reference from URL
-  const params = new URLSearchParams(window.location.search);
-  const reference = params.get("reference");
+  const navigate = useNavigate();
+  const [checkoutData, setCheckoutData] = useState(null);
+  const [cartItems, setCartItems] = useState([]);
 
   useEffect(() => {
-    if (!reference) return;
+    // Load checkout info and cart from localStorage
+    const storedCheckout = JSON.parse(localStorage.getItem("checkout"));
+    const storedCart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    const verifyPayment = async () => {
-      try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/payment/verify`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ reference })
-        });
-        const data = await res.json();
-        if (data.success) {
-          setSuccess(true);
-          setOrder(data.order);
-        } else {
-          setSuccess(false);
-        }
-      } catch (err) {
-        console.error("Verification error:", err);
-        setSuccess(false);
-      } finally {
-        setLoading(false);
-      }
-    };
+    setCheckoutData(storedCheckout);
+    setCartItems(storedCart);
 
-    verifyPayment();
-  }, [reference]);
+    // Clear cart and checkout info
+    localStorage.removeItem("cart");
+    localStorage.removeItem("checkout");
+  }, []);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <p className="text-xl">Verifying your payment...</p>
-      </div>
-    );
-  }
+  // Calculate subtotal
+  const subtotal = cartItems.reduce(
+    (sum, item) => sum + Number(item.price) * item.quantity,
+    0
+  );
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
-      <div className="bg-white p-12 rounded-xl shadow-xl text-center max-w-xl">
-        {success ? (
-          <>
-            <h1 className="text-5xl font-bold text-green-600 mb-4">
-              ✅ Payment Successful!
-            </h1>
-            <p className="text-gray-700 text-lg mb-6">
-              Your payment has been verified. Thank you for your order!
-            </p>
-            <p className="text-gray-600 text-sm">
-              Order Ref: {order?.paymentRef}
-            </p>
-          </>
-        ) : (
-          <>
-            <h1 className="text-5xl font-bold text-red-600 mb-4">
-              ❌ Payment Failed
-            </h1>
-            <p className="text-gray-700 text-lg mb-6">
-              We couldn’t verify your payment. Please contact support.
-            </p>
-          </>
+    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-6">
+      <div className="bg-white shadow-xl rounded-2xl max-w-3xl w-full p-10">
+        <div className="text-center mb-8">
+          <h1 className="text-5xl font-bold text-green-600 mb-4">✅ Payment Successful!</h1>
+          <p className="text-gray-700 text-lg">
+            Your payment has been verified successfully. Thank you for shopping with us!
+          </p>
+        </div>
+
+        {checkoutData && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Delivery Information</h2>
+            <div className="space-y-1 text-gray-800">
+              <p><strong>Name:</strong> {checkoutData.fullName}</p>
+              <p><strong>Email:</strong> {checkoutData.email}</p>
+              <p><strong>Phone:</strong> {checkoutData.phone}</p>
+              <p><strong>Address:</strong> {checkoutData.address}, {checkoutData.state}</p>
+            </div>
+          </div>
         )}
 
-        <button
-          onClick={() => (window.location.href = "/")}
-          className="mt-8 bg-black text-white px-8 py-3 rounded"
-        >
-          Back to Home
-        </button>
+        {cartItems.length > 0 && (
+          <div className="mb-8">
+            <h2 className="text-2xl font-semibold mb-4">Order Summary</h2>
+            <div className="border rounded-lg divide-y">
+              {cartItems.map((item, index) => (
+                <div key={index} className="flex justify-between p-4">
+                  <span>{item.name} x {item.quantity}</span>
+                  <span>₦{(item.price * item.quantity).toLocaleString()}</span>
+                </div>
+              ))}
+              <div className="flex justify-between p-4 font-bold text-lg bg-gray-50">
+                <span>Total</span>
+                <span>₦{subtotal.toLocaleString()}</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="text-center">
+          <button
+            onClick={() => navigate("/")}
+            className="mt-4 bg-black text-white px-8 py-3 rounded-xl hover:bg-gray-800 transition"
+          >
+            Back to Home
+          </button>
+        </div>
       </div>
     </div>
   );

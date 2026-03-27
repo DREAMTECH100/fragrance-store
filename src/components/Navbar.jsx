@@ -64,7 +64,8 @@ function Navbar({ wishlist }) {
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const wishlistCount = wishlist?.length || 0;
-
+// ✅ ADD THIS inside Navbar component (after hooks)
+const baseURL = import.meta.env.VITE_API_URL;
   /* =======================
      SEARCH EFFECT
   ======================= */
@@ -77,8 +78,8 @@ function Navbar({ wishlist }) {
     const fetchSuggestions = async () => {
       try {
         const res = await fetch(
-          `http://localhost:5000/api/products/search?q=${encodeURIComponent(searchTerm)}`
-        );
+  `${baseURL}/api/products/search?q=${encodeURIComponent(searchTerm)}`
+);
         const data = await res.json();
         setSuggestions(data);
       } catch (err) {
@@ -95,9 +96,9 @@ function Navbar({ wishlist }) {
     if (searchTerm.trim().length < 2) return;
 
     try {
-      const res = await fetch(
-        `http://localhost:5000/api/products/search?q=${encodeURIComponent(searchTerm)}`
-      );
+     const res = await fetch(
+  `${baseURL}/api/products/search?q=${encodeURIComponent(searchTerm)}`
+);
       const data = await res.json();
 
       if (data.length > 0) {
@@ -288,8 +289,8 @@ function Navbar({ wishlist }) {
           if (!searchTerm.trim()) return;
           try {
             const res = await fetch(
-              `http://localhost:5000/api/products/search?q=${encodeURIComponent(searchTerm)}`
-            );
+  `${baseURL}/api/products/search?q=${encodeURIComponent(searchTerm)}`
+);
             const data = await res.json();
             if (data.length > 0) {
               const product = data[0];
