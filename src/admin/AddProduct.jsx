@@ -1,7 +1,8 @@
 import { useState } from "react";
 
 function AddProduct() {
-  const baseURL = "http://localhost:5000";   // ← Define once
+  // 🔥 CHANGE THIS TO YOUR LIVE DOMAIN
+  const baseURL = "https://yourdomain.com";   // ←←← UPDATE THIS
 
   const [product, setProduct] = useState({
     name: "",
@@ -17,10 +18,7 @@ function AddProduct() {
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // Size state
-  const [sizes, setSizes] = useState([
-    { label: "", price: "" },
-  ]);
+  const [sizes, setSizes] = useState([{ label: "", price: "" }]);
 
   const mainCategories = [
     { value: "fragrances", label: "FRAGRANCES" },
@@ -63,16 +61,13 @@ function AddProduct() {
     }));
   };
 
-  // Size handlers
   const handleSizeChange = (index, field, value) => {
     const updated = [...sizes];
     updated[index][field] = value;
     setSizes(updated);
   };
 
-  const addSize = () => {
-    setSizes([...sizes, { label: "", price: "" }]);
-  };
+  const addSize = () => setSizes([...sizes, { label: "", price: "" }]);
 
   const removeSize = (index) => {
     setSizes(sizes.filter((_, i) => i !== index));
@@ -95,25 +90,26 @@ function AddProduct() {
         body: formData,
       });
 
+      if (!res.ok) throw new Error("Upload failed");
+
       const data = await res.json();
 
       if (data.url) {
         setProduct((prev) => ({ ...prev, image: data.url }));
       } else {
-        alert("Image upload failed - no URL returned");
+        alert("Image uploaded but no URL returned");
       }
     } catch (err) {
       console.error(err);
-      alert("Image upload failed");
+      alert("Image upload failed. Please check your internet and backend.");
     } finally {
       setUploading(false);
     }
   };
 
-  // Submit - FIXED
+  // Submit Product
   const handleSubmit = async (e) => {
     e.preventDefault();
-
     if (!product.image) return alert("Please upload an image first");
 
     const formattedSizes = sizes
@@ -133,11 +129,9 @@ function AddProduct() {
     if (!submitData.subCategory) delete submitData.subCategory;
 
     try {
-      const res = await fetch(`${baseURL}/api/products`, {   // ← Correct endpoint!
+      const res = await fetch(`${baseURL}/api/products`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(submitData),
       });
 
@@ -157,7 +151,7 @@ function AddProduct() {
       }
     } catch (err) {
       console.error(err);
-      alert("Server error while adding product");
+      alert("Error connecting to server. Please try again.");
     }
   };
 
@@ -168,7 +162,6 @@ function AddProduct() {
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-10">
-
         <input
           name="name"
           placeholder="Product Name"
@@ -250,11 +243,10 @@ function AddProduct() {
         {/* Size Section */}
         <div className="border-t pt-8">
           <h2 className="text-xl font-semibold mb-4">Product Sizes (Optional)</h2>
-
           {sizes.map((size, index) => (
             <div key={index} className="flex gap-3 mb-4">
               <input
-                placeholder="Size (e.g 50ml, 100ml)"
+                placeholder="Size (e.g 50ml)"
                 value={size.label}
                 onChange={(e) => handleSizeChange(index, "label", e.target.value)}
                 className="flex-1 border p-3 rounded"
@@ -275,7 +267,6 @@ function AddProduct() {
               </button>
             </div>
           ))}
-
           <button
             type="button"
             onClick={addSize}
@@ -292,7 +283,6 @@ function AddProduct() {
         >
           {uploading ? "Uploading..." : "Add Product"}
         </button>
-
       </form>
     </div>
   );
