@@ -15,6 +15,8 @@ function AddProduct() {
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
+console.log("UPLOAD RESPONSE:", data);
+console.log("PRODUCT BEFORE ADD:", product);
   // 🔥 SIZE STATE (ADDED ONLY)
   const [sizes, setSizes] = useState([{ label: "", price: "" }]);
 

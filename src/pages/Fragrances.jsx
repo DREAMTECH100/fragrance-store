@@ -41,8 +41,8 @@ function Fragrances({ addToWishlist, addToCart }) {
 
         // Pick up to 5 random images for hero
         const images = data
-          .map((p) => p.image && `${baseURL}${p.image}`)
-          .filter(Boolean);
+  .map((p) => p.image)
+  .filter(Boolean);
         for (let i = images.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [images[i], images[j]] = [images[j], images[i]];
