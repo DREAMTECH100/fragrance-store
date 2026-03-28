@@ -92,10 +92,10 @@ function AddProduct() {
       const formData = new FormData();
       formData.append("image", file);
 
-      const res = await fetch(`${baseURL}/api/products/add`, {
-        method: "POST",
-        body: formData,
-      });
+     const res = await fetch(`${baseURL}/api/products/upload`, {
+  method: "POST",
+  body: formData,
+});
 
       const data = await res.json();
       setProduct((prev) => ({ ...prev, image: data.url }));
