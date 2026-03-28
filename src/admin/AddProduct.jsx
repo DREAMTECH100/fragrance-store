@@ -1,6 +1,8 @@
 import { useState } from "react";
 
 function AddProduct() {
+  const baseURL = "http://localhost:5000";   // ← Define once
+
   const [product, setProduct] = useState({
     name: "",
     price: "",
@@ -9,18 +11,17 @@ function AddProduct() {
     description: "",
     image: "",
     stock: "",
-    sizes: [], // 🔥 ADDED ONLY
+    sizes: [],
   });
 
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // 🔥 SIZE STATE (ADDED ONLY)
+  // Size state
   const [sizes, setSizes] = useState([
     { label: "", price: "" },
   ]);
 
-  // Main categories
   const mainCategories = [
     { value: "fragrances", label: "FRAGRANCES" },
     { value: "makeup", label: "MAKEUP" },
@@ -37,7 +38,6 @@ function AddProduct() {
       { value: "signature", label: "SIGNATURE" },
       { value: "soleil", label: "SOLEIL" },
       { value: "runway", label: "RUNWAY" },
-      { value: "", label: "ALL FRAGRANCES" },
     ],
     makeup: [
       { value: "lips", label: "LIPS" },
@@ -54,7 +54,6 @@ function AddProduct() {
 
   const currentSubs = subCategoriesMap[product.category] || [];
 
-  // ================= EXISTING INPUT =================
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct((prev) => ({
@@ -64,7 +63,7 @@ function AddProduct() {
     }));
   };
 
-  // ================= SIZE HANDLERS (ADDED ONLY) =================
+  // Size handlers
   const handleSizeChange = (index, field, value) => {
     const updated = [...sizes];
     updated[index][field] = value;
@@ -76,11 +75,10 @@ function AddProduct() {
   };
 
   const removeSize = (index) => {
-    const updated = sizes.filter((_, i) => i !== index);
-    setSizes(updated);
+    setSizes(sizes.filter((_, i) => i !== index));
   };
 
-  // ================= IMAGE =================
+  // Image Upload
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -88,17 +86,22 @@ function AddProduct() {
     setPreview(URL.createObjectURL(file));
     setUploading(true);
 
-    try {
-      const formData = new FormData();
-      formData.append("image", file);
+    const formData = new FormData();
+    formData.append("image", file);
 
-     const res = await fetch(`${baseURL}/api/products/upload`, {
-  method: "POST",
-  body: formData,
-});
+    try {
+      const res = await fetch(`${baseURL}/api/products/upload`, {
+        method: "POST",
+        body: formData,
+      });
 
       const data = await res.json();
-      setProduct((prev) => ({ ...prev, image: data.url }));
+
+      if (data.url) {
+        setProduct((prev) => ({ ...prev, image: data.url }));
+      } else {
+        alert("Image upload failed - no URL returned");
+      }
     } catch (err) {
       console.error(err);
       alert("Image upload failed");
@@ -107,66 +110,65 @@ function AddProduct() {
     }
   };
 
-  // ================= SUBMIT (SAFE UPGRADE ONLY) =================
+  // Submit - FIXED
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!product.image) return alert("Please upload an image");
+
+    if (!product.image) return alert("Please upload an image first");
 
     const formattedSizes = sizes
       .filter(s => s.label && s.price)
       .map(s => ({
-        label: s.label,
+        label: s.label.trim(),
         price: Number(s.price),
       }));
 
     const submitData = {
       ...product,
-      sizes: formattedSizes, // 🔥 ONLY ADDITION
+      price: Number(product.price),
+      stock: Number(product.stock),
+      sizes: formattedSizes,
     };
 
     if (!submitData.subCategory) delete submitData.subCategory;
 
     try {
-      const res = await fetch(`${baseURL}/api/products/add`, {
+      const res = await fetch(`${baseURL}/api/products`, {   // ← Correct endpoint!
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify(submitData),
       });
 
-      if (!res.ok) throw new Error("Failed");
+      const data = await res.json();
 
-      alert("Product added successfully!");
-
-      setProduct({
-        name: "",
-        price: "",
-        category: "",
-        subCategory: "",
-        description: "",
-        image: "",
-        stock: "",
-        sizes: [],
-      });
-
-      setSizes([{ label: "", price: "" }]); // reset
-      setPreview(null);
-
+      if (res.ok) {
+        alert("Product added successfully!");
+        // Reset form
+        setProduct({
+          name: "", price: "", category: "", subCategory: "", description: "",
+          image: "", stock: "", sizes: [],
+        });
+        setSizes([{ label: "", price: "" }]);
+        setPreview(null);
+      } else {
+        alert(data.message || "Failed to add product");
+      }
     } catch (err) {
       console.error(err);
-      alert("Error adding product");
+      alert("Server error while adding product");
     }
   };
 
   return (
     <div className="max-w-4xl mx-auto py-16 px-6 md:px-12 bg-softwhite min-h-screen">
-
       <h1 className="text-5xl font-luxury uppercase tracking-superWide text-primary text-center mb-16">
         Add New Product
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-10">
 
-        {/* ALL YOUR ORIGINAL INPUTS (UNCHANGED) */}
         <input
           name="name"
           placeholder="Product Name"
@@ -186,7 +188,6 @@ function AddProduct() {
           className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl focus:border-primary outline-none transition"
         />
 
-        {/* CATEGORY (UNCHANGED) */}
         <select
           name="category"
           value={product.category}
@@ -196,9 +197,7 @@ function AddProduct() {
         >
           <option value="">Select Main Category</option>
           {mainCategories.map((c) => (
-            <option key={c.value} value={c.value}>
-              {c.label}
-            </option>
+            <option key={c.value} value={c.value}>{c.label}</option>
           ))}
         </select>
 
@@ -211,31 +210,24 @@ function AddProduct() {
           >
             <option value="">Select Sub-Category (optional)</option>
             {currentSubs.map((s) => (
-              <option key={s.value} value={s.value}>
-                {s.label}
-              </option>
+              <option key={s.value} value={s.value}>{s.label}</option>
             ))}
           </select>
         )}
 
-        {/* IMAGE */}
         <input
           type="file"
           accept="image/*"
           onChange={handleFileChange}
+          className="w-full py-4"
         />
 
         {uploading && <p className="text-primary">Uploading image...</p>}
 
         {preview && (
-          <img
-            src={preview}
-            alt="preview"
-            className="max-h-64 object-contain mx-auto"
-          />
+          <img src={preview} alt="preview" className="max-h-64 object-contain mx-auto rounded-lg" />
         )}
 
-        {/* STOCK + DESCRIPTION (UNCHANGED) */}
         <input
           name="stock"
           type="number"
@@ -255,37 +247,29 @@ function AddProduct() {
           className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl focus:border-primary outline-none resize-y transition"
         />
 
-        {/* ================= SIZE SECTION (ADDED ONLY) ================= */}
+        {/* Size Section */}
         <div className="border-t pt-8">
-          <h2 className="text-xl font-semibold mb-4">
-            Product Sizes (Optional)
-          </h2>
+          <h2 className="text-xl font-semibold mb-4">Product Sizes (Optional)</h2>
 
           {sizes.map((size, index) => (
-            <div key={index} className="flex gap-3 mb-3">
-
+            <div key={index} className="flex gap-3 mb-4">
               <input
-                placeholder="Size (e.g 50ml)"
+                placeholder="Size (e.g 50ml, 100ml)"
                 value={size.label}
-                onChange={(e) =>
-                  handleSizeChange(index, "label", e.target.value)
-                }
-                className="w-1/2 border p-2"
+                onChange={(e) => handleSizeChange(index, "label", e.target.value)}
+                className="flex-1 border p-3 rounded"
               />
-
               <input
                 placeholder="Price"
+                type="number"
                 value={size.price}
-                onChange={(e) =>
-                  handleSizeChange(index, "price", e.target.value)
-                }
-                className="w-1/2 border p-2"
+                onChange={(e) => handleSizeChange(index, "price", e.target.value)}
+                className="flex-1 border p-3 rounded"
               />
-
               <button
                 type="button"
                 onClick={() => removeSize(index)}
-                className="text-red-500"
+                className="text-red-600 px-4"
               >
                 ✕
               </button>
@@ -295,19 +279,18 @@ function AddProduct() {
           <button
             type="button"
             onClick={addSize}
-            className="text-blue-600 text-sm mt-2"
+            className="text-primary text-sm mt-2 hover:underline"
           >
-            + Add Size
+            + Add Another Size
           </button>
         </div>
 
-        {/* SUBMIT (UNCHANGED) */}
         <button
           type="submit"
-          disabled={uploading}
-          className="w-full bg-primary text-white py-5 text-lg uppercase tracking-widestLux font-sansLux hover:bg-red-700 transition disabled:opacity-50"
+          disabled={uploading || !product.image}
+          className="w-full bg-primary text-white py-5 text-lg uppercase tracking-widestLux hover:bg-black transition disabled:opacity-50"
         >
-          {uploading ? "Adding..." : "Add Product"}
+          {uploading ? "Uploading..." : "Add Product"}
         </button>
 
       </form>
