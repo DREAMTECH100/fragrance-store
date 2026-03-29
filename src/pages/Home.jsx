@@ -269,11 +269,10 @@ const baseURL = import.meta.env.VITE_API_URL;
         to={`/product/${product._id}`}
         className="group relative border bg-white/70 backdrop-blur-md hover:shadow-2xl hover:border-primary/40 transition-all duration-500 rounded-lg overflow-hidden flex flex-col"
       >
-        <div className="h-52 overflow-hidden relative">
-      <img
+        <div className="h-44 overflow-hidden relative">
+       <img
   src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  alt={product.name}
-  className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
+  className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
 />
 
           {/* Desktop hover overlay */}
@@ -388,13 +387,13 @@ const baseURL = import.meta.env.VITE_API_URL;
             to={`/product/${product._id}`}
             className="group relative bg-white/10 backdrop-blur border border-white/20 hover:border-white/70 transition-all duration-500 rounded-md overflow-hidden flex flex-col"
           >
-            <div className="h-42 overflow-hidden">
-         <img
-  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  alt={product.name}
-  className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
-/>
-            </div>
+            <div className="h-32 overflow-hidden">
+  <img
+    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+    alt={product.name}
+    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+  />
+</div>
 
             <div className="p-3 flex flex-col flex-grow">
               <p className="text-[11px] uppercase tracking-wider">
@@ -492,13 +491,13 @@ const baseURL = import.meta.env.VITE_API_URL;
           to={`/product/${product._id}`}
           className="group border bg-white hover:shadow-xl transition-all duration-500 rounded overflow-hidden flex flex-col"
         >
-          <div className="h-38 overflow-hidden">
-         <img
-  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  alt={product.name}
-  className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
-/>
-          </div>
+         <div className="h-32 overflow-hidden">
+  <img
+    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+    alt={product.name}
+    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+  />
+</div>
 
           <div className="p-3 flex flex-col flex-grow">
             <p className="text-[11px] uppercase">
