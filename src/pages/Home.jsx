@@ -269,11 +269,13 @@ const baseURL = import.meta.env.VITE_API_URL;
         to={`/product/${product._id}`}
         className="group relative border bg-white/70 backdrop-blur-md hover:shadow-2xl hover:border-primary/40 transition-all duration-500 rounded-lg overflow-hidden flex flex-col"
       >
-        <div className="h-44 overflow-hidden relative">
-       <img
-  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
-/>
+      <div className="h-44 overflow-hidden relative">
+  <img
+    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+    alt={product.name}
+    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+  />
+
 
           {/* Desktop hover overlay */}
           <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-60 transition-opacity duration-500 hidden md:block" />
