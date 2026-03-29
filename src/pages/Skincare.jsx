@@ -37,8 +37,7 @@ function Skincare({ addToWishlist, addToCart }) {
       .then((data) => {
         setProducts(data);
         setFilteredProducts(data);
-
-      const images = data
+const images = data
   .map((p) => {
     if (!p.image) return null;
     return p.image.startsWith("http") ? p.image : `${baseURL}${p.image}`;

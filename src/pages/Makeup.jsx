@@ -40,13 +40,12 @@ function Makeup({ addToWishlist, addToCart }) {
         setFilteredProducts(data);
 
         // Pick up to 5 random images for hero dynamically
-        const images = data
+       const images = data
   .map((p) => {
     if (!p.image) return null;
     return p.image.startsWith("http") ? p.image : `${baseURL}${p.image}`;
   })
   .filter(Boolean);
-
         // Shuffle images
         for (let i = images.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));

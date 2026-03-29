@@ -40,7 +40,7 @@ function Fragrances({ addToWishlist, addToCart }) {
         setFilteredProducts(data);
 
         // Pick up to 5 random images for hero
-       const images = data
+     const images = data
   .map((p) => {
     if (!p.image) return null;
     return p.image.startsWith("http") ? p.image : `${baseURL}${p.image}`;
