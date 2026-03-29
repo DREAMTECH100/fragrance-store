@@ -59,8 +59,12 @@ function CategoryPage({ mainCategory, title, addToWishlist }) {
     ? sub.replace(/-/g, " ").toUpperCase()
     : title.toUpperCase();
 
-  const heroImage =
-    products.length > 0 ? `${baseURL}${products[0].image}` : null;
+ const heroImage =
+  products.length > 0
+    ? products[0].image.startsWith("http")
+      ? products[0].image
+      : `${baseURL}${products[0].image}`
+    : null;
 
   return (
     <div className="bg-white min-h-screen">

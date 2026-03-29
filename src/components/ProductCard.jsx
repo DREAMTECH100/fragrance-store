@@ -32,11 +32,11 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
         )}
 
         {/* IMAGE */}
-        <img
-          src={`${baseURL}${product.image}`} 
-          alt={product.name}
-          className="w-full h-[220px] object-cover transform group-hover:scale-105 transition duration-500"
-        />
+       <img
+  src={product.image.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+  alt={product.name}
+  className="w-full h-[220px] object-cover transform group-hover:scale-105 transition duration-500"
+/>
 
         {/* HOVER OVERLAY */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition duration-300 flex items-center justify-center">
