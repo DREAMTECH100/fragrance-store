@@ -270,9 +270,10 @@ const baseURL = import.meta.env.VITE_API_URL;
         className="group relative border bg-white/70 backdrop-blur-md hover:shadow-2xl hover:border-primary/40 transition-all duration-500 rounded-lg overflow-hidden flex flex-col"
       >
         <div className="h-44 overflow-hidden relative">
-       <img
+      <img
   src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
+  alt={product.name}
+  className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
 />
 
           {/* Desktop hover overlay */}
@@ -388,9 +389,10 @@ const baseURL = import.meta.env.VITE_API_URL;
             className="group relative bg-white/10 backdrop-blur border border-white/20 hover:border-white/70 transition-all duration-500 rounded-md overflow-hidden flex flex-col"
           >
             <div className="h-32 overflow-hidden">
-          <img
+         <img
   src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
+  alt={product.name}
+  className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
 />
             </div>
 
@@ -491,9 +493,10 @@ const baseURL = import.meta.env.VITE_API_URL;
           className="group border bg-white hover:shadow-xl transition-all duration-500 rounded overflow-hidden flex flex-col"
         >
           <div className="h-28 overflow-hidden">
-          <img
+         <img
   src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
+  alt={product.name}
+  className="w-full h-full object-contain transition-transform duration-700 group-hover:scale-105"
 />
           </div>
 
