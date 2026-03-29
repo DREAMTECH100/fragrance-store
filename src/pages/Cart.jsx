@@ -42,11 +42,11 @@ function Cart() {
               >
                 {/* IMAGE */}
                 <div className="relative w-full md:w-40 h-40 overflow-hidden">
-                  <img
-                    src={`${baseURL}${item.image}`}
-                    alt={item.name}
-                    className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
-                  />
+                <img
+  src={item?.image ? (item.image.startsWith("http") ? item.image : `${baseURL}${item.image}`) : "/images/placeholder.png"}
+  alt={item.name}
+  className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+/>
                   <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition" />
                 </div>
 

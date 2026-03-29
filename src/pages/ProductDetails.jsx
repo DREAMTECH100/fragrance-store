@@ -100,11 +100,11 @@ function ProductDetails() {
       {/* ================= TOP ================= */}
       <div className="grid md:grid-cols-2 gap-12">
         {/* IMAGE */}
-        <img
-          src={`${baseURL}${product.image}`}
-          alt={product.name}
-          className="w-full h-[520px] object-cover rounded-lg"
-        />
+       <img
+  src={product?.image ? (product.image.startsWith("http") ? product.image : `${baseURL}${product.image}`) : "/images/placeholder.png"}
+  alt={product.name}
+  className="w-full h-[520px] object-cover rounded-lg"
+/>
 
         {/* DETAILS */}
         <div>
