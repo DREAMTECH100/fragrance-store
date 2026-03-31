@@ -58,7 +58,11 @@ function OrderSuccess() {
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-6 py-14">
       <div className="bg-white p-10 rounded-xl shadow-xl max-w-lg w-full text-center">
         <h1 className="text-3xl font-bold mb-6">
-          {status === "paid" && "🎉 Payment Successful"}
+         {status === "paid" && (
+  <>
+    Payment Successful <br /> ✅
+  </>
+)}
           {status === "pending" && "⏳ Payment Pending"}
           {status === "failed" && "❌ Payment Failed"}
         </h1>
