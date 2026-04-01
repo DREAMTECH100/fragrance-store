@@ -8,7 +8,7 @@ export default function SalesPopup() {
     const interval = setInterval(() => {
       setVisible(true);
       setTimeout(() => setVisible(false), 3000); // hide after 5s
-    }, 180000); // every 10s
+    }, 980000); // every 10s
 
     return () => clearInterval(interval);
   }, []);
