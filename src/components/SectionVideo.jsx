@@ -1,7 +1,20 @@
+import { useRef } from "react";
+
 function SectionVideo({ src, title, subtitle }) {
+  const videoRef = useRef(null);
+
+  const handleUnmute = () => {
+    const video = videoRef.current;
+    if (video) {
+      video.muted = !video.muted;
+      video.play();
+    }
+  };
+
   return (
     <div className="relative w-full h-screen overflow-hidden">
       <video
+        ref={videoRef}
         className="absolute inset-0 w-full h-full object-cover"
         src={src}
         autoPlay
@@ -9,6 +22,14 @@ function SectionVideo({ src, title, subtitle }) {
         loop
         playsInline
       />
+
+      {/* Unmute Button */}
+      <button
+        onClick={handleUnmute}
+        className="absolute bottom-6 right-6 z-20 bg-white/90 text-black px-4 py-2 rounded-full text-sm hover:bg-white transition"
+      >
+        🔊 Unmute
+      </button>
 
       <div className="absolute inset-0 bg-black/50" />
 
@@ -25,4 +46,4 @@ function SectionVideo({ src, title, subtitle }) {
   );
 }
 
-export default SectionVideo; 
+export default SectionVideo;
