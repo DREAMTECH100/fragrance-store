@@ -173,62 +173,110 @@ function ProductDetails() {
         </div>
       )}
 
-      {/* ================= REVIEWS ================= */}
-      <div className="mt-20">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl uppercase">Customer Reviews</h2>
-          <button
-            onClick={() => setShowReviewModal(true)}
-            className="border px-4 py-2 text-sm"
-          >
-            Write Review
-          </button>
-        </div>
+{/* ================= REVIEWS ================= */}
+<div className="mt-20">
+  <div className="flex justify-between items-center mb-6">
+    <h2 className="text-2xl uppercase tracking-wider">Customer Reviews</h2>
+    <button
+      onClick={() => setShowReviewModal(true)}
+      className="border px-4 py-2 text-sm hover:bg-red-500 hover:text-white transition"
+    >
+      Write Review
+    </button>
+  </div>
 
-        {reviews.length === 0 ? (
-          <p className="text-gray-500">No reviews yet.</p>
-        ) : (
-          <div className="space-y-4">
-            {reviews.map((r, i) => (
-              <div key={i} className="border p-4">
-                <p className="font-semibold">{r.name}</p>
-                <p className="text-gray-600 text-sm mt-1">{r.comment}</p>
-              </div>
+  {reviews.length === 0 ? (
+    <p className="text-gray-500">No reviews yet.</p>
+  ) : (
+    <div className="space-y-6">
+      {reviews.map((r, i) => (
+        <div
+          key={i}
+          className="border p-4 rounded-lg shadow-sm hover:shadow-lg transition"
+        >
+          <p className="font-semibold">{r.name}</p>
+
+          {/* ⭐ STAR RATING */}
+          <div className="flex items-center mt-2">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <svg
+                key={star}
+                className={`w-5 h-5 ${
+                  r.rating >= star ? "text-red-500" : "text-gray-300"
+                }`}
+                fill="currentColor"
+                viewBox="0 0 20 20"
+              >
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.16c.969 0 1.371 1.24.588 1.81l-3.37 2.447a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.37-2.447a1 1 0 00-1.176 0l-3.37 2.447c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.037 9.384c-.784-.57-.38-1.81.588-1.81h4.161a1 1 0 00.951-.69l1.286-3.957z" />
+              </svg>
             ))}
           </div>
-        )}
+
+          <p className="text-gray-600 text-sm mt-2">{r.comment}</p>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
+
+{/* ================= REVIEW MODAL ================= */}
+{showReviewModal && (
+  <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+    <div className="bg-white p-6 w-[90%] max-w-md rounded-lg shadow-lg">
+      <h3 className="text-lg mb-4 font-semibold">Write a Review</h3>
+
+      <input
+        placeholder="Your Name"
+        value={reviewName}
+        onChange={(e) => setReviewName(e.target.value)}
+        className="w-full border p-2 mb-3 rounded"
+      />
+
+      <textarea
+        placeholder="Your Review"
+        value={reviewText}
+        onChange={(e) => setReviewText(e.target.value)}
+        className="w-full border p-2 mb-3 rounded"
+      />
+
+      {/* ⭐ SELECT RATING */}
+      <div className="flex items-center mb-4">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <button
+            key={star}
+            onClick={() => setReviewRating(star)}
+            className={`w-8 h-8 flex items-center justify-center ${
+              reviewRating >= star ? "text-red-500" : "text-gray-300"
+            } transition`}
+          >
+            <svg
+              fill="currentColor"
+              viewBox="0 0 20 20"
+              className="w-5 h-5"
+            >
+              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.286 3.957a1 1 0 00.95.69h4.16c.969 0 1.371 1.24.588 1.81l-3.37 2.447a1 1 0 00-.364 1.118l1.287 3.957c.3.921-.755 1.688-1.54 1.118l-3.37-2.447a1 1 0 00-1.176 0l-3.37 2.447c-.784.57-1.838-.197-1.539-1.118l1.287-3.957a1 1 0 00-.364-1.118L2.037 9.384c-.784-.57-.38-1.81.588-1.81h4.161a1 1 0 00.951-.69l1.286-3.957z" />
+            </svg>
+          </button>
+        ))}
       </div>
 
-      {/* ================= REVIEW MODAL ================= */}
-      {showReviewModal && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 w-[90%] max-w-md">
-            <h3 className="text-lg mb-4">Write a Review</h3>
-
-            <input
-              placeholder="Your Name"
-              value={reviewName}
-              onChange={(e) => setReviewName(e.target.value)}
-              className="w-full border p-2 mb-3"
-            />
-            <textarea
-              placeholder="Your Review"
-              value={reviewText}
-              onChange={(e) => setReviewText(e.target.value)}
-              className="w-full border p-2 mb-3"
-            />
-            <div className="flex justify-end gap-3">
-              <button onClick={() => setShowReviewModal(false)}>Cancel</button>
-              <button
-                onClick={submitReview}
-                className="bg-black text-white px-4 py-2"
-              >
-                Submit
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      <div className="flex justify-end gap-3">
+        <button
+          onClick={() => setShowReviewModal(false)}
+          className="px-3 py-1 rounded border hover:bg-gray-100 transition"
+        >
+          Cancel
+        </button>
+        <button
+          onClick={submitReview}
+          className="bg-black text-white px-4 py-2 rounded hover:bg-red-500 transition"
+        >
+          Submit
+        </button>
+      </div>
+    </div>
+  </div>
+)}
     </div>
   );
 }
