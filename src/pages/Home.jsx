@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { fixImageUrl } from "../utils/fixImageUrl";
 import SectionVideo from "../components/SectionVideo";
 function pickRandom(arr, n) {
   if (!arr || arr.length === 0) return [];
@@ -144,7 +145,7 @@ const baseURL = import.meta.env.VITE_API_URL;
           {/* IMAGE */}
           <div className="relative w-full h-64 overflow-hidden">
          <img
-  src={p?.image ? (p.image.startsWith("http") ? p.image : `${baseURL}${p.image}`) : "/images/placeholder.png"}
+  src={fixImageUrl(p?.image)}
   className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
   alt={p?.name}
 />
@@ -234,7 +235,7 @@ const baseURL = import.meta.env.VITE_API_URL;
         className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-700"
       >
       <img
-  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+  src={fixImageUrl(p?.image)}
   className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
 />
 
@@ -270,8 +271,8 @@ const baseURL = import.meta.env.VITE_API_URL;
         className="group relative border bg-white/70 backdrop-blur-md hover:shadow-2xl hover:border-primary/40 transition-all duration-500 rounded-lg overflow-hidden flex flex-col"
       >
       <div className="h-44 overflow-hidden relative">
-  <img
-    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+ <img
+  src={fixImageUrl(p?.image)}
     alt={product.name}
     className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
   />
@@ -362,7 +363,7 @@ const baseURL = import.meta.env.VITE_API_URL;
             className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-700"
           >
         <img
-  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+  src={fixImageUrl(p?.image)}
   className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
 />
 
@@ -391,7 +392,7 @@ const baseURL = import.meta.env.VITE_API_URL;
           >
             <div className="h-32 overflow-hidden">
   <img
-    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+  src={fixImageUrl(p?.image)}
     alt={product.name}
     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
   />
@@ -466,7 +467,7 @@ const baseURL = import.meta.env.VITE_API_URL;
           className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-700"
         >
          <img
-  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+  src={fixImageUrl(p?.image)}
   className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
 />
 
@@ -494,8 +495,8 @@ const baseURL = import.meta.env.VITE_API_URL;
           className="group border bg-white hover:shadow-xl transition-all duration-500 rounded overflow-hidden flex flex-col"
         >
          <div className="h-32 overflow-hidden">
-  <img
-    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+ <img
+  src={fixImageUrl(p?.image)}
     alt={product.name}
     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
   />
