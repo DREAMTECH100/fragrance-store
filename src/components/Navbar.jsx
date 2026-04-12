@@ -91,37 +91,31 @@ const baseURL = import.meta.env.VITE_API_URL;
   }, [searchTerm]);
 
   const handleSearchSubmit = async (e) => {
-  e.preventDefault();
+    e?.preventDefault();
 
-  if (!searchTerm.trim()) return;
+    if (searchTerm.trim().length < 2) return;
 
-  try {
-    const res = await fetch(
-      `${baseURL}/api/products/search?q=${encodeURIComponent(searchTerm)}`
-    );
+    try {
+     const res = await fetch(
+  `${baseURL}/api/products/search?q=${encodeURIComponent(searchTerm)}`
+);
+      const data = await res.json();
 
-    const data = await res.json();
+      if (data.length > 0) {
+        // redirect dynamically to category/subcategory of first match
+        const product = data[0];
+        navigate(`/${product.category}?sub=${product.subcategory || ""}`);
+      }
 
-    console.log("SEARCH RESULT:", data); // debug
+      setSearchTerm("");
+      setSuggestions([]);
+      setSearchOpen(false);
 
-    if (data.length > 0) {
-      const product = data[0];
-
-      navigate(
-        `/${product.category}?sub=${product.subcategory || ""}`
-      );
-    } else {
-      console.warn("No products found");
+    } catch (err) {
+      console.error(err);
     }
+  };
 
-    setSearchTerm("");
-    setSuggestions([]);
-    setSearchOpen(false);
-
-  } catch (err) {
-    console.error("SEARCH ERROR:", err);
-  }
-};
   const navItems = [
     {
       name: "FRAGRANCES",
@@ -285,44 +279,53 @@ const baseURL = import.meta.env.VITE_API_URL;
         </div>
       </nav>
 
-     {/* SEARCH PANEL */}
+       {/* SEARCH PANEL */}
 {searchOpen && (
   <div className="fixed inset-x-0 top-full bg-softwhite border-b border-darktext/10 z-50">
     <div className="max-w-4xl mx-auto px-6 py-6">
-      
-      <form onSubmit={handleSearchSubmit}>
-        <div className="flex items-center gap-4">
-          <input
-            id="search"
-            name="search"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full border-b py-4 text-xl focus:outline-none"
-            placeholder="Search for products..."
-            autoComplete="off"
-          />
-
-          <button
-            type="submit"
-            className="p-2 hover:bg-gray-100 rounded-full transition"
-          >
-            <Search className="w-6 h-6 text-darktext" />
-          </button>
-        </div>
+      <form
+        onSubmit={async (e) => {
+          e.preventDefault();
+          if (!searchTerm.trim()) return;
+          try {
+            const res = await fetch(
+  `${baseURL}/api/products/search?q=${encodeURIComponent(searchTerm)}`
+);
+            const data = await res.json();
+            if (data.length > 0) {
+              const product = data[0];
+              navigate(`/${product.category}?sub=${product.subcategory || ""}`);
+            }
+            setSearchTerm("");
+            setSuggestions([]);
+            setSearchOpen(false);
+          } catch (err) {
+            console.error(err);
+          }
+        }}
+      >
+        <input
+          id="search"
+          name="search"
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full border-b py-4 text-xl focus:outline-none"
+          placeholder="Search for products..."
+          autoComplete="off"
+        />
       </form>
 
       {/* SUGGESTIONS */}
       {suggestions.length > 0 && (
-        <ul className="mt-3 border-t pt-2 max-h-60 overflow-y-auto">
+        <ul className="mt-2 border-t pt-2 max-h-60 overflow-y-auto">
           {suggestions.map((p) => (
             <li
               key={p._id}
-              className="py-2 px-2 cursor-pointer hover:bg-gray-100 transition"
+              className="py-2 cursor-pointer hover:bg-gray-100 transition"
               onMouseDown={(e) => {
+                // use onMouseDown instead of onClick to fire before blur
                 e.preventDefault();
-                navigate(
-                  `/${p.category}?sub=${p.subcategory || ""}`
-                );
+                navigate(`/${p.category}?sub=${p.subcategory || ""}`);
                 setSearchTerm("");
                 setSuggestions([]);
                 setSearchOpen(false);
@@ -336,6 +339,7 @@ const baseURL = import.meta.env.VITE_API_URL;
     </div>
   </div>
 )}
+
         {/* MOBILE SIDEBAR */}
         <div
           className={`fixed top-0 left-0 h-full w-4/5 max-w-xs bg-softwhite z-50 transition-transform ${
