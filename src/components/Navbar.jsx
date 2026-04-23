@@ -155,7 +155,7 @@ const baseURL = import.meta.env.VITE_API_URL;
   name: "HOME FRAGRANCES",
   path: "/home-fragrances",
   subItems: [
-    { label: "CENTER-CANDLES", slug: "Center-candles" },
+    { label: "SCENTED-CANDLES", slug: "Sented-candles" },
     { label: "DIFFUSERS", slug: "diffusers" },
     { label: "ROOM SPRAYS", slug: "room-sprays" },
     { label: "VIEW ALL HOME FRAGRANCES", slug: "" },

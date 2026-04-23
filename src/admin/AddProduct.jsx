@@ -41,7 +41,7 @@ function AddProduct() {
 
  // ✅ ADD THIS
   "home-fragrances": [
-    { value: "candles", label: "CENTER CANDLES" },
+    { value: "candles", label: "SCENTED CANDLES" },
     { value: "diffusers", label: "DIFFUSERS" },
     { value: "room-sprays", label: "ROOM SPRAYS" },
     { value: "", label: "ALL HOME FRAGRANCES" },
