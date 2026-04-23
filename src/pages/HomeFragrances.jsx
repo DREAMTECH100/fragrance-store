@@ -37,19 +37,26 @@ function HomeFragrances({ addToWishlist, addToCart }) {
         return res.json();
       })
       .then((data) => {
-        setProducts(data);
-        setFilteredProducts(data);
+        // ✅ NORMALIZE ALL PRODUCTS FROM DB
+        const normalizedData = data.map((p) => ({
+          ...p,
+          category: normalize(p.category),
+          subCategory: normalize(p.subCategory),
+        }));
 
-        const images = data
+        setProducts(normalizedData);
+        setFilteredProducts(normalizedData);
+
+        const images = normalizedData
           .map((p) => {
-            if (!p.image) return null;
+            if (!p?.image) return null;
             return p.image.startsWith("http")
               ? p.image
               : `${baseURL}${p.image}`;
           })
           .filter(Boolean);
 
-        // Shuffle images
+        // Shuffle
         for (let i = images.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [images[i], images[j]] = [images[j], images[i]];
@@ -78,7 +85,11 @@ function HomeFragrances({ addToWishlist, addToCart }) {
 
   /* ================= FILTER ================= */
   const subCategoriesOnPage = [
-    ...new Set(products.map((p) => p.subCategory).filter(Boolean)),
+    ...new Set(
+      products
+        .map((p) => normalize(p?.subCategory))
+        .filter(Boolean)
+    ),
   ];
 
   useEffect(() => {
@@ -87,7 +98,7 @@ function HomeFragrances({ addToWishlist, addToCart }) {
     } else {
       setFilteredProducts(
         products.filter((p) =>
-          selectedSubCategories.includes(p.subCategory)
+          selectedSubCategories.includes(normalize(p?.subCategory))
         )
       );
     }
