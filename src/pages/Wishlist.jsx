@@ -33,7 +33,7 @@ function Wishlist({ wishlist }) {
                 <div className="border p-4 rounded-lg shadow hover:shadow-xl transition">
 
                   <img
-                    src={`${baseURL}${product.image}`} // ✅ FIXED
+                   src={product.image} // ✅ FIXED
                     alt={product.name}
                     className="h-48 w-full object-cover"
                   />
