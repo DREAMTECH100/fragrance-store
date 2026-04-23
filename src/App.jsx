@@ -122,6 +122,9 @@ function App() {
             <Route path="/order-success" element={<OrderSuccess />} />
           </Route>
 
+{/* ADMIN */}
+<Route path="/admin" element={<AdminLayout />}></Route>
+
           {/* ADMIN */}
          <Route path="/admin" element={<AdminLayout />}>
   <Route index element={<AdminDashboard />} />
