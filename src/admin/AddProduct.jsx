@@ -10,7 +10,7 @@ function AddProduct() {
     image: "",
     stock: "",
     sizes: [],
-    isPreorder: false, // 🔥 ADDED
+    isPreorder: false,
   });
 
   const [preview, setPreview] = useState(null);
@@ -24,7 +24,7 @@ function AddProduct() {
     { value: "fragrances", label: "FRAGRANCES" },
     { value: "makeup", label: "MAKEUP" },
     { value: "skincare", label: "SKINCARE" },
-     { value: "home-fragrances", label: "HOME FRAGRANCES" },
+    { value: "home-fragrances", label: "HOME FRAGRANCES" },
     { value: "collections", label: "COLLECTIONS" },
     { value: "gifts", label: "GIFTS" },
     { value: "new", label: "NEW" },
@@ -39,14 +39,12 @@ function AddProduct() {
       { value: "", label: "ALL FRAGRANCES" },
     ],
 
- // ✅ ADD THIS
-  "home-fragrances": [
-    { value: "candles", label: "SCENTED CANDLES" },
-    { value: "diffusers", label: "DIFFUSERS" },
-    { value: "room-sprays", label: "ROOM SPRAYS" },
-    { value: "", label: "ALL HOME FRAGRANCES" },
-  ],
-
+    "home-fragrances": [
+      { value: "candles", label: "SCENTED CANDLES" },
+      { value: "diffusers", label: "DIFFUSERS" },
+      { value: "room-sprays", label: "ROOM SPRAYS" },
+      { value: "", label: "ALL HOME FRAGRANCES" },
+    ],
 
     makeup: [
       { value: "lips", label: "LIPS" },
@@ -54,6 +52,7 @@ function AddProduct() {
       { value: "face", label: "FACE" },
       { value: "cheeks", label: "CHEEKS" },
     ],
+
     skincare: [
       { value: "moisturizers", label: "MOISTURIZERS" },
       { value: "serums", label: "SERUMS" },
@@ -127,8 +126,13 @@ function AddProduct() {
         price: Number(s.price),
       }));
 
+    // ✅ NORMALIZATION FIX (VERY IMPORTANT)
     const submitData = {
       ...product,
+      category: product.category?.toLowerCase().trim(),
+      subCategory: product.subCategory
+        ? product.subCategory.toLowerCase().trim()
+        : undefined,
       sizes: formattedSizes,
     };
 
@@ -173,7 +177,6 @@ function AddProduct() {
 
       <form onSubmit={handleSubmit} className="space-y-10">
 
-        {/* ALL ORIGINAL FIELDS (UNCHANGED) */}
         <input
           name="name"
           placeholder="Product Name"
@@ -244,7 +247,6 @@ function AddProduct() {
           className="w-full border p-2"
         />
 
-        {/* ================= PREORDER TOGGLE ================= */}
         <div className="flex items-center gap-3 border-t pt-6">
           <input
             type="checkbox"
@@ -261,7 +263,6 @@ function AddProduct() {
           </label>
         </div>
 
-        {/* ================= SIZES ================= */}
         <div className="border-t pt-8">
           <h2 className="font-semibold mb-4">Sizes</h2>
 
@@ -296,7 +297,10 @@ function AddProduct() {
           </button>
         </div>
 
-        <button className="w-full bg-black text-white py-4 mt-6">
+        {/* ✅ UPDATED BUTTON */}
+        <button
+          className="w-full bg-red-600 hover:bg-red-700 active:scale-95 transition-all duration-200 text-white py-4 mt-6"
+        >
           Add Product
         </button>
       </form>
