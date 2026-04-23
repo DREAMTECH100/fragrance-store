@@ -132,7 +132,7 @@ function EditProduct() {
           {sizes.map((size, index) => (
             <div key={index} className="flex gap-2 mb-2">
               <input
-                placeholder="Label"
+                placeholder="Size"
                 value={size.label}
                 onChange={(e) => handleSizeChange(index, "label", e.target.value)}
                 className="w-1/2 border p-2"
