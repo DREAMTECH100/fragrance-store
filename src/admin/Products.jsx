@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Products() {
   const [products, setProducts] = useState([]);
   const baseURL = import.meta.env.VITE_API_URL; // 🔑 production base URL
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetch(`${baseURL}/api/products`)
@@ -45,13 +47,24 @@ function Products() {
                 <td className="p-3">₦{product.price}</td>
                 <td className="p-3">{product.category}</td>
                 <td className="p-3">{product.stock}</td>
-                <td className="p-3">
+                <td className="p-3 flex gap-2">
+                  
+                  {/* ✅ NEW EDIT BUTTON (non-breaking) */}
+                  <button
+                    onClick={() => navigate(`/admin/edit-product/${product._id}`)}
+                    className="bg-blue-600 text-white px-4 py-1 rounded shadow hover:bg-blue-700 transition"
+                  >
+                    Edit
+                  </button>
+
+                  {/* ✅ EXISTING DELETE (unchanged) */}
                   <button
                     onClick={() => deleteProduct(product._id)}
                     className="bg-red-600 text-white px-4 py-1 rounded shadow hover:bg-red-700 transition"
                   >
                     Delete
                   </button>
+
                 </td>
               </tr>
             ))}
