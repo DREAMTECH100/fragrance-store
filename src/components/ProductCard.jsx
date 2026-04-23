@@ -6,7 +6,7 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
   const { addToCart } = useCart()
   const baseURL = import.meta.env.VITE_API_URL
 
-  const WHATSAPP_NUMBER = "234XXXXXXXXXX" // optional
+  const WHATSAPP_NUMBER = "2348062392555"
 
   const handleWishlist = (e) => {
     e.preventDefault()
@@ -14,6 +14,24 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
   }
 
   const rating = Number(product.rating || product.averageRating || 4)
+
+  const handleCartClick = (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    // 🟡 PREORDER LOGIC (SAFE & CONSISTENT)
+    if (product.isPreorder) {
+      const message = `Hi, I want to confirm preorder for: ${product.name}`
+
+      window.open(
+        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
+        "_blank"
+      )
+      return
+    }
+
+    addToCart(product)
+  }
 
   return (
     <Link
@@ -42,7 +60,11 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
 
         {/* IMAGE */}
         <img
-          src={product.image.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+          src={
+            product.image?.startsWith("http")
+              ? product.image
+              : `${baseURL}${product.image}`
+          }
           alt={product.name}
           className="w-full h-[220px] object-cover transform group-hover:scale-105 transition duration-500"
         />
@@ -80,9 +102,9 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
           ₦{Number(product.price || 0).toLocaleString()}
         </p>
 
-        {/* 🆕 PREORDER MESSAGE */}
+        {/* 🆕 PREORDER MESSAGE (CUSTOMER FACING) */}
         {product.isPreorder && (
-          <p className="text-[11px] text-red-500 mt-1 uppercase">
+          <p className="text-[11px] text-red-500 mt-1 uppercase tracking-wide">
             Pre-order item — chat admin to confirm availability
           </p>
         )}
@@ -104,28 +126,14 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
           </Link>
         ) : (
           <button
-            onClick={(e) => {
-              e.preventDefault()
-              e.stopPropagation()
-
-              // 🆕 OPTIONAL: block preorder from cart
-              if (product.isPreorder) {
-                window.open(
-                  `https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I want to confirm preorder for ${product.name}`,
-                  "_blank"
-                )
-                return
-              }
-
-              addToCart(product)
-            }}
+            onClick={handleCartClick}
             className={`mt-4 w-full border py-2 text-sm tracking-widest transition font-cormorant ${
               product.isPreorder
-                ? "border-gray-400 text-gray-500 cursor-not-allowed"
+                ? "border-gray-400 text-gray-500 hover:bg-black hover:text-white"
                 : "border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
             }`}
           >
-            {product.isPreorder ? "Pre-order (Contact Admin)" : buttonText}
+            {product.isPreorder ? "Pre-order via WhatsApp" : buttonText}
           </button>
         )}
       </div>
