@@ -8,7 +8,6 @@ function HomeFragrances({ addToWishlist, addToCart }) {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
   const [heroImages, setHeroImages] = useState([]);
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
 
@@ -38,23 +37,19 @@ function HomeFragrances({ addToWishlist, addToCart }) {
         return res.json();
       })
       .then((data) => {
-        // ✅ SAFE DATA CLEANUP (FIXES YOUR CRASH)
-        const safeData = Array.isArray(data)
-          ? data.filter((p) => p && typeof p === "object")
-          : [];
+        setProducts(data);
+        setFilteredProducts(data);
 
-        setProducts(safeData);
-        setFilteredProducts(safeData);
+        const images = data
+          .map((p) => {
+            if (!p.image) return null;
+            return p.image.startsWith("http")
+              ? p.image
+              : `${baseURL}${p.image}`;
+          })
+          .filter(Boolean);
 
-        // ================= HERO IMAGES =================
-        const images = safeData
-          .map((p) => p?.image)
-          .filter(Boolean)
-          .map((img) =>
-            img.startsWith("http") ? img : `${baseURL}${img}`
-          );
-
-        // shuffle safely
+        // Shuffle images
         for (let i = images.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [images[i], images[j]] = [images[j], images[i]];
@@ -81,13 +76,9 @@ function HomeFragrances({ addToWishlist, addToCart }) {
     return () => clearInterval(interval);
   }, [heroImages]);
 
-  /* ================= SUBCATEGORY FILTER ================= */
+  /* ================= FILTER ================= */
   const subCategoriesOnPage = [
-    ...new Set(
-      (products || [])
-        .map((p) => p?.subCategory)
-        .filter(Boolean)
-    ),
+    ...new Set(products.map((p) => p.subCategory).filter(Boolean)),
   ];
 
   useEffect(() => {
@@ -95,9 +86,8 @@ function HomeFragrances({ addToWishlist, addToCart }) {
       setFilteredProducts(products);
     } else {
       setFilteredProducts(
-        (products || []).filter(
-          (p) =>
-            p && selectedSubCategories.includes(p.subCategory)
+        products.filter((p) =>
+          selectedSubCategories.includes(p.subCategory)
         )
       );
     }
@@ -113,6 +103,7 @@ function HomeFragrances({ addToWishlist, addToCart }) {
 
   const clearFilters = () => setSelectedSubCategories([]);
 
+  /* ================= UI ================= */
   const displayTitle = sub
     ? sub.replace(/-/g, " ").toUpperCase()
     : "HOME FRAGRANCES";
@@ -133,7 +124,7 @@ function HomeFragrances({ addToWishlist, addToCart }) {
   return (
     <div className="bg-softwhite min-h-screen">
 
-      {/* ================= HERO ================= */}
+      {/* HERO */}
       <section
         className="relative h-[50vh] md:h-[65vh] flex items-center justify-center text-center transition-all duration-1000"
         style={
@@ -159,12 +150,11 @@ function HomeFragrances({ addToWishlist, addToCart }) {
         </div>
       </section>
 
-      {/* ================= CONTENT ================= */}
+      {/* CONTENT */}
       <section className="max-w-7xl mx-auto px-6 py-16">
-
         <div className="grid md:grid-cols-[250px_1fr] gap-10">
 
-          {/* FILTER SIDEBAR */}
+          {/* FILTER */}
           <aside className="text-sm self-start space-y-8 bg-softwhite z-30 shadow-md p-4">
             <p className="uppercase tracking-widest">
               {filteredProducts.length} Products
@@ -201,9 +191,8 @@ function HomeFragrances({ addToWishlist, addToCart }) {
             </div>
           </aside>
 
-          {/* PRODUCTS GRID */}
+          {/* PRODUCTS */}
           <main>
-
             <div className="flex justify-between items-center mb-10">
               <p className="text-sm text-darktext/60">
                 Showing {filteredProducts.length} results
@@ -232,7 +221,7 @@ function HomeFragrances({ addToWishlist, addToCart }) {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-10">
-                {(filteredProducts || []).map((product) => (
+                {filteredProducts.map((product) => (
                   <ProductCard
                     key={product._id}
                     product={product}
@@ -246,7 +235,7 @@ function HomeFragrances({ addToWishlist, addToCart }) {
         </div>
       </section>
 
-      {/* ================= VIDEO ================= */}
+      {/* VIDEO */}
       <SectionVideo
         src="/videos/home-fragrances.mp4"
         title="Home Fragrances"
