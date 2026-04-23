@@ -22,6 +22,8 @@ function ProductDetails() {
 
   const baseURL = import.meta.env.VITE_API_URL;
 
+  const WHATSAPP_NUMBER = "2348062392555"; // 🔥 replace with yours
+
   // ================= FETCH PRODUCT =================
   useEffect(() => {
     fetch(`${baseURL}/api/products`)
@@ -34,7 +36,6 @@ function ProductDetails() {
           setSelectedSize(found.sizes[0]);
         }
 
-        // related products
         const filtered = data.filter(
           (p) => p.category === found.category && p._id !== found._id
         );
@@ -62,6 +63,7 @@ function ProductDetails() {
   const decrease = () => {
     if (quantity > 1) setQuantity((q) => q - 1);
   };
+
   const activePrice = selectedSize?.price || product.price;
 
   const handleAddToCart = () => {
@@ -88,8 +90,8 @@ function ProductDetails() {
     });
 
     const data = await res.json();
-
     setReviews((prev) => [data, ...prev]);
+
     setReviewText("");
     setReviewName("");
     setShowReviewModal(false);
@@ -99,19 +101,47 @@ function ProductDetails() {
     <div className="max-w-6xl mx-auto px-6 py-12">
       {/* ================= TOP ================= */}
       <div className="grid md:grid-cols-2 gap-12">
+
         {/* IMAGE */}
-       <img
-  src={product?.image ? (product.image.startsWith("http") ? product.image : `${baseURL}${product.image}`) : "/images/placeholder.png"}
-  alt={product.name}
-  className="w-full h-[520px] object-cover rounded-lg"
-/>
+        <img
+          src={
+            product?.image
+              ? product.image.startsWith("http")
+                ? product.image
+                : `${baseURL}${product.image}`
+              : "/images/placeholder.png"
+          }
+          alt={product.name}
+          className="w-full h-[520px] object-cover rounded-lg"
+        />
 
         {/* DETAILS */}
         <div>
           <h1 className="text-4xl uppercase">{product.name}</h1>
+
+          {/* PRICE */}
           <p className="text-2xl mt-4 font-semibold">
             ₦{activePrice?.toLocaleString()}
           </p>
+
+          {/* 🆕 PREORDER MESSAGE */}
+          {product.isPreorder && (
+            <div className="mt-2">
+              <p className="text-xs text-red-500 uppercase tracking-wide">
+                Pre-order item — confirm availability before purchase
+              </p>
+
+              <a
+                href={`https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I want to confirm preorder availability for ${product.name}`}
+                target="_blank"
+                className="inline-block mt-2 bg-green-600 text-white px-4 py-2 text-sm"
+              >
+                Chat Admin on WhatsApp
+              </a>
+            </div>
+          )}
+
+          {/* DESCRIPTION */}
           <p className="mt-4 text-gray-600">{product.description}</p>
 
           {/* SIZES */}
@@ -138,21 +168,24 @@ function ProductDetails() {
 
           {/* QUANTITY */}
           <div className="flex items-center gap-4 mt-6">
-            <button onClick={decrease} className="px-3 border">
-              -
-            </button>
+            <button onClick={decrease} className="px-3 border">-</button>
             <span>{quantity}</span>
-            <button onClick={increase} className="px-3 border">
-              +
-            </button>
+            <button onClick={increase} className="px-3 border">+</button>
           </div>
 
-          {/* ADD TO CART */}
+          {/* 🆕 PREORDER SAFE ADD TO CART */}
           <button
             onClick={handleAddToCart}
-            className="mt-6 bg-black text-white px-6 py-3 w-full"
+            disabled={product.isPreorder}
+            className={`mt-6 px-6 py-3 w-full text-white ${
+              product.isPreorder
+                ? "bg-gray-400 cursor-not-allowed"
+                : "bg-black"
+            }`}
           >
-            Add To Bag
+            {product.isPreorder
+              ? "Pre-order (Contact Admin)"
+              : "Add To Bag"}
           </button>
 
           <p className="text-xs text-gray-400 mt-3 text-center">
@@ -211,14 +244,18 @@ function ProductDetails() {
               onChange={(e) => setReviewName(e.target.value)}
               className="w-full border p-2 mb-3"
             />
+
             <textarea
               placeholder="Your Review"
               value={reviewText}
               onChange={(e) => setReviewText(e.target.value)}
               className="w-full border p-2 mb-3"
             />
+
             <div className="flex justify-end gap-3">
-              <button onClick={() => setShowReviewModal(false)}>Cancel</button>
+              <button onClick={() => setShowReviewModal(false)}>
+                Cancel
+              </button>
               <button
                 onClick={submitReview}
                 className="bg-black text-white px-4 py-2"

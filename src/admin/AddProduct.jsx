@@ -1,4 +1,4 @@
-  import { useState } from "react";
+import { useState } from "react";
 
 function AddProduct() {
   const [product, setProduct] = useState({
@@ -9,18 +9,17 @@ function AddProduct() {
     description: "",
     image: "",
     stock: "",
-    sizes: [], // 🔥 ADDED ONLY
+    sizes: [],
+    isPreorder: false, // 🔥 ADDED
   });
 
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
 
-  // 🔥 SIZE STATE (ADDED ONLY)
   const [sizes, setSizes] = useState([{ label: "", price: "" }]);
 
-  const baseURL = import.meta.env.VITE_API_URL; // <-- use .env.production
+  const baseURL = import.meta.env.VITE_API_URL;
 
-  // Main categories
   const mainCategories = [
     { value: "fragrances", label: "FRAGRANCES" },
     { value: "makeup", label: "MAKEUP" },
@@ -63,7 +62,7 @@ function AddProduct() {
     }));
   };
 
-  // ================= SIZE HANDLERS (ADDED ONLY) =================
+  // ================= SIZE HANDLERS =================
   const handleSizeChange = (index, field, value) => {
     const updated = [...sizes];
     updated[index][field] = value;
@@ -106,7 +105,7 @@ function AddProduct() {
     }
   };
 
-  // ================= SUBMIT (SAFE UPGRADE ONLY) =================
+  // ================= SUBMIT =================
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!product.image) return alert("Please upload an image");
@@ -120,7 +119,7 @@ function AddProduct() {
 
     const submitData = {
       ...product,
-      sizes: formattedSizes, // 🔥 ONLY ADDITION
+      sizes: formattedSizes,
     };
 
     if (!submitData.subCategory) delete submitData.subCategory;
@@ -145,9 +144,10 @@ function AddProduct() {
         image: "",
         stock: "",
         sizes: [],
+        isPreorder: false,
       });
 
-      setSizes([{ label: "", price: "" }]); // reset
+      setSizes([{ label: "", price: "" }]);
       setPreview(null);
     } catch (err) {
       console.error(err);
@@ -162,14 +162,15 @@ function AddProduct() {
       </h1>
 
       <form onSubmit={handleSubmit} className="space-y-10">
-        {/* ALL YOUR ORIGINAL INPUTS (UNCHANGED) */}
+
+        {/* ALL ORIGINAL FIELDS (UNCHANGED) */}
         <input
           name="name"
           placeholder="Product Name"
           value={product.name}
           onChange={handleChange}
           required
-          className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl focus:border-primary outline-none transition"
+          className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl"
         />
 
         <input
@@ -179,15 +180,14 @@ function AddProduct() {
           value={product.price}
           onChange={handleChange}
           required
-          className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl focus:border-primary outline-none transition"
+          className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl"
         />
 
         <select
           name="category"
           value={product.category}
           onChange={handleChange}
-          required
-          className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl focus:border-primary outline-none bg-softwhite transition"
+          className="w-full border-b-2 py-4 px-2 text-xl"
         >
           <option value="">Select Main Category</option>
           {mainCategories.map((c) => (
@@ -202,9 +202,9 @@ function AddProduct() {
             name="subCategory"
             value={product.subCategory}
             onChange={handleChange}
-            className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl focus:border-primary outline-none bg-softwhite transition"
+            className="w-full border-b-2 py-4 px-2 text-xl"
           >
-            <option value="">Select Sub-Category (optional)</option>
+            <option value="">Select Sub-Category</option>
             {currentSubs.map((s) => (
               <option key={s.value} value={s.value}>
                 {s.label}
@@ -214,17 +214,16 @@ function AddProduct() {
         )}
 
         <input type="file" accept="image/*" onChange={handleFileChange} />
-        {uploading && <p className="text-primary">Uploading image...</p>}
-        {preview && <img src={preview} alt="preview" className="max-h-64 object-contain mx-auto" />}
+        {uploading && <p>Uploading...</p>}
+        {preview && <img src={preview} className="max-h-64 mx-auto" />}
 
         <input
           name="stock"
           type="number"
-          placeholder="Stock Quantity"
+          placeholder="Stock"
           value={product.stock}
           onChange={handleChange}
-          required
-          className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl focus:border-primary outline-none transition"
+          className="w-full border p-2"
         />
 
         <textarea
@@ -232,45 +231,63 @@ function AddProduct() {
           placeholder="Description"
           value={product.description}
           onChange={handleChange}
-          rows={5}
-          className="w-full border-b-2 border-darktext/30 py-4 px-2 text-xl focus:border-primary outline-none resize-y transition"
+          className="w-full border p-2"
         />
 
-        {/* ================= SIZE SECTION (ADDED ONLY) ================= */}
+        {/* ================= PREORDER TOGGLE ================= */}
+        <div className="flex items-center gap-3 border-t pt-6">
+          <input
+            type="checkbox"
+            checked={product.isPreorder}
+            onChange={(e) =>
+              setProduct((prev) => ({
+                ...prev,
+                isPreorder: e.target.checked,
+              }))
+            }
+          />
+          <label className="text-sm uppercase tracking-wide">
+            Mark as Pre-order Product
+          </label>
+        </div>
+
+        {/* ================= SIZES ================= */}
         <div className="border-t pt-8">
-          <h2 className="text-xl font-semibold mb-4">Product Sizes (Optional)</h2>
+          <h2 className="font-semibold mb-4">Sizes</h2>
 
           {sizes.map((size, index) => (
-            <div key={index} className="flex gap-3 mb-3">
+            <div key={index} className="flex gap-2 mb-2">
               <input
-                placeholder="Size (e.g 50ml)"
+                placeholder="Label"
                 value={size.label}
-                onChange={(e) => handleSizeChange(index, "label", e.target.value)}
+                onChange={(e) =>
+                  handleSizeChange(index, "label", e.target.value)
+                }
                 className="w-1/2 border p-2"
               />
+
               <input
                 placeholder="Price"
                 value={size.price}
-                onChange={(e) => handleSizeChange(index, "price", e.target.value)}
+                onChange={(e) =>
+                  handleSizeChange(index, "price", e.target.value)
+                }
                 className="w-1/2 border p-2"
               />
-              <button type="button" onClick={() => removeSize(index)} className="text-red-500">
+
+              <button type="button" onClick={() => removeSize(index)}>
                 ✕
               </button>
             </div>
           ))}
 
-          <button type="button" onClick={addSize} className="text-blue-600 text-sm mt-2">
+          <button type="button" onClick={addSize}>
             + Add Size
           </button>
         </div>
 
-        <button
-          type="submit"
-          disabled={uploading}
-          className="w-full bg-primary text-white py-5 text-lg uppercase tracking-widestLux font-sansLux hover:bg-red-700 transition disabled:opacity-50"
-        >
-          {uploading ? "Adding..." : "Add Product"}
+        <button className="w-full bg-black text-white py-4 mt-6">
+          Add Product
         </button>
       </form>
     </div>

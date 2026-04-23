@@ -4,7 +4,9 @@ import { useCart } from "../context/CartContext"
 
 function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", buttonLink }) {
   const { addToCart } = useCart()
-  const baseURL = import.meta.env.VITE_API_URL // ✅ ADD THIS
+  const baseURL = import.meta.env.VITE_API_URL
+
+  const WHATSAPP_NUMBER = "234XXXXXXXXXX" // optional
 
   const handleWishlist = (e) => {
     e.preventDefault()
@@ -18,8 +20,15 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
       to={`/product/${product._id}`}
       className="group block bg-white border border-gray-200 hover:shadow-xl transition duration-300 relative cursor-pointer"
     >
-      {/* Image */}
+      {/* IMAGE SECTION */}
       <div className="relative overflow-hidden">
+
+        {/* 🆕 PREORDER BADGE */}
+        {product.isPreorder && (
+          <div className="absolute top-3 left-3 z-20 bg-red-600 text-white text-[10px] px-2 py-1 uppercase tracking-widest">
+            Pre-order
+          </div>
+        )}
 
         {/* Wishlist */}
         {addToWishlist && (
@@ -32,11 +41,11 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
         )}
 
         {/* IMAGE */}
-       <img
-  src={product.image.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  alt={product.name}
-  className="w-full h-[220px] object-cover transform group-hover:scale-105 transition duration-500"
-/>
+        <img
+          src={product.image.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+          alt={product.name}
+          className="w-full h-[220px] object-cover transform group-hover:scale-105 transition duration-500"
+        />
 
         {/* HOVER OVERLAY */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition duration-300 flex items-center justify-center">
@@ -45,9 +54,11 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
           </span>
         </div>
 
+        {/* MOBILE CTA */}
         <div className="absolute bottom-3 right-3 md:hidden flex items-center gap-1 bg-black/60 text-white text-[10px] px-2 py-1 tracking-widest">
           VIEW →
         </div>
+
         <div className="absolute bottom-3 right-3 md:hidden">
           <span className="block w-2 h-2 bg-white rounded-full animate-ping"></span>
         </div>
@@ -59,21 +70,28 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
         </div>
       </div>
 
-      {/* Info */}
+      {/* INFO */}
       <div className="p-4">
         <h3 className="text-[15px] tracking-wide font-bold uppercase font-playfair">
           {product.name}
         </h3>
+
+        <p className="mt-2 font-semibold text-black font-playfair">
+          ₦{Number(product.price || 0).toLocaleString()}
+        </p>
+
+        {/* 🆕 PREORDER MESSAGE */}
+        {product.isPreorder && (
+          <p className="text-[11px] text-red-500 mt-1 uppercase">
+            Pre-order item — chat admin to confirm availability
+          </p>
+        )}
 
         {product.description && (
           <p className="text-sm text-gray-700 mt-1 line-clamp-2 font-cormorant">
             {product.description}
           </p>
         )}
-
-        <p className="mt-2 font-semibold text-black font-playfair">
-          ₦{Number(product.price || 0).toLocaleString()}
-        </p>
 
         {/* BUTTON */}
         {buttonLink ? (
@@ -89,11 +107,25 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
             onClick={(e) => {
               e.preventDefault()
               e.stopPropagation()
+
+              // 🆕 OPTIONAL: block preorder from cart
+              if (product.isPreorder) {
+                window.open(
+                  `https://wa.me/${WHATSAPP_NUMBER}?text=Hi, I want to confirm preorder for ${product.name}`,
+                  "_blank"
+                )
+                return
+              }
+
               addToCart(product)
             }}
-            className="mt-4 w-full border border-red-600 text-red-600 py-2 text-sm tracking-widest hover:bg-red-600 hover:text-white transition font-cormorant"
+            className={`mt-4 w-full border py-2 text-sm tracking-widest transition font-cormorant ${
+              product.isPreorder
+                ? "border-gray-400 text-gray-500 cursor-not-allowed"
+                : "border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
+            }`}
           >
-            {buttonText}
+            {product.isPreorder ? "Pre-order (Contact Admin)" : buttonText}
           </button>
         )}
       </div>
