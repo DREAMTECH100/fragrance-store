@@ -23,19 +23,6 @@ function Products() {
     }
   };
 
-const editProduct = async (id) => {
-    try {
-      await fetch(`${baseURL}/api/products/${id}`, {
-        method: "EDIT",
-      });
-      setProducts(products.filter(p => p._id !== id));
-    } catch (err) {
-      console.error("Failed to edit product:", err);
-      alert("Error deleting product");
-    }
-  };
-
-
   return (
     <div>
       <h1 className="text-3xl font-luxury text-red-600 mb-8">Products</h1>
@@ -64,12 +51,6 @@ const editProduct = async (id) => {
                     className="bg-red-600 text-white px-4 py-1 rounded shadow hover:bg-red-700 transition"
                   >
                     Delete
-                  </button>
-                   <button
-                    onClick={() => editProduct(product._id)}
-                    className="bg-red-600 text-white px-4 py-1 rounded shadow hover:bg-red-700 transition"
-                  >
-                    Edit
                   </button>
                 </td>
               </tr>
