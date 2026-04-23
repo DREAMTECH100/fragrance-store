@@ -38,19 +38,23 @@ function HomeFragrances({ addToWishlist, addToCart }) {
         return res.json();
       })
       .then((data) => {
-        setProducts(data);
-        setFilteredProducts(data);
+        // ✅ SAFE DATA CLEANUP (FIXES YOUR CRASH)
+        const safeData = Array.isArray(data)
+          ? data.filter((p) => p && typeof p === "object")
+          : [];
 
-        const images = data
-          .map((p) => {
-            if (!p.image) return null;
-            return p.image.startsWith("http")
-              ? p.image
-              : `${baseURL}${p.image}`;
-          })
-          .filter(Boolean);
+        setProducts(safeData);
+        setFilteredProducts(safeData);
 
-        // shuffle
+        // ================= HERO IMAGES =================
+        const images = safeData
+          .map((p) => p?.image)
+          .filter(Boolean)
+          .map((img) =>
+            img.startsWith("http") ? img : `${baseURL}${img}`
+          );
+
+        // shuffle safely
         for (let i = images.length - 1; i > 0; i--) {
           const j = Math.floor(Math.random() * (i + 1));
           [images[i], images[j]] = [images[j], images[i]];
@@ -79,7 +83,11 @@ function HomeFragrances({ addToWishlist, addToCart }) {
 
   /* ================= SUBCATEGORY FILTER ================= */
   const subCategoriesOnPage = [
-    ...new Set(products.map((p) => p.subCategory).filter(Boolean)),
+    ...new Set(
+      (products || [])
+        .map((p) => p?.subCategory)
+        .filter(Boolean)
+    ),
   ];
 
   useEffect(() => {
@@ -87,8 +95,9 @@ function HomeFragrances({ addToWishlist, addToCart }) {
       setFilteredProducts(products);
     } else {
       setFilteredProducts(
-        products.filter((p) =>
-          selectedSubCategories.includes(p.subCategory)
+        (products || []).filter(
+          (p) =>
+            p && selectedSubCategories.includes(p.subCategory)
         )
       );
     }
@@ -223,7 +232,7 @@ function HomeFragrances({ addToWishlist, addToCart }) {
               </div>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-10">
-                {filteredProducts.map((product) => (
+                {(filteredProducts || []).map((product) => (
                   <ProductCard
                     key={product._id}
                     product={product}
