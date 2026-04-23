@@ -122,8 +122,8 @@ function App() {
             <Route path="/order-success" element={<OrderSuccess />} />
           </Route>
 
-{/* ADMIN */}
-<Route path="/admin" element={<AdminLayout />}></Route>
+{/* ADMIN LOGIN */}
+<Route path="/admin-login" element={<AdminLogin />} />
 
           {/* ADMIN */}
          <Route path="/admin" element={<AdminLayout />}>
