@@ -1,8 +1,12 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { useState } from "react";
 
+
+
+
 import StoreLayout from "./layouts/StoreLayout";
 import Home from "./pages/Home";
+import HomeFragrances from "./pages/HomeFragrances";
 import Fragrances from "./pages/Fragrances";
 import Makeup from "./pages/Makeup";
 import EditProduct from "./admin/EditProduct";
@@ -64,6 +68,7 @@ function App() {
               element={<Makeup addToWishlist={addToWishlist} />}
             />
 
+
             <Route
               path="/skincare"
               element={<Skincare addToWishlist={addToWishlist} />}
@@ -72,6 +77,17 @@ function App() {
               path="/skincare/:subcategory"
               element={<Skincare addToWishlist={addToWishlist} />}
             />
+
+          <Route
+  path="/home-fragrances"
+  element={<HomeFragrances addToWishlist={addToWishlist} addToCart={addToCart} />}
+/>
+
+<Route
+  path="/home-fragrances/:subcategory"
+  element={<HomeFragrances addToWishlist={addToWishlist} addToCart={addToCart} />}
+/>
+
 
             <Route
               path="/accessories"

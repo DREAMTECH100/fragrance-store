@@ -149,7 +149,20 @@ const baseURL = import.meta.env.VITE_API_URL;
         { label: "VIEW ALL SKINCARE", slug: "" },
       ],
     },
-    { name: "ACCESSORIES", path: "/accessories", subItems: [] },
+
+
+{
+  name: "HOME FRAGRANCES",
+  path: "/home-fragrances",
+  subItems: [
+    { label: "CENTER-CANDLES", slug: "Center-candles" },
+    { label: "DIFFUSERS", slug: "diffusers" },
+    { label: "ROOM SPRAYS", slug: "room-sprays" },
+    { label: "VIEW ALL HOME FRAGRANCES", slug: "" },
+  ],
+},
+
+  
     { name: "COLLECTIONS", path: "/collections", subItems: [] },
     { name: "GIFTS", path: "/gifts", subItems: [] },
     { name: "NEW", path: "/new", subItems: [] },

@@ -24,7 +24,7 @@ function AddProduct() {
     { value: "fragrances", label: "FRAGRANCES" },
     { value: "makeup", label: "MAKEUP" },
     { value: "skincare", label: "SKINCARE" },
-    { value: "accessories", label: "ACCESSORIES" },
+     { value: "home-fragrances", label: "HOME FRAGRANCES" },
     { value: "collections", label: "COLLECTIONS" },
     { value: "gifts", label: "GIFTS" },
     { value: "new", label: "NEW" },
@@ -38,6 +38,16 @@ function AddProduct() {
       { value: "runway", label: "RUNWAY" },
       { value: "", label: "ALL FRAGRANCES" },
     ],
+
+ // ✅ ADD THIS
+  "home-fragrances": [
+    { value: "candles", label: "CENTER CANDLES" },
+    { value: "diffusers", label: "DIFFUSERS" },
+    { value: "room-sprays", label: "ROOM SPRAYS" },
+    { value: "", label: "ALL HOME FRAGRANCES" },
+  ],
+
+
     makeup: [
       { value: "lips", label: "LIPS" },
       { value: "eyes", label: "EYES" },
