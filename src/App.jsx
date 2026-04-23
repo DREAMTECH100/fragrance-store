@@ -5,6 +5,7 @@ import StoreLayout from "./layouts/StoreLayout";
 import Home from "./pages/Home";
 import Fragrances from "./pages/Fragrances";
 import Makeup from "./pages/Makeup";
+import EditProduct from "./admin/EditProduct";
 import Skincare from "./pages/Skincare";
 import Accessories from "./pages/Accessories";
 import Collections from "./pages/Collections";
@@ -106,13 +107,13 @@ function App() {
           </Route>
 
           {/* ADMIN */}
-          <Route path="/admin-login" element={<AdminLogin />} />
-          <Route path="/admin" element={<AdminLayout />}>
-            <Route index element={<AdminDashboard />} />
-            <Route path="orders" element={<Orders />} />
-            <Route path="products" element={<Products />} />
-            <Route path="add-product" element={<AddProduct />} />
-          </Route>
+         <Route path="/admin" element={<AdminLayout />}>
+  <Route index element={<AdminDashboard />} />
+  <Route path="orders" element={<Orders />} />
+  <Route path="products" element={<Products />} />
+  <Route path="add-product" element={<AddProduct />} />
+  <Route path="edit-product/:id" element={<EditProduct />} />
+</Route>
         </Routes>
         <SalesPopup/>
       </div>
