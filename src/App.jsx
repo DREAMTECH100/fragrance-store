@@ -78,15 +78,14 @@ function App() {
               element={<Skincare addToWishlist={addToWishlist} />}
             />
 
-          <Route
-  path="/home-fragrances"
-  element={<HomeFragrances addToWishlist={addToWishlist} addToCart={addToCart} />}
-/>
-
-<Route
-  path="/home-fragrances/:subcategory"
-  element={<HomeFragrances addToWishlist={addToWishlist} addToCart={addToCart} />}
-/>
+           <Route
+              path="/home-fragrances"
+              element={<home-fragrances addToWishlist={addToWishlist} />}
+            />
+            <Route
+              path="/home-fragrances/:subcategory"
+              element={<home-fragrances addToWishlist={addToWishlist} />}
+            />
 
 
             <Route
