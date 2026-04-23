@@ -260,7 +260,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
                     {/* DROPDOWN */}
                     {item.subItems?.length > 0 && (
-                      <div className="fixed inset-x-0 top-[130px] bg-softwhite border-b border-darktext/10 z-50">
+                     <div className="absolute top-full left-1/2 -translate-x-1/2 mt-3 w-64 bg-softwhite border border-darktext/10 shadow-xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 py-5 px-8 text-center">
                         {item.subItems.map((sub, i) => (
                           <Link
                             key={i}
@@ -302,7 +302,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
        {/* SEARCH PANEL */}
 {searchOpen && (
-  <div className="fixed inset-x-0 top-full bg-softwhite border-b border-darktext/10 z-50">
+ <div className="fixed inset-x-0 top-[130px] bg-softwhite border-b border-darktext/10 z-50">
     <div className="max-w-4xl mx-auto px-6 py-6">
       <form
         onSubmit={async (e) => {
