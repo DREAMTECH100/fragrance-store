@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { Heart, ShoppingBag, Search, ChevronDown, ChevronRight } from "lucide-react";
 import { useCart } from "../context/CartContext";
+import { useRef } from "react";
 
 /* =======================
    TOP TICKER (ORANGE)
@@ -61,6 +62,7 @@ function Navbar({ wishlist }) {
   const [expanded, setExpanded] = useState({});
   const navigate = useNavigate();
   const { cart } = useCart();
+  const searchRef = useRef(null);
 
   const cartCount = cart.reduce((total, item) => total + item.quantity, 0);
   const wishlistCount = wishlist?.length || 0;
@@ -101,11 +103,10 @@ const baseURL = import.meta.env.VITE_API_URL;
 );
       const data = await res.json();
 
-      if (data.length > 0) {
-        // redirect dynamically to category/subcategory of first match
-        const product = data[0];
-        navigate(`/${product.category}?sub=${product.subcategory || ""}`);
-      }
+     if (data.length > 0) {
+  const product = data[0];
+  navigate(`/product/${product._id}`);
+}
 
       setSearchTerm("");
       setSuggestions([]);
@@ -201,10 +202,17 @@ const baseURL = import.meta.env.VITE_API_URL;
                 ☰
               </button>
 
-              {/* SEARCH BUTTON */}
-              <button onClick={() => setSearchOpen(!searchOpen)}>
-                <Search className="w-6 h-6 text-darktext hover:text-primary transition" />
-              </button>
+            {/* SEARCH BUTTON */}
+<button
+  onClick={() => {
+    setSearchOpen(true);
+    setTimeout(() => {
+      searchRef.current?.focus();
+    }, 100);
+  }}
+>
+  <Search className="w-6 h-6 text-darktext hover:text-primary transition" />
+</button>
             </div>
 
             {/* CENTER LOGO */}
@@ -306,9 +314,9 @@ const baseURL = import.meta.env.VITE_API_URL;
 );
             const data = await res.json();
             if (data.length > 0) {
-              const product = data[0];
-              navigate(`/${product.category}?sub=${product.subcategory || ""}`);
-            }
+  const product = data[0];
+  navigate(`/product/${product._id}`);
+}
             setSearchTerm("");
             setSuggestions([]);
             setSearchOpen(false);
@@ -318,14 +326,15 @@ const baseURL = import.meta.env.VITE_API_URL;
         }}
       >
         <input
-          id="search"
-          name="search"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full border-b py-4 text-xl focus:outline-none"
-          placeholder="Search for products..."
-          autoComplete="off"
-        />
+  ref={searchRef}
+  id="search"
+  name="search"
+  value={searchTerm}
+  onChange={(e) => setSearchTerm(e.target.value)}
+  className="w-full border-b py-4 text-xl focus:outline-none"
+  placeholder="Search for products..."
+  autoComplete="off"
+/>
       </form>
 
       {/* SUGGESTIONS */}
@@ -338,7 +347,7 @@ const baseURL = import.meta.env.VITE_API_URL;
               onMouseDown={(e) => {
                 // use onMouseDown instead of onClick to fire before blur
                 e.preventDefault();
-                navigate(`/${p.category}?sub=${p.subcategory || ""}`);
+               navigate(`/product/${p._id}`);
                 setSearchTerm("");
                 setSuggestions([]);
                 setSearchOpen(false);
