@@ -19,7 +19,51 @@ function EditProduct() {
   const [sizes, setSizes] = useState([{ label: "", price: "" }]);
   const [loading, setLoading] = useState(true);
 
-  // ================= FETCH PRODUCT =================
+  // ================= CATEGORY SYSTEM (SAME AS ADDPRODUCT) =================
+  const mainCategories = [
+    { value: "fragrances", label: "FRAGRANCES" },
+    { value: "body-mist", label: "BODY MIST" },
+    { value: "mini-perfume", label: "MINI PERFUME" },
+    { value: "makeup", label: "MAKEUP" },
+    { value: "skincare", label: "SKINCARE" },
+    { value: "home-fragrances", label: "HOME FRAGRANCES" },
+    { value: "collections", label: "COLLECTIONS" },
+    { value: "gifts", label: "GIFTS" },
+    { value: "new", label: "NEW ARRIVALS" },
+  ];
+
+  const subCategoriesMap = {
+    fragrances: [
+      { value: "", label: "ALL FRAGRANCES" },
+      { value: "mens-perfume", label: "MENS PERFUME" },
+      { value: "womens-perfume", label: "WOMENS PERFUME" },
+      { value: "all-brands", label: "ALL BRANDS" },
+    ],
+    skincare: [
+      { value: "moisturizers", label: "MOISTURIZERS" },
+      { value: "serums", label: "SERUMS" },
+      { value: "cleansers", label: "CLEANSERS" },
+      { value: "body-oil", label: "BODY OIL" },
+      { value: "hair-perfume", label: "HAIR PERFUME" },
+      { value: "deodorant-body-sprays", label: "DEODORANT BODY SPRAYS" },
+    ],
+    makeup: [
+      { value: "lips", label: "LIPS" },
+      { value: "eyes", label: "EYES" },
+      { value: "face", label: "FACE" },
+      { value: "cheeks", label: "CHEEKS" },
+    ],
+    "home-fragrances": [
+      { value: "scented-candles", label: "SCENTED CANDLES" },
+      { value: "diffusers", label: "DIFFUSERS" },
+      { value: "room-sprays", label: "ROOM SPRAYS" },
+      { value: "", label: "ALL HOME FRAGRANCES" },
+    ],
+  };
+
+  const currentSubs = subCategoriesMap[product.category] || [];
+
+  // ================= FETCH =================
   useEffect(() => {
     fetch(`${baseURL}/api/products/${id}`)
       .then(res => res.json())
@@ -35,7 +79,6 @@ function EditProduct() {
         });
 
         setSizes(data.sizes?.length ? data.sizes : [{ label: "", price: "" }]);
-
         setLoading(false);
       })
       .catch(err => {
@@ -44,30 +87,41 @@ function EditProduct() {
       });
   }, [id, baseURL]);
 
-  // ================= BASIC INPUTS =================
+  // ================= HANDLE CHANGE =================
   const handleChange = (e) => {
     const { name, value } = e.target;
 
     setProduct(prev => ({
       ...prev,
       [name]: value,
+      ...(name === "category" ? { subCategory: "" } : {}),
     }));
   };
 
-  // ================= SIZES (same logic as AddProduct) =================
-  const handleSizeChange = (index, field, value) => {
-    const updated = [...sizes];
-    updated[index][field] = value;
-    setSizes(updated);
-  };
+  // ================= IMAGE UPLOAD (same logic as AddProduct) =================
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-  const addSize = () => {
-    setSizes([...sizes, { label: "", price: "" }]);
-  };
+    const formData = new FormData();
+    formData.append("image", file);
 
-  const removeSize = (index) => {
-    const updated = sizes.filter((_, i) => i !== index);
-    setSizes(updated);
+    try {
+      const res = await fetch(`${baseURL}/api/products/upload`, {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+
+      setProduct(prev => ({
+        ...prev,
+        image: data.url,
+      }));
+    } catch (err) {
+      console.error(err);
+      alert("Image upload failed");
+    }
   };
 
   // ================= SUBMIT =================
@@ -89,9 +143,7 @@ function EditProduct() {
     try {
       const res = await fetch(`${baseURL}/api/products/${id}`, {
         method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(submitData),
       });
 
@@ -117,44 +169,47 @@ function EditProduct() {
 
         <input name="price" value={product.price} onChange={handleChange} className="w-full border p-2" placeholder="Price" />
 
-        <input name="category" value={product.category} onChange={handleChange} className="w-full border p-2" placeholder="Category" />
+        {/* CATEGORY DROPDOWN */}
+        <select
+          name="category"
+          value={product.category}
+          onChange={handleChange}
+          className="w-full border p-2"
+        >
+          <option value="">Select Category</option>
+          {mainCategories.map(c => (
+            <option key={c.value} value={c.value}>
+              {c.label}
+            </option>
+          ))}
+        </select>
 
-        <input name="subCategory" value={product.subCategory} onChange={handleChange} className="w-full border p-2" placeholder="Sub Category" />
+        {/* SUBCATEGORY DROPDOWN */}
+        {currentSubs.length > 0 && (
+          <select
+            name="subCategory"
+            value={product.subCategory}
+            onChange={handleChange}
+            className="w-full border p-2"
+          >
+            <option value="">Select Subcategory</option>
+            {currentSubs.map(s => (
+              <option key={s.value} value={s.value}>
+                {s.label}
+              </option>
+            ))}
+          </select>
+        )}
 
         <input name="stock" value={product.stock} onChange={handleChange} className="w-full border p-2" placeholder="Stock" />
 
         <textarea name="description" value={product.description} onChange={handleChange} className="w-full border p-2" placeholder="Description" />
 
-        {/* ================= SIZES ================= */}
-        <div className="border-t pt-4">
-          <h2 className="font-semibold mb-2">Sizes</h2>
-
-          {sizes.map((size, index) => (
-            <div key={index} className="flex gap-2 mb-2">
-              <input
-                placeholder="Size"
-                value={size.label}
-                onChange={(e) => handleSizeChange(index, "label", e.target.value)}
-                className="w-1/2 border p-2"
-              />
-
-              <input
-                placeholder="Price"
-                value={size.price}
-                onChange={(e) => handleSizeChange(index, "price", e.target.value)}
-                className="w-1/2 border p-2"
-              />
-
-              <button type="button" onClick={() => removeSize(index)}>
-                ✕
-              </button>
-            </div>
-          ))}
-
-          <button type="button" onClick={addSize} className="text-blue-600">
-            + Add Size
-          </button>
-        </div>
+        {/* IMAGE */}
+        <input type="file" onChange={handleFileChange} />
+        {product.image && (
+          <img src={product.image} className="w-32 h-32 object-cover mt-2" />
+        )}
 
         <button className="bg-green-600 text-white px-6 py-2 mt-4">
           Update Product
