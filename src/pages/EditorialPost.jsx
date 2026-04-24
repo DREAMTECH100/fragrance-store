@@ -1,108 +1,132 @@
 import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+
+const editorialPosts = [
+  {
+    slug: "architecture-of-a-signature-scent",
+    title: "The Architecture of a Signature Scent",
+    excerpt: "Layering is deliberate construction...",
+    image: "https://thumbs.dreamstime.com/b/luxury-dark-perfume-bottle.jpg",
+    content: `
+## The Opening
+
+A fragrance is never worn. It is entered.
+
+## Composition
+
+Top Notes: Citrus spark, clean aldehydes  
+Heart Notes: Floral tension, soft spice  
+Base Notes: Oud, amber, musk  
+
+> True luxury is presence without noise.
+
+This is a scent that does not ask for attention — it rearranges it.
+`
+  },
+  {
+    slug: "nocturnal-ritual-oud-and-amber",
+    title: "Nocturnal Ritual — Oud, Amber, After Dark",
+    excerpt: "As light fades...",
+    image: "https://thumbs.dreamstime.com/b/luxury-black-obsidian.jpg",
+    content: `
+## After Dark
+
+This is where silence becomes expensive.
+
+## Scent Profile
+
+Top: Smoke, citrus peel  
+Heart: Resin, dark florals  
+Base: Oud, amber, leather  
+
+> Some scents are not worn — they are inhabited.
+
+Night transforms this fragrance into identity.
+`
+  },
+  {
+    slug: "the-restraint-of-radiance",
+    title: "The Restraint of Radiance — Skincare as Power",
+    excerpt: "True luxury is subtraction...",
+    image: "https://thumbs.dreamstime.com/b/young-woman-applying.jpg",
+    content: `
+## Ritual
+
+Luxury begins when excess is removed.
+
+## Philosophy
+
+Minimal steps. Maximum discipline.  
+Skin that does not shout — it commands quietly.
+
+> Radiance is restraint perfected.
+
+This is skincare as identity, not routine.
+`
+  }
+];
 
 function EditorialPost() {
   const { slug } = useParams();
-  const [post, setPost] = useState(null);
 
-  const baseURL = import.meta.env.VITE_API_URL;
-
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const res = await fetch(`${baseURL}/api/editorial/${slug}`);
-        const data = await res.json();
-        setPost(data);
-      } catch (err) {
-        console.error("EDITORIAL FETCH ERROR:", err);
-      }
-    };
-
-    fetchPost();
-  }, [slug, baseURL]);
+  const post = editorialPosts.find((p) => p.slug === slug);
 
   if (!post) {
     return (
       <div className="min-h-screen flex items-center justify-center text-gray-500">
-        Loading...
+        Post not found
       </div>
     );
   }
 
+  const formatContent = (text) => {
+    return text.split("\n").map((line, i) => {
+      if (line.startsWith("##")) {
+        return (
+          <h2 key={i} className="text-2xl font-luxury uppercase mt-8 mb-4">
+            {line.replace("##", "")}
+          </h2>
+        );
+      }
+
+      if (line.startsWith(">")) {
+        return (
+          <p key={i} className="italic border-l-2 pl-4 my-4 text-gray-600">
+            {line.replace(">", "")}
+          </p>
+        );
+      }
+
+      return (
+        <p key={i} className="leading-relaxed my-2 text-gray-700">
+          {line}
+        </p>
+      );
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-softwhite text-darktext px-6 py-24">
+    <div className="min-h-screen bg-softwhite px-6 py-20 text-darktext">
       <div className="max-w-4xl mx-auto">
 
-        {/* HERO IMAGE */}
+        {/* IMAGE */}
         <img
-          src={
-            post.image?.startsWith("http")
-              ? post.image
-              : `${baseURL}${post.image}`
-          }
+          src={post.image}
           alt={post.title}
-          className="w-full h-[450px] object-cover rounded-xl shadow-xl mb-12"
+          className="w-full h-[450px] object-cover rounded-xl mb-10"
         />
 
         {/* TITLE */}
-        <h1 className="text-4xl md:text-6xl font-luxury uppercase tracking-[0.2em] mb-6">
+        <h1 className="text-4xl md:text-6xl font-luxury uppercase mb-4 tracking-widest">
           {post.title}
         </h1>
 
-        {/* SUB HEADLINE */}
-        <p className="text-lg italic text-darktext/70 mb-10 leading-relaxed">
-          {post.tagline ||
-            "A composition of scent, memory, and silent identity."}
+        {/* EXCERPT */}
+        <p className="italic text-gray-600 mb-10">
+          {post.excerpt}
         </p>
 
-        {/* MAGAZINE BODY */}
-        <div className="space-y-8 text-base md:text-lg leading-relaxed text-darktext/80">
-
-          {/* OPENING */}
-          <p>
-            In the world of fragrance, scent is never just worn — it is entered.
-            It becomes architecture around the body, shaping presence before
-            words ever arrive.
-          </p>
-
-          {/* STORY LAYER */}
-          <p>
-            {post.title} unfolds like a narrative written in invisible ink.
-            The first impression is fleeting — a whisper of top notes that
-            vanish almost as quickly as they appear. Yet they leave a question
-            behind: *who just entered the room?*
-          </p>
-
-          {/* SCENT PROFILE */}
-          <div className="border-l-2 border-black/20 pl-6">
-            <h3 className="uppercase tracking-[0.25em] text-sm mb-2">
-              Fragrance Composition
-            </h3>
-
-            <p>
-              Top Notes: Citrus brightness, airy aldehydes, first impression spark<br />
-              Heart Notes: Floral depth, soft spice, emotional warmth<br />
-              Base Notes: Oud, amber, musk — the memory that lingers
-            </p>
-          </div>
-
-          {/* EMOTIONAL INTERPRETATION */}
-          <p>
-            This is not a fragrance that asks for attention. It commands it
-            silently. It does not announce arrival — it reshapes atmosphere.
-          </p>
-
-          {/* LUXURY STATEMENT */}
-          <p className="italic text-darktext/70">
-            “True luxury is not seen. It is remembered.”
-          </p>
-
-        </div>
-
-        {/* CLOSING LINE */}
-        <div className="mt-16 border-t pt-8 text-sm uppercase tracking-widest text-darktext/60">
-          Private Notes • Fragrance Editorial Archive
-        </div>
+        {/* MAGAZINE CONTENT */}
+        <div>{formatContent(post.content)}</div>
 
       </div>
     </div>
