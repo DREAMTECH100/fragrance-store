@@ -34,12 +34,10 @@ function AddProduct() {
 
   const subCategoriesMap = {
     fragrances: [
-      { value: "private-blend", label: "PRIVATE BLEND" },
-      { value: "signature", label: "SIGNATURE" },
-      { value: "soleil", label: "SOLEIL" },
-      { value: "runway", label: "RUNWAY" },
-      { value: "", label: "ALL FRAGRANCES" },
-    ],
+  { value: "", label: "ALL FRAGRANCES" },
+  { value: "mens-perfume", label: "MENS PERFUME" },
+  { value: "womens-perfume", label: "WOMENS PERFUME" },
+],
 
     "home-fragrances": [
       { value: "scented-candles", label: "SCENTED CANDLES" },
@@ -55,11 +53,13 @@ function AddProduct() {
       { value: "cheeks", label: "CHEEKS" },
     ],
 
-   skincare: [
+ skincare: [
   { value: "moisturizers", label: "MOISTURIZERS" },
   { value: "serums", label: "SERUMS" },
   { value: "cleansers", label: "CLEANSERS" },
-  { value: "body-oil", label: "BODY OIL" }, // ✅ NEW
+  { value: "body-oil", label: "BODY OIL" },
+  { value: "hair-perfume", label: "HAIR PERFUME" },
+  { value: "deodorant-body-sprays", label: "DEODORANT BODY SPRAYS" }, // ✅
 ],
   };
 

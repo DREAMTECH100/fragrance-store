@@ -140,13 +140,13 @@ const navItems = [
     name: "FRAGRANCES",
     path: "/fragrances",
     subItems: [
-      { label: "PRIVATE BLEND", slug: "private-blend" },
-      { label: "SIGNATURE", slug: "signature" },
-      { label: "SOLEIL", slug: "soleil" },
-      { label: "RUNWAY", slug: "runway" },
-      { label: "ALL FRAGRANCES", slug: "" },
+      { label: "ALL BRANDS", slug: "" },
+      { label: "MEN'S PERFUME", slug: "men" },
+      { label: "WOMEN'S PERFUME", slug: "women" },
+      { label: "BRANDS", slug: "brands" },
     ],
   },
+
 
   // ✅ NEW CATEGORY
   {
@@ -175,19 +175,22 @@ const navItems = [
   },
 
   {
-    name: "SKINCARE",
-    path: "/skincare",
-    subItems: [
-      { label: "MOISTURIZERS", slug: "moisturizers" },
-      { label: "SERUMS", slug: "serums" },
-      { label: "CLEANSERS", slug: "cleansers" },
+  name: "SKINCARE",
+  path: "/skincare",
+  subItems: [
+    { label: "MOISTURIZERS", slug: "moisturizers" },
+    { label: "SERUMS", slug: "serums" },
+    { label: "CLEANSERS", slug: "cleansers" },
 
-      // ✅ NEW SUBCATEGORY
-      { label: "BODY OIL", slug: "body-oil" },
+    { label: "BODY OIL", slug: "body-oil" },
+    { label: "HAIR PERFUME", slug: "hair-perfume" },
 
-      { label: "VIEW ALL SKINCARE", slug: "" },
-    ],
-  },
+    // ✅ ADD THIS
+    { label: "DEODORANT BODY SPRAYS", slug: "deodorant-body-sprays" },
+
+    { label: "VIEW ALL SKINCARE", slug: "" },
+  ],
+},
 
   {
     name: "HOME FRAGRANCES",

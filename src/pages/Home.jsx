@@ -266,7 +266,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
   {/* Mini cards (exclude first 4) */}
   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mb-20">
-    {fragrances.slice(4, 12).map(product => (
+    {fragrances.slice(6, 15).map(product => (
       <Link
         key={product._id}
         to={`/product/${product._id}`}
@@ -490,7 +490,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
     {/* SMALL CARDS */}
     <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
-      {skincare.slice(0, 5).map(product => (
+      {skincare.slice(3, 12).map(product => (
         <Link
           key={product._id}
           to={`/product/${product._id}`}

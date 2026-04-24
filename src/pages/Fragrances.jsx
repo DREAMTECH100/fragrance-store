@@ -70,16 +70,26 @@ function Fragrances({ addToWishlist, addToCart }) {
     return () => clearInterval(interval);
   }, [heroImages]);
 
-  const subCategoriesOnPage = [
-    ...new Set(products.map((p) => p.subCategory).filter(Boolean)),
-  ];
+ const subCategoriesOnPage = [
+  ...new Set(
+    products
+      .map((p) =>
+        p.subCategory?.toLowerCase().replace(/\s+/g, "-")
+      )
+      .filter(Boolean)
+  ),
+];
 
   useEffect(() => {
     if (selectedSubCategories.length === 0) {
       setFilteredProducts(products);
     } else {
       setFilteredProducts(
-        products.filter((p) => selectedSubCategories.includes(p.subCategory))
+       products.filter((p) =>
+  selectedSubCategories.includes(
+    p.subCategory?.toLowerCase().replace(/\s+/g, "-")
+  )
+)
       );
     }
   }, [selectedSubCategories, products]);
