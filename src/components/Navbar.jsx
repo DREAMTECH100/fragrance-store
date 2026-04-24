@@ -136,16 +136,16 @@ useEffect(() => {
 
 
 const navItems = [
-  {
-    name: "FRAGRANCES",
-    path: "/fragrances",
-    subItems: [
-      { label: "ALL BRANDS", slug: "" },
-      { label: "MEN'S PERFUME", slug: "men" },
-      { label: "WOMEN'S PERFUME", slug: "women" },
-      { label: "BRANDS", slug: "brands" },
-    ],
-  },
+ {
+  name: "FRAGRANCES",
+  path: "/fragrances",
+  subItems: [
+    { label: "MEN'S PERFUME", slug: "men" },
+    { label: "WOMEN'S PERFUME", slug: "women" },
+    { label: "ALL BRANDS", slug: "brands" },
+    { label: "ALL FRAGRANCES", slug: "" },
+  ],
+},
 
 
   // ✅ NEW CATEGORY
@@ -205,7 +205,7 @@ const navItems = [
 
   { name: "COLLECTIONS", path: "/collections", subItems: [] },
   { name: "GIFTS", path: "/gifts", subItems: [] },
-  { name: "NEW", path: "/new", subItems: [] },
+ { name: "NEW ARRIVALS", path: "/new", subItems: [] },
   { name: "ABOUT", path: "/about", subItems: [] },
 ];
 

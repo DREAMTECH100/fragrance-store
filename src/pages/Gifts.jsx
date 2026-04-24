@@ -4,14 +4,15 @@ import ProductCard from "../components/ProductCard";
 
 function Gifts({ addToWishlist }) {
   const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [searchParams] = useSearchParams();
   const sub = searchParams.get("sub") || "";
 
-  // ✅ BASE URL (same pattern as your Makeup page)
   const baseURL = import.meta.env.VITE_API_URL;
 
+  // FETCH PRODUCTS
   useEffect(() => {
     setLoading(true);
 
@@ -25,6 +26,7 @@ function Gifts({ addToWishlist }) {
       })
       .then((data) => {
         setProducts(data);
+        setFilteredProducts(data);
         setLoading(false);
       })
       .catch((err) => {
@@ -39,7 +41,7 @@ function Gifts({ addToWishlist }) {
 
   return (
     <div className="bg-softwhite min-h-screen">
-      
+
       {/* HERO */}
       <section className="py-32 md:py-40 px-6 text-center">
         <h1 className="text-5xl md:text-7xl lg:text-9xl font-luxury uppercase tracking-superWide text-darktext">
@@ -50,17 +52,18 @@ function Gifts({ addToWishlist }) {
         </p>
       </section>
 
-      {/* PRODUCT GRID */}
+      {/* PRODUCTS */}
       <section className="max-w-7xl mx-auto px-6 py-16 md:py-24">
+
         {loading ? (
           <p className="text-center text-2xl">Loading gifts...</p>
-        ) : products.length === 0 ? (
+        ) : filteredProducts.length === 0 ? (
           <p className="text-center text-2xl font-luxury uppercase tracking-widestLux text-darktext/70">
             No gifts found.
           </p>
         ) : (
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 md:gap-12">
-            {products.map((product) => (
+            {filteredProducts.map((product) => (
               <ProductCard
                 key={product._id}
                 product={product}
@@ -69,6 +72,7 @@ function Gifts({ addToWishlist }) {
             ))}
           </div>
         )}
+
       </section>
     </div>
   );

@@ -29,15 +29,17 @@ function AddProduct() {
   { value: "home-fragrances", label: "HOME FRAGRANCES" },
   { value: "collections", label: "COLLECTIONS" },
   { value: "gifts", label: "GIFTS" },
-  { value: "new", label: "NEW" },
+  { value: "new", label: "NEW ARRIVALS" },
 ];
 
   const subCategoriesMap = {
-    fragrances: [
-  { value: "", label: "ALL FRAGRANCES" },
-  { value: "mens-perfume", label: "MENS PERFUME" },
-  { value: "womens-perfume", label: "WOMENS PERFUME" },
-],
+  fragrances: [
+    { value: "", label: "ALL FRAGRANCES" }, // 👈 general page (NO FILTER)
+    { value: "mens-perfume", label: "MENS PERFUME" },
+    { value: "womens-perfume", label: "WOMENS PERFUME" },
+    { value: "all-brands", label: "ALL BRANDS" }, // 👈 just another category
+  ],
+
 
     "home-fragrances": [
       { value: "scented-candles", label: "SCENTED CANDLES" },
