@@ -8,6 +8,8 @@ import StoreLayout from "./layouts/StoreLayout";
 import Home from "./pages/Home";
 import HomeFragrances from "./pages/HomeFragrances";
 import Fragrances from "./pages/Fragrances";
+import BodyMist from "./pages/BodyMist";
+import MiniPerfume from "./pages/MiniPerfume";
 import Makeup from "./pages/Makeup";
 import EditProduct from "./admin/EditProduct";
 import Skincare from "./pages/Skincare";
@@ -88,6 +90,16 @@ function App() {
   element={<HomeFragrances addToWishlist={addToWishlist} />}
 />
 
+
+<Route
+  path="/body-mist"
+  element={<BodyMist addToWishlist={addToWishlist} />}
+/>
+
+<Route
+  path="/mini-perfume"
+  element={<MiniPerfume addToWishlist={addToWishlist} />}
+/>
 
             <Route
               path="/accessories"

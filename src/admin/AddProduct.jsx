@@ -20,15 +20,17 @@ function AddProduct() {
 
   const baseURL = import.meta.env.VITE_API_URL;
 
-  const mainCategories = [
-    { value: "fragrances", label: "FRAGRANCES" },
-    { value: "makeup", label: "MAKEUP" },
-    { value: "skincare", label: "SKINCARE" },
-    { value: "home-fragrances", label: "HOME FRAGRANCES" },
-    { value: "collections", label: "COLLECTIONS" },
-    { value: "gifts", label: "GIFTS" },
-    { value: "new", label: "NEW" },
-  ];
+ const mainCategories = [
+  { value: "fragrances", label: "FRAGRANCES" },
+  { value: "body-mist", label: "BODY MIST" },       // ✅ NEW
+  { value: "mini-perfume", label: "MINI PERFUME" }, // ✅ NEW
+  { value: "makeup", label: "MAKEUP" },
+  { value: "skincare", label: "SKINCARE" },
+  { value: "home-fragrances", label: "HOME FRAGRANCES" },
+  { value: "collections", label: "COLLECTIONS" },
+  { value: "gifts", label: "GIFTS" },
+  { value: "new", label: "NEW" },
+];
 
   const subCategoriesMap = {
     fragrances: [
@@ -53,11 +55,12 @@ function AddProduct() {
       { value: "cheeks", label: "CHEEKS" },
     ],
 
-    skincare: [
-      { value: "moisturizers", label: "MOISTURIZERS" },
-      { value: "serums", label: "SERUMS" },
-      { value: "cleansers", label: "CLEANSERS" },
-    ],
+   skincare: [
+  { value: "moisturizers", label: "MOISTURIZERS" },
+  { value: "serums", label: "SERUMS" },
+  { value: "cleansers", label: "CLEANSERS" },
+  { value: "body-oil", label: "BODY OIL" }, // ✅ NEW
+],
   };
 
   const currentSubs = subCategoriesMap[product.category] || [];

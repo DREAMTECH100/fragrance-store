@@ -134,58 +134,77 @@ useEffect(() => {
     }
   };
 
-  const navItems = [
-    {
-      name: "FRAGRANCES",
-      path: "/fragrances",
-      subItems: [
-        { label: "PRIVATE BLEND", slug: "private-blend" },
-        { label: "SIGNATURE", slug: "signature" },
-        { label: "SOLEIL", slug: "soleil" },
-        { label: "RUNWAY", slug: "runway" },
-        { label: "ALL FRAGRANCES", slug: "" },
-      ],
-    },
-    {
-      name: "MAKEUP",
-      path: "/makeup",
-      subItems: [
-        { label: "LIPS", slug: "lips" },
-        { label: "EYES", slug: "eyes" },
-        { label: "FACE", slug: "face" },
-        { label: "CHEEKS", slug: "cheeks" },
-        { label: "VIEW ALL MAKEUP", slug: "" },
-      ],
-    },
-    {
-      name: "SKINCARE",
-      path: "/skincare",
-      subItems: [
-        { label: "MOISTURIZERS", slug: "moisturizers" },
-        { label: "SERUMS", slug: "serums" },
-        { label: "CLEANSERS", slug: "cleansers" },
-        { label: "VIEW ALL SKINCARE", slug: "" },
-      ],
-    },
 
+const navItems = [
+  {
+    name: "FRAGRANCES",
+    path: "/fragrances",
+    subItems: [
+      { label: "PRIVATE BLEND", slug: "private-blend" },
+      { label: "SIGNATURE", slug: "signature" },
+      { label: "SOLEIL", slug: "soleil" },
+      { label: "RUNWAY", slug: "runway" },
+      { label: "ALL FRAGRANCES", slug: "" },
+    ],
+  },
 
-{
-  name: "HOME FRAGRANCES",
-  path: "/home-fragrances",
-  subItems: [
-    { label: "SCENTED-CANDLES", slug: "scented-candles" },
-    { label: "DIFFUSERS", slug: "diffusers" },
-    { label: "ROOM SPRAYS", slug: "room-sprays" },
-    { label: "VIEW ALL HOME FRAGRANCES", slug: "" },
-  ],
-},
+  // ✅ NEW CATEGORY
+  {
+    name: "BODY MIST",
+    path: "/body-mist",
+    subItems: [], // no dropdown
+  },
 
-  
-    { name: "COLLECTIONS", path: "/collections", subItems: [] },
-    { name: "GIFTS", path: "/gifts", subItems: [] },
-    { name: "NEW", path: "/new", subItems: [] },
-    { name: "ABOUT", path: "/about", subItems: [] },
-  ];
+  // ✅ NEW CATEGORY
+  {
+    name: "MINI PERFUME",
+    path: "/mini-perfume",
+    subItems: [], // no dropdown
+  },
+
+  {
+    name: "MAKEUP",
+    path: "/makeup",
+    subItems: [
+      { label: "LIPS", slug: "lips" },
+      { label: "EYES", slug: "eyes" },
+      { label: "FACE", slug: "face" },
+      { label: "CHEEKS", slug: "cheeks" },
+      { label: "VIEW ALL MAKEUP", slug: "" },
+    ],
+  },
+
+  {
+    name: "SKINCARE",
+    path: "/skincare",
+    subItems: [
+      { label: "MOISTURIZERS", slug: "moisturizers" },
+      { label: "SERUMS", slug: "serums" },
+      { label: "CLEANSERS", slug: "cleansers" },
+
+      // ✅ NEW SUBCATEGORY
+      { label: "BODY OIL", slug: "body-oil" },
+
+      { label: "VIEW ALL SKINCARE", slug: "" },
+    ],
+  },
+
+  {
+    name: "HOME FRAGRANCES",
+    path: "/home-fragrances",
+    subItems: [
+      { label: "SCENTED CANDLES", slug: "scented-candles" },
+      { label: "DIFFUSERS", slug: "diffusers" },
+      { label: "ROOM SPRAYS", slug: "room-sprays" },
+      { label: "VIEW ALL HOME FRAGRANCES", slug: "" },
+    ],
+  },
+
+  { name: "COLLECTIONS", path: "/collections", subItems: [] },
+  { name: "GIFTS", path: "/gifts", subItems: [] },
+  { name: "NEW", path: "/new", subItems: [] },
+  { name: "ABOUT", path: "/about", subItems: [] },
+];
 
   const toggleExpand = (name) => {
     setExpanded((prev) => ({ ...prev, [name]: !prev[name] }));
