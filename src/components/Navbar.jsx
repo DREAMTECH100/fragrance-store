@@ -140,8 +140,8 @@ const navItems = [
   name: "FRAGRANCES",
   path: "/fragrances",
   subItems: [
-    { label: "MEN'S PERFUME", slug: "men" },
-    { label: "WOMEN'S PERFUME", slug: "women" },
+    { label: "MEN'S PERFUME", slug: "mens-perfume" },
+    { label: "WOMEN'S PERFUME", slug: "womens-perfume" },
     { label: "ALL BRANDS", slug: "brands" },
     { label: "ALL FRAGRANCES", slug: "" },
   ],
