@@ -142,7 +142,7 @@ const navItems = [
   subItems: [
     { label: "MEN'S PERFUME", slug: "mens-perfume" },
     { label: "WOMEN'S PERFUME", slug: "womens-perfume" },
-    { label: "ALL BRANDS", slug: "brands" },
+    { label: "ALL BRANDS", slug: "all-brands" },
     { label: "ALL FRAGRANCES", slug: "" },
   ],
 },
