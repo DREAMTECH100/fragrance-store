@@ -39,35 +39,37 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
       className="group block bg-white border border-gray-200 hover:shadow-xl transition duration-300 relative cursor-pointer"
     >
       {/* IMAGE SECTION */}
-      <div className="relative overflow-hidden">
+     <div className="relative overflow-hidden bg-white">
 
-        {/* 🆕 PREORDER BADGE */}
-        {product.isPreorder && (
-          <div className="absolute top-3 left-3 z-20 bg-red-600 text-white text-[10px] px-2 py-1 uppercase tracking-widest">
-            Pre-order
-          </div>
-        )}
+  {/* PREORDER BADGE */}
+  {product.isPreorder && (
+    <div className="absolute top-3 left-3 z-20 bg-red-600 text-white text-[10px] px-2 py-1 uppercase tracking-widest">
+      Pre-order
+    </div>
+  )}
 
-        {/* Wishlist */}
-        {addToWishlist && (
-          <button
-            onClick={handleWishlist}
-            className="absolute top-3 right-3 z-20 bg-white rounded-full p-2 shadow-md text-gray-600 hover:text-red-600 transition"
-          >
-            <Heart size={18} />
-          </button>
-        )}
+  {/* Wishlist */}
+  {addToWishlist && (
+    <button
+      onClick={handleWishlist}
+      className="absolute top-3 right-3 z-20 bg-white rounded-full p-2 shadow-md text-gray-600 hover:text-red-600 transition"
+    >
+      <Heart size={18} />
+    </button>
+  )}
 
-        {/* IMAGE */}
-        <img
-          src={
-            product.image?.startsWith("http")
-              ? product.image
-              : `${baseURL}${product.image}`
-          }
-          alt={product.name}
-          className="w-full h-[220px] object-cover transform group-hover:scale-105 transition duration-500"
-        />
+  {/* ✅ ONLY IMAGE YOU SHOULD HAVE */}
+  <div className="w-full h-[220px] flex items-center justify-center bg-white">
+    <img
+      src={
+        product.image?.startsWith("http")
+          ? product.image
+          : `${baseURL}${product.image}`
+      }
+      alt={product.name}
+      className="max-h-full max-w-full object-contain transform group-hover:scale-105 transition duration-500"
+    />
+  </div>
 
         {/* HOVER OVERLAY */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition duration-300 flex items-center justify-center">
