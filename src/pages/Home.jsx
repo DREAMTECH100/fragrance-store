@@ -46,32 +46,35 @@ const baseURL = import.meta.env.VITE_API_URL;
   const accessories = products.filter(p => p.category === "accessories");
 
   // Editorial content — unchanged
-  const editorialPosts = [
-    {
-      slug: "architecture-of-a-signature-scent",
-      title: "The Architecture of a Signature Scent",
-      excerpt: "Layering is deliberate construction. Base notes anchor like black cashmere. Heart notes unfold in quiet revelation. Top notes command the entrance. One drop — and presence is rewritten.",
-      date: "March 2026",
-      readTime: "7 min",
-      image: "https://thumbs.dreamstime.com/b/luxury-dark-perfume-bottle-elegant-texture-dramatic-lighting-black-table-luxurious-textured-surface-shown-398748408.jpg"
-    },
-    {
-      slug: "nocturnal-ritual-oud-and-amber",
-      title: "Nocturnal Ritual — Oud, Amber, After Dark",
-      excerpt: "As light fades, heavier compositions awaken. Smoked leather meets rich oud; amber glows like embers. A fragrance not worn — but inhabited. For evenings that demand memory.",
-      date: "February 2026",
-      readTime: "9 min",
-      image: "https://thumbs.dreamstime.com/b/luxury-black-obsidian-perfume-bottle-warm-amber-liquid-reflected-mirror-surface-against-golden-bokeh-dramatic-low-key-420798605.jpg"
-    },
-    {
-      slug: "the-restraint-of-radiance",
-      title: "The Restraint of Radiance — Skincare as Power",
-      excerpt: "True luxury is subtraction. One precise serum, applied with ceremony. Rare botanicals meet clinical precision. Skin doesn't shout — it commands quietly, eternally luminous.",
-      date: "January 2026",
-      readTime: "6 min",
-      image: "https://thumbs.dreamstime.com/b/young-woman-applying-facial-serum-dropper-skincare-routine-beauty-treatment-glowing-skin-self-care-concept-young-woman-424011595.jpg"
-    }
-  ];
+ const editorialPosts = [
+  {
+    slug: "architecture-of-a-signature-scent",
+    title: "The Architecture of a Signature Scent",
+    excerpt:
+      "Layering is deliberate construction. Base notes anchor like black cashmere. Heart notes unfold in quiet revelation. Top notes command the entrance. One drop — and presence is rewritten.",
+    date: "March 2026",
+    readTime: "7 min",
+    image: "/images/BLACK BOTTLE.jpeg",
+  },
+  {
+    slug: "nocturnal-ritual-oud-and-amber",
+    title: "Nocturnal Ritual — Oud, Amber, After Dark",
+    excerpt:
+      "As light fades, heavier compositions awaken. Smoked leather meets rich oud; amber glows like embers. A fragrance not worn — but inhabited. For evenings that demand memory.",
+    date: "February 2026",
+    readTime: "9 min",
+    image: "/images/LOUIS VITTON.jpeg",
+  },
+  {
+    slug: "the-restraint-of-radiance",
+    title: "The Restraint of Radiance — Skincare as Power",
+    excerpt:
+      "True luxury is subtraction. One precise serum, applied with ceremony. Rare botanicals meet clinical precision. Skin doesn't shout — it commands quietly, eternally luminous.",
+    date: "January 2026",
+    readTime: "6 min",
+    image: "/images/LOUIS VITTON2.jpeg",
+  },
+];
 
   return (
     <div className="overflow-x-hidden bg-softwhite text-darktext relative">
