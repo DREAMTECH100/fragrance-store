@@ -59,7 +59,7 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
   )}
 
   {/* ✅ ONLY IMAGE YOU SHOULD HAVE */}
-  <div className="w-full h-[220px] flex items-center justify-center bg-white">
+ <div className="w-full aspect-square flex items-center justify-center bg-white">
     <img
       src={
         product.image?.startsWith("http")
