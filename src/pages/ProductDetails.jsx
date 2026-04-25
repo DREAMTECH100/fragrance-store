@@ -26,6 +26,7 @@ function ProductDetails() {
 
   // ================= FETCH PRODUCT =================
   useEffect(() => {
+     window.scrollTo({ top: 0, behavior: "smooth" }); // 👈 ADD THIS
     fetch(`${baseURL}/api/products`)
       .then((res) => res.json())
       .then((data) => {
