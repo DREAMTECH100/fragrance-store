@@ -230,7 +230,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
   {/* Big featured */}
   <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
-    {fragrances.slice(0, 3).map(product => (
+    {fragrances.slice(0, 4).map(product => (
       <Link
         key={product._id}
         to={`/product/${product._id}`}
@@ -462,7 +462,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
     {/* BIG FEATURED */}
    <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
-      {skincare.slice(0, 3).map(product => (
+      {skincare.slice(0, 2).map(product => (
         <Link
           key={product._id}
           to={`/product/${product._id}`}
@@ -490,7 +490,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
     {/* SMALL CARDS */}
     <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
-      {skincare.slice(3, 15).map(product => (
+      {skincare.slice(3, 12).map(product => (
         <Link
           key={product._id}
           to={`/product/${product._id}`}
