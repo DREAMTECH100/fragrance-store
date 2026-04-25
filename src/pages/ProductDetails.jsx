@@ -104,17 +104,19 @@ function ProductDetails() {
       <div className="grid md:grid-cols-2 gap-12">
 
         {/* IMAGE */}
-        <img
-          src={
-            product?.image
-              ? product.image.startsWith("http")
-                ? product.image
-                : `${baseURL}${product.image}`
-              : "/images/placeholder.png"
-          }
-          alt={product.name}
-          className="w-full h-[520px] object-cover rounded-lg"
-        />
+        <div className="w-full h-[520px] flex items-center justify-center bg-white rounded-lg overflow-hidden">
+  <img
+    src={
+      product?.image
+        ? product.image.startsWith("http")
+          ? product.image
+          : `${baseURL}${product.image}`
+        : "/images/placeholder.png"
+    }
+    alt={product.name}
+    className="w-full h-full object-contain p-2"
+  />
+</div>
 
         {/* DETAILS */}
         <div>
