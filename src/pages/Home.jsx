@@ -230,7 +230,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
   {/* Big featured */}
   <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
-    {fragrances.slice(0, 4).map(product => (
+    {fragrances.slice(0, 3).map(product => (
       <Link
         key={product._id}
         to={`/product/${product._id}`}
@@ -266,7 +266,7 @@ const baseURL = import.meta.env.VITE_API_URL;
 
   {/* Mini cards (exclude first 4) */}
   <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mb-20">
-    {fragrances.slice(6, 20).map(product => (
+    {fragrances.slice(6, 15).map(product => (
       <Link
         key={product._id}
         to={`/product/${product._id}`}
