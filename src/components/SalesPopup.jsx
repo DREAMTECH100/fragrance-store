@@ -29,9 +29,9 @@ export default function SalesPopup() {
         <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-yellow-200 opacity-30 blur-3xl"></div>
         <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-red-200 opacity-30 blur-3xl"></div>
 
-        <h3 className="text-2xl font-bold mb-2 text-center"> Easter Sale!</h3>
+        <h3 className="text-2xl font-bold mb-2 text-center"> FREE DELIVERY!</h3>
         <p className="text-center mb-4 tracking-wide">
-          Get <span className="font-extrabold text-lg">30% OFF</span> on all items! <br />
+          Get <span className="font-extrabold text-lg">Free Delivery</span> on all purchases above 500k! <br />
           Don’t miss out — shop now!
         </p>
 
