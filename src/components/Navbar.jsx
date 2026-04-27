@@ -10,7 +10,7 @@ import { useRef } from "react";
 function TopTicker() {
   const messages = [
     "100% AUTHENTIC FRAGRANCES",
-    "FREE DELIVERY ON ORDERS ABOVE ₦100,000",
+    "FREE DELIVERY ON ORDERS ABOVE ₦1,000,000",
     "24 - 48 HOURS DELIVERY WITHIN LAGOS",
     "72 HOURS NATIONWIDE DELIVERY",
   ];

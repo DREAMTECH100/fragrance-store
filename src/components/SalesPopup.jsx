@@ -31,7 +31,7 @@ export default function SalesPopup() {
 
         <h3 className="text-2xl font-bold mb-2 text-center"> FREE DELIVERY!</h3>
         <p className="text-center mb-4 tracking-wide">
-          Get <span className="font-extrabold text-lg">Free Delivery</span> on all purchases above 500k! <br />
+          Get <span className="font-extrabold text-lg">Free Delivery</span> on all purchases above 1 Million naira! <br />
           Don’t miss out — shop now!
         </p>
 
