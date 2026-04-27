@@ -4,6 +4,9 @@ export const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
 
+  // =========================
+  // CART STATE (UNCHANGED)
+  // =========================
   const [cart, setCart] = useState(() => {
     return JSON.parse(localStorage.getItem("cart")) || [];
   });
@@ -13,7 +16,18 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   // =========================
-  // ADD TO CART (SIZE-AWARE)
+  // 🔥 WISHLIST STATE (NEW)
+  // =========================
+  const [wishlist, setWishlist] = useState(() => {
+    return JSON.parse(localStorage.getItem("wishlist")) || [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem("wishlist", JSON.stringify(wishlist));
+  }, [wishlist]);
+
+  // =========================
+  // ADD TO CART (UNCHANGED)
   // =========================
   const addToCart = (product) => {
 
@@ -28,9 +42,7 @@ export const CartProvider = ({ children }) => {
     if (existingIndex !== -1) {
 
       const updatedCart = [...cart];
-
       updatedCart[existingIndex].quantity += product.quantity || 1;
-
       setCart(updatedCart);
 
     } else {
@@ -40,11 +52,25 @@ export const CartProvider = ({ children }) => {
         {
           ...product,
           quantity: product.quantity || 1,
-          sizeKey, // store for safety
+          sizeKey,
         }
       ]);
 
     }
+  };
+
+  // =========================
+  // 🔥 WISHLIST FUNCTIONS (NEW)
+  // =========================
+  const addToWishlist = (product) => {
+    const exists = wishlist.find(item => item._id === product._id);
+    if (exists) return;
+
+    setWishlist([...wishlist, product]);
+  };
+
+  const removeFromWishlist = (id) => {
+    setWishlist(wishlist.filter(item => item._id !== id));
   };
 
   // =========================
@@ -108,7 +134,12 @@ export const CartProvider = ({ children }) => {
       increaseQty,
       decreaseQty,
       clearCart,
-      getCartTotal
+      getCartTotal,
+
+      // 🔥 EXPORT WISHLIST
+      wishlist,
+      addToWishlist,
+      removeFromWishlist
     }}>
       {children}
     </CartContext.Provider>
