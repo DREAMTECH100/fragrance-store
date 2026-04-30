@@ -15,7 +15,7 @@ function Footer() {
             />
           </Link>
           <p className="text-gray-400 text-sm leading-relaxed">
-            Discover luxury fragrances, makeup, skincare & accessories curated 
+            Discover luxury fragrances, makeup, Beauty Asthetics & Skincare curated 
             for those who demand the finest. Sign up for exclusive offers and updates.
           </p>
         </div>
@@ -29,7 +29,7 @@ function Footer() {
             <li><Link to="/fragrances" className="hover:text-primary transition">Fragrances</Link></li>
             <li><Link to="/makeup" className="hover:text-primary transition">Makeup</Link></li>
             <li><Link to="/skincare" className="hover:text-primary transition">Skincare</Link></li>
-            <li><Link to="/beauty asthetics & skincare" className="hover:text-primary transition">Beauty Asthetics & Skincare</Link></li>
+            <li><Link to="/skincare" className="hover:text-primary transition">Beauty Asthetics & Skincare</Link></li>
             <li><Link to="/gifts" className="hover:text-primary transition">Gifts</Link></li>
             <li><Link to="/about" className="hover:text-primary transition">About Us</Link></li>
           </ul>
