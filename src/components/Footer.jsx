@@ -29,7 +29,7 @@ function Footer() {
             <li><Link to="/fragrances" className="hover:text-primary transition">Fragrances</Link></li>
             <li><Link to="/makeup" className="hover:text-primary transition">Makeup</Link></li>
             <li><Link to="/skincare" className="hover:text-primary transition">Skincare</Link></li>
-            <li><Link to="/accessories" className="hover:text-primary transition">Accessories</Link></li>
+            <li><Link to="/beauty asthetics & skincare" className="hover:text-primary transition">Beauty Asthetics & Skincare</Link></li>
             <li><Link to="/gifts" className="hover:text-primary transition">Gifts</Link></li>
             <li><Link to="/about" className="hover:text-primary transition">About Us</Link></li>
           </ul>
