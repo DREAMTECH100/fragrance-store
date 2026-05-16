@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import StoreLayout from "./layouts/StoreLayout";
 import Home from "./pages/Home";
+import WhatsAppButton from "./components/WhatsAppButton";
 import HomeFragrances from "./pages/HomeFragrances";
 import Fragrances from "./pages/Fragrances";
 import BodyMist from "./pages/BodyMist";
@@ -147,6 +148,7 @@ function App() {
 </Route>
         </Routes>
         <SalesPopup/>
+         <WhatsAppButton />
       </div>
     </Router>
   );
