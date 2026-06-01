@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
 import { useSearchParams, useParams } from "react-router-dom";
 import SectionVideo from "../components/SectionVideo";
-import { SlidersHorizontal, X, ChevronDown } from "lucide-react";
+import { X } from "lucide-react";
 
 function Fragrances({ addToWishlist, addToCart }) {
   const [products, setProducts] = useState([]);
@@ -12,6 +12,7 @@ function Fragrances({ addToWishlist, addToCart }) {
   const [heroImages, setHeroImages] = useState([]);
   const [currentHeroIndex, setCurrentHeroIndex] = useState(0);
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [sortValue, setSortValue] = useState("featured");
 
   const [searchParams] = useSearchParams();
   const { subcategory } = useParams();
@@ -77,18 +78,19 @@ function Fragrances({ addToWishlist, addToCart }) {
   ];
 
   useEffect(() => {
-    if (selectedSubCategories.length === 0) {
-      setFilteredProducts(products);
-    } else {
-      setFilteredProducts(
-        products.filter((p) =>
+    let base = selectedSubCategories.length === 0
+      ? [...products]
+      : products.filter((p) =>
           selectedSubCategories.includes(
             p.subCategory?.toLowerCase().replace(/\s+/g, "-")
           )
-        )
-      );
-    }
-  }, [selectedSubCategories, products]);
+        );
+
+    if (sortValue === "price-asc") base.sort((a, b) => (a.price || 0) - (b.price || 0));
+    else if (sortValue === "price-desc") base.sort((a, b) => (b.price || 0) - (a.price || 0));
+
+    setFilteredProducts(base);
+  }, [selectedSubCategories, products, sortValue]);
 
   const toggleSubCategory = (subCat) => {
     setSelectedSubCategories((prev) =>
@@ -99,6 +101,7 @@ function Fragrances({ addToWishlist, addToCart }) {
   const clearFilters = () => setSelectedSubCategories([]);
 
   const displayTitle = sub ? sub.replace(/-/g, " ").toUpperCase() : "FRAGRANCES";
+  const heroImage = heroImages[currentHeroIndex] || null;
 
   const heroSubtitles = [
     "Crafted for timeless elegance and unforgettable presence",
@@ -108,156 +111,264 @@ function Fragrances({ addToWishlist, addToCart }) {
     "Where art meets aroma",
   ];
   const currentSubtitle = heroSubtitles[currentHeroIndex % heroSubtitles.length];
-  const heroImage = heroImages[currentHeroIndex] || null;
 
   return (
-    <div className="bg-[#faf9f7] min-h-screen">
+    <div style={{ background: "var(--cream, #faf8f4)", minHeight: "100vh" }}>
 
-      {/* ── HERO ── */}
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Tenor+Sans&family=Montserrat:wght@300;400;500&display=swap');
+
+        :root {
+          --gold: #b8965a;
+          --gold-light: #d4af72;
+          --gold-dim: rgba(184,150,90,0.3);
+          --ink: #0e0c0a;
+          --cream: #faf8f4;
+          --warm-grey: #8a8178;
+          --red: #c0392b;
+        }
+
+        .frag-display  { font-family: 'Cormorant Garamond', serif; }
+        .frag-label    { font-family: 'Tenor Sans', sans-serif; }
+        .frag-body     { font-family: 'Montserrat', sans-serif; }
+
+        .frag-sec-label {
+          font-family: 'Tenor Sans', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.4em;
+          text-transform: uppercase;
+          color: var(--red);
+        }
+        .frag-sec-heading {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 300;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          line-height: 1.05;
+        }
+        .frag-divider-gold {
+          width: 60px; height: 1px;
+          background: linear-gradient(90deg, transparent, var(--red), transparent);
+          margin: 0 auto;
+        }
+
+        /* ── Img zoom (matches Home) ── */
+        .frag-img-zoom img { transition: transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .frag-img-zoom:hover img { transform: scale(1.08); }
+
+        /* ── Lux card lift ── */
+        .frag-lux-card { transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.6s ease; }
+        .frag-lux-card:hover { transform: translateY(-5px); box-shadow: 0 24px 60px rgba(0,0,0,0.16); }
+
+        /* ── Hero quote animation ── */
+        @keyframes fragQuote {
+          0%   { transform: translateY(20px); opacity: 0; }
+          15%  { transform: translateY(0);    opacity: 1; }
+          80%  { transform: translateY(0);    opacity: 1; }
+          100% { transform: translateY(-20px);opacity: 0; }
+        }
+        .frag-animate-quote { animation: fragQuote 6s ease 1; }
+
+        /* ── Custom checkbox ── */
+        .frag-check {
+          width: 14px; height: 14px;
+          border: 1px solid #d1d5db;
+          display: flex; align-items: center; justify-content: center;
+          flex-shrink: 0; transition: all 0.15s;
+        }
+        .frag-check.active {
+          background: var(--red);
+          border-color: var(--red);
+        }
+
+        /* ── Btn (matches Home btn-gold) ── */
+        .frag-btn {
+          display: inline-block;
+          padding: 12px 40px;
+          border: 1px solid var(--red);
+          color: var(--red);
+          font-family: 'Tenor Sans', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.35em;
+          text-transform: uppercase;
+          transition: background 0.4s ease, color 0.4s ease;
+          cursor: pointer;
+          background: transparent;
+        }
+        .frag-btn:hover { background: var(--red); color: #fff; }
+
+        /* ── Sort select ── */
+        .frag-select {
+          font-family: 'Tenor Sans', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          border: 1px solid rgba(0,0,0,0.12);
+          padding: 8px 32px 8px 12px;
+          background: #fff;
+          color: var(--ink);
+          appearance: none;
+          cursor: pointer;
+          outline: none;
+        }
+
+        /* ── Skeleton pulse ── */
+        @keyframes fragSkel { 0%,100%{opacity:0.5} 50%{opacity:1} }
+        .frag-skel { animation: fragSkel 1.6s ease infinite; }
+
+        /* ── Mobile drawer ── */
+        @keyframes slideIn { from{transform:translateX(100%)} to{transform:translateX(0)} }
+        .frag-drawer { animation: slideIn 0.28s cubic-bezier(0.22,1,0.36,1) both; }
+      `}</style>
+
+      {/* ══════════════════════ HERO ══════════════════════ */}
       <section
-        className="relative overflow-hidden flex items-end justify-start text-left"
+        className="relative overflow-hidden flex items-end"
         style={{
-          height: "clamp(340px, 60vh, 640px)",
+          height: "clamp(380px, 62vh, 680px)",
           backgroundImage: heroImage ? `url(${heroImage})` : undefined,
-          backgroundColor: heroImage ? undefined : "#e8e2d9",
+          backgroundColor: heroImage ? undefined : "#1a1612",
           backgroundSize: "cover",
           backgroundPosition: "center",
-          transition: "background-image 1s ease",
+          transition: "background-image 1.2s ease",
         }}
       >
-        {/* Dark gradient from bottom */}
-        <div
-          className="absolute inset-0"
-          style={{
-            background:
-              "linear-gradient(to top, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.18) 55%, rgba(0,0,0,0.08) 100%)",
-          }}
-        />
+        {/* Same vignette as Home hero */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.22) 0%, rgba(0,0,0,0.52) 60%, rgba(0,0,0,0.78) 100%)" }} />
 
-        {/* Hero dot nav */}
+        {/* Top red rule — matches Home */}
+        <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--red)" }} />
+
+        {/* Dot nav */}
         {heroImages.length > 1 && (
           <div className="absolute top-5 right-6 z-20 flex gap-2">
             {heroImages.map((_, i) => (
               <button
                 key={i}
                 onClick={() => setCurrentHeroIndex(i)}
-                className="transition-all duration-300"
                 style={{
                   width: i === currentHeroIndex ? "22px" : "7px",
                   height: "7px",
                   borderRadius: "4px",
-                  background: i === currentHeroIndex ? "#fff" : "rgba(255,255,255,0.4)",
+                  background: i === currentHeroIndex ? "#fff" : "rgba(255,255,255,0.35)",
                   border: "none",
                   cursor: "pointer",
+                  transition: "all 0.3s ease",
+                  padding: 0,
                 }}
               />
             ))}
           </div>
         )}
 
-        {/* Text block */}
-        <div className="relative z-10 px-8 md:px-16 pb-12 md:pb-16 max-w-2xl">
+        {/* Text — bottom-left editorial anchor, same as Home */}
+        <div className="relative z-10 px-8 md:px-16 pb-14 max-w-2xl">
           {sub && (
-            <p
-              className="text-[11px] uppercase tracking-[0.3em] text-white/60 mb-3 font-cormorant"
-            >
+            <p className="frag-sec-label mb-3" style={{ color: "rgba(255,255,255,0.5)", letterSpacing: "0.4em" }}>
               Fragrances
             </p>
           )}
           <h1
-            className="font-playfair uppercase text-white leading-none"
-            style={{ fontSize: "clamp(2.2rem, 5vw, 4rem)", letterSpacing: "0.08em" }}
+            className="frag-sec-heading text-white"
+            style={{ fontSize: "clamp(2.4rem, 6vw, 5rem)", textShadow: "0 4px 40px rgba(0,0,0,0.4)" }}
           >
             {displayTitle}
           </h1>
-          <div
-            className="mt-4"
-            style={{ width: "48px", height: "2px", background: "#dc2626" }}
-          />
-          <p
-            className="mt-4 text-white/75 font-cormorant"
-            style={{ fontSize: "clamp(0.95rem, 1.5vw, 1.2rem)", lineHeight: "1.6", letterSpacing: "0.04em" }}
-          >
-            {currentSubtitle}
-          </p>
+
+          {/* Gold divider matching Home */}
+          <div className="frag-divider-gold my-5" style={{ marginLeft: 0 }} />
+
+          <div style={{ height: "60px", overflow: "hidden" }}>
+            <p
+              key={currentHeroIndex}
+              className="frag-animate-quote frag-display text-white/75"
+              style={{ fontSize: "clamp(0.9rem, 1.4vw, 1.15rem)", fontStyle: "italic", fontWeight: 300, letterSpacing: "0.05em", lineHeight: 1.6 }}
+            >
+              {currentSubtitle}
+            </p>
+          </div>
         </div>
+
+        {/* Bottom gold rule — matches Home */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, var(--gold-dim, rgba(184,150,90,0.3)), transparent)" }} />
       </section>
 
-      {/* ── BREADCRUMB / META BAR ── */}
-      <div
-        className="border-b"
-        style={{ borderColor: "#ede9e3", background: "#fff" }}
-      >
-        <div className="max-w-7xl mx-auto px-6 py-3 flex items-center justify-between">
-          <p className="text-[11px] uppercase tracking-[0.18em] text-gray-400 font-cormorant">
+      {/* ══════════════════════ META BAR ══════════════════════ */}
+      <div style={{ background: "#fff", borderBottom: "1px solid rgba(0,0,0,0.07)" }}>
+        <div className="max-w-7xl mx-auto px-6 md:px-16 py-3 flex items-center justify-between">
+          <p className="frag-label" style={{ fontSize: "10px", letterSpacing: "0.22em", textTransform: "uppercase", color: "#9ca3af" }}>
             Home / Fragrances{sub ? ` / ${sub.replace(/-/g, " ")}` : ""}
           </p>
-          <p className="text-[11px] uppercase tracking-[0.18em] text-gray-400 font-cormorant">
+          <p className="frag-label" style={{ fontSize: "10px", letterSpacing: "0.22em", textTransform: "uppercase", color: "#9ca3af" }}>
             {filteredProducts.length} Products
           </p>
         </div>
       </div>
 
-      {/* ── MAIN LAYOUT ── */}
-      <section className="max-w-7xl mx-auto px-6 py-12">
-        <div className="grid md:grid-cols-[220px_1fr] gap-10 items-start">
+      {/* ══════════════════════ LAYOUT ══════════════════════ */}
+      <section className="max-w-7xl mx-auto px-6 md:px-10 py-14">
+        <div className="grid md:grid-cols-[200px_1fr] gap-10 items-start">
 
           {/* ── SIDEBAR (desktop) ── */}
           <aside className="hidden md:block self-start sticky top-24">
-            <div
-              className="p-6"
-              style={{
-                background: "#fff",
-                border: "1px solid #ede9e3",
-              }}
-            >
-              {/* Header */}
-              <div className="flex items-center justify-between mb-6">
-                <p
-                  className="text-[11px] uppercase tracking-[0.22em] font-semibold"
-                  style={{ color: "#1a1a1a" }}
-                >
+            <div style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", padding: "24px" }}>
+
+              {/* Header row */}
+              <div className="flex items-center justify-between mb-5">
+                <p className="frag-label" style={{ fontSize: "10px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--ink)" }}>
                   Filter
                 </p>
                 {selectedSubCategories.length > 0 && (
                   <button
                     onClick={clearFilters}
-                    className="flex items-center gap-1 text-[10px] uppercase tracking-widest transition"
-                    style={{ color: "#dc2626" }}
+                    className="frag-label flex items-center gap-1"
+                    style={{ fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--red)", background: "none", border: "none", cursor: "pointer" }}
                   >
-                    <X size={11} /> Clear
+                    <X size={10} /> Clear
                   </button>
                 )}
               </div>
 
-              {/* Divider */}
-              <div className="mb-5" style={{ height: "1px", background: "#ede9e3" }} />
+              <div style={{ height: "1px", background: "rgba(0,0,0,0.07)", marginBottom: "20px" }} />
 
-              {/* Subcategories */}
+              {/* Active filter pills */}
+              {selectedSubCategories.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-5">
+                  {selectedSubCategories.map((s) => (
+                    <button
+                      key={s}
+                      onClick={() => toggleSubCategory(s)}
+                      className="frag-label flex items-center gap-1"
+                      style={{
+                        fontSize: "9px", letterSpacing: "0.15em", textTransform: "uppercase",
+                        padding: "3px 10px", border: "1px solid var(--red)", color: "var(--red)",
+                        background: "rgba(192,57,43,0.06)", borderRadius: "999px", cursor: "pointer",
+                      }}
+                    >
+                      {s.replace(/-/g, " ")} <X size={9} />
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Category list */}
               {subCategoriesOnPage.length > 0 && (
                 <div>
-                  <p
-                    className="text-[10px] uppercase tracking-[0.22em] mb-4"
-                    style={{ color: "#9ca3af" }}
-                  >
+                  <p className="frag-sec-label mb-4" style={{ fontSize: "9px", letterSpacing: "0.3em", color: "var(--warm-grey)" }}>
                     Category
                   </p>
-                  <div className="space-y-3">
+                  <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
                     {subCategoriesOnPage.map((subCat) => (
                       <label
                         key={subCat}
-                        className="flex items-center gap-3 cursor-pointer group/filter"
+                        style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}
                       >
                         <span
-                          className="flex-shrink-0 w-4 h-4 border flex items-center justify-center transition-all duration-150"
-                          style={{
-                            borderColor: selectedSubCategories.includes(subCat) ? "#dc2626" : "#d1d5db",
-                            background: selectedSubCategories.includes(subCat) ? "#dc2626" : "transparent",
-                          }}
+                          className={`frag-check ${selectedSubCategories.includes(subCat) ? "active" : ""}`}
                         >
                           {selectedSubCategories.includes(subCat) && (
-                            <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-                              <path d="M1 3.5L3.5 6L8 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                            <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                              <path d="M1 3L3 5.5L7 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           )}
                         </span>
@@ -268,8 +379,12 @@ function Fragrances({ addToWishlist, addToCart }) {
                           onChange={() => toggleSubCategory(subCat)}
                         />
                         <span
-                          className="text-[12px] capitalize tracking-wide font-cormorant transition"
-                          style={{ color: selectedSubCategories.includes(subCat) ? "#1a1a1a" : "#6b7280" }}
+                          className="frag-label"
+                          style={{
+                            fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase",
+                            color: selectedSubCategories.includes(subCat) ? "var(--ink)" : "var(--warm-grey)",
+                            transition: "color 0.2s",
+                          }}
                         >
                           {subCat.replace(/-/g, " ")}
                         </span>
@@ -281,96 +396,82 @@ function Fragrances({ addToWishlist, addToCart }) {
             </div>
           </aside>
 
-          {/* ── MAIN CONTENT ── */}
+          {/* ── MAIN ── */}
           <main>
+
             {/* Toolbar */}
             <div
               className="flex items-center justify-between mb-8 pb-4"
-              style={{ borderBottom: "1px solid #ede9e3" }}
+              style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}
             >
-              {/* Mobile filter toggle */}
+              {/* Mobile filter button */}
               <button
-                className="md:hidden flex items-center gap-2 text-[11px] uppercase tracking-[0.18em] font-cormorant"
-                style={{ color: "#1a1a1a" }}
+                className="md:hidden frag-label flex items-center gap-2"
+                style={{ fontSize: "10px", letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--ink)", background: "none", border: "1px solid rgba(0,0,0,0.12)", padding: "7px 14px", cursor: "pointer" }}
                 onClick={() => setSidebarOpen(true)}
               >
-                <SlidersHorizontal size={14} /> Filter
+                Filter
                 {selectedSubCategories.length > 0 && (
-                  <span
-                    className="text-[9px] text-white px-1.5 py-0.5 rounded-full"
-                    style={{ background: "#dc2626" }}
-                  >
+                  <span style={{ background: "var(--red)", color: "#fff", fontSize: "9px", width: "16px", height: "16px", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center" }}>
                     {selectedSubCategories.length}
                   </span>
                 )}
               </button>
 
-              <p
-                className="hidden md:block text-[11px] uppercase tracking-[0.18em] font-cormorant"
-                style={{ color: "#9ca3af" }}
-              >
-                Showing {filteredProducts.length} results
+              <p className="frag-label hidden md:block" style={{ fontSize: "10px", letterSpacing: "0.22em", textTransform: "uppercase", color: "var(--warm-grey)" }}>
+                {filteredProducts.length} results
               </p>
 
               {/* Sort */}
-              <div className="relative flex items-center gap-2">
+              <div style={{ position: "relative", display: "flex", alignItems: "center" }}>
                 <select
-                  className="appearance-none text-[11px] uppercase tracking-[0.14em] font-cormorant pr-6 pl-3 py-2 cursor-pointer outline-none"
-                  style={{
-                    border: "1px solid #ede9e3",
-                    background: "#fff",
-                    color: "#1a1a1a",
-                  }}
+                  className="frag-select"
+                  value={sortValue}
+                  onChange={(e) => setSortValue(e.target.value)}
                 >
                   <option value="featured">Featured</option>
                   <option value="price-asc">Price: Low – High</option>
                   <option value="price-desc">Price: High – Low</option>
                 </select>
-                <ChevronDown size={12} className="absolute right-2 pointer-events-none text-gray-400" />
+                <svg width="10" height="6" viewBox="0 0 10 6" fill="none" style={{ position: "absolute", right: "10px", pointerEvents: "none" }}>
+                  <path d="M1 1L5 5L9 1" stroke="#8a8178" strokeWidth="1.2" strokeLinecap="round" />
+                </svg>
               </div>
             </div>
 
-            {/* Grid */}
+            {/* States */}
             {loading ? (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+              /* ── Skeleton matching Home's card structure ── */
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[2px]">
                 {Array.from({ length: 8 }).map((_, i) => (
-                  <div key={i} className="animate-pulse">
-                    <div style={{ aspectRatio: "1/1", background: "#ede9e3" }} />
-                    <div className="p-4 bg-white space-y-2" style={{ borderTop: "1px solid #ede9e3" }}>
-                      <div className="h-3 bg-gray-200 rounded w-3/4" />
-                      <div className="h-3 bg-gray-100 rounded w-1/2" />
-                      <div className="h-8 bg-gray-100 rounded mt-3" />
+                  <div key={i} className="frag-skel" style={{ background: "#f0ede8", overflow: "hidden" }}>
+                    <div style={{ aspectRatio: "1/1", background: "#e8e4de" }} />
+                    <div style={{ padding: "16px", background: "#f5f3ef" }}>
+                      <div style={{ height: "10px", background: "#e8e4de", borderRadius: "2px", width: "70%", marginBottom: "8px" }} />
+                      <div style={{ height: "10px", background: "#e8e4de", borderRadius: "2px", width: "45%" }} />
                     </div>
                   </div>
                 ))}
               </div>
             ) : error ? (
-              <div
-                className="text-center py-24 font-cormorant"
-                style={{ color: "#dc2626" }}
-              >
+              <div className="text-center py-24 frag-display" style={{ color: "var(--red)", fontSize: "18px", fontStyle: "italic" }}>
                 {error}
               </div>
             ) : filteredProducts.length === 0 ? (
               <div className="text-center py-24">
-                <p
-                  className="text-2xl font-playfair uppercase"
-                  style={{ color: "#9ca3af", letterSpacing: "0.12em" }}
-                >
+                <p className="frag-sec-heading" style={{ fontSize: "clamp(22px, 3vw, 32px)", color: "var(--warm-grey)" }}>
                   No products found
                 </p>
+                <div className="frag-divider-gold my-5" />
                 {selectedSubCategories.length > 0 && (
-                  <button
-                    onClick={clearFilters}
-                    className="mt-4 text-[11px] uppercase tracking-widest underline font-cormorant"
-                    style={{ color: "#dc2626" }}
-                  >
-                    Clear filters
+                  <button onClick={clearFilters} className="frag-btn mt-2">
+                    Clear Filters
                   </button>
                 )}
               </div>
             ) : (
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5 md:gap-6">
+              /* ── Product grid — same gap/structure as Home mini-card strip ── */
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-[3px]">
                 {filteredProducts.map((product) => (
                   <ProductCard
                     key={product._id}
@@ -387,61 +488,47 @@ function Fragrances({ addToWishlist, addToCart }) {
 
       {/* ── MOBILE FILTER DRAWER ── */}
       {sidebarOpen && (
-        <div className="fixed inset-0 z-50 flex md:hidden">
-          {/* Backdrop */}
+        <div style={{ position: "fixed", inset: 0, zIndex: 50, display: "flex" }}>
+          <div style={{ position: "absolute", inset: 0, background: "rgba(14,12,10,0.55)" }} onClick={() => setSidebarOpen(false)} />
           <div
-            className="absolute inset-0 bg-black/40"
-            onClick={() => setSidebarOpen(false)}
-          />
-          {/* Drawer */}
-          <div
-            className="relative ml-auto w-72 h-full overflow-y-auto p-6"
-            style={{ background: "#fff" }}
+            className="frag-drawer"
+            style={{
+              position: "relative", marginLeft: "auto",
+              width: "280px", height: "100%", overflowY: "auto",
+              background: "#fff", padding: "28px 24px",
+            }}
           >
             <div className="flex items-center justify-between mb-6">
-              <p className="text-[11px] uppercase tracking-[0.22em] font-semibold">Filter</p>
-              <button onClick={() => setSidebarOpen(false)}>
-                <X size={18} style={{ color: "#6b7280" }} />
+              <p className="frag-label" style={{ fontSize: "10px", letterSpacing: "0.3em", textTransform: "uppercase", color: "var(--ink)" }}>Filter</p>
+              <button onClick={() => setSidebarOpen(false)} style={{ background: "none", border: "none", cursor: "pointer" }}>
+                <X size={18} color="var(--warm-grey)" />
               </button>
             </div>
-            <div className="mb-5" style={{ height: "1px", background: "#ede9e3" }} />
+            <div style={{ height: "1px", background: "rgba(0,0,0,0.07)", marginBottom: "20px" }} />
             {selectedSubCategories.length > 0 && (
               <button
                 onClick={clearFilters}
-                className="flex items-center gap-1 text-[10px] uppercase tracking-widest mb-4"
-                style={{ color: "#dc2626" }}
+                className="frag-label flex items-center gap-1 mb-5"
+                style={{ fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--red)", background: "none", border: "none", cursor: "pointer" }}
               >
-                <X size={11} /> Clear all
+                <X size={10} /> Clear all
               </button>
             )}
             {subCategoriesOnPage.length > 0 && (
               <div>
-                <p className="text-[10px] uppercase tracking-[0.22em] mb-4" style={{ color: "#9ca3af" }}>
-                  Category
-                </p>
-                <div className="space-y-3">
+                <p className="frag-sec-label mb-4" style={{ fontSize: "9px", letterSpacing: "0.3em", color: "var(--warm-grey)" }}>Category</p>
+                <div style={{ display: "flex", flexDirection: "column", gap: "14px" }}>
                   {subCategoriesOnPage.map((subCat) => (
-                    <label key={subCat} className="flex items-center gap-3 cursor-pointer">
-                      <span
-                        className="flex-shrink-0 w-4 h-4 border flex items-center justify-center"
-                        style={{
-                          borderColor: selectedSubCategories.includes(subCat) ? "#dc2626" : "#d1d5db",
-                          background: selectedSubCategories.includes(subCat) ? "#dc2626" : "transparent",
-                        }}
-                      >
+                    <label key={subCat} style={{ display: "flex", alignItems: "center", gap: "10px", cursor: "pointer" }}>
+                      <span className={`frag-check ${selectedSubCategories.includes(subCat) ? "active" : ""}`}>
                         {selectedSubCategories.includes(subCat) && (
-                          <svg width="9" height="7" viewBox="0 0 9 7" fill="none">
-                            <path d="M1 3.5L3.5 6L8 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                          <svg width="8" height="6" viewBox="0 0 8 6" fill="none">
+                            <path d="M1 3L3 5.5L7 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                         )}
                       </span>
-                      <input
-                        type="checkbox"
-                        className="sr-only"
-                        checked={selectedSubCategories.includes(subCat)}
-                        onChange={() => toggleSubCategory(subCat)}
-                      />
-                      <span className="text-[13px] capitalize font-cormorant" style={{ color: "#1a1a1a" }}>
+                      <input type="checkbox" className="sr-only" checked={selectedSubCategories.includes(subCat)} onChange={() => toggleSubCategory(subCat)} />
+                      <span className="frag-label" style={{ fontSize: "10px", letterSpacing: "0.15em", textTransform: "uppercase", color: "var(--warm-grey)" }}>
                         {subCat.replace(/-/g, " ")}
                       </span>
                     </label>
@@ -451,8 +538,8 @@ function Fragrances({ addToWishlist, addToCart }) {
             )}
             <button
               onClick={() => setSidebarOpen(false)}
-              className="mt-8 w-full py-3 text-[11px] uppercase tracking-[0.18em] font-cormorant text-white"
-              style={{ background: "#1a1a1a" }}
+              className="frag-btn"
+              style={{ marginTop: "32px", width: "100%", display: "block", textAlign: "center", background: "var(--ink)", borderColor: "var(--ink)", color: "#fff" }}
             >
               Apply
             </button>
