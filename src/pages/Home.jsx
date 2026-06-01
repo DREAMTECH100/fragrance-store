@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import SectionVideo from "../components/SectionVideo";
+
 function pickRandom(arr, n) {
   if (!arr || arr.length === 0) return [];
   const shuffled = [...arr].sort(() => 0.5 - Math.random());
@@ -10,38 +11,35 @@ function pickRandom(arr, n) {
 function Home({ addToWishlist }) {
 
   const formatNaira = (value) => {
-  if (value == null) return "";
-  return new Intl.NumberFormat("en-NG", {
-    style: "currency",
-    currency: "NGN",
-    minimumFractionDigits: 0,
-  }).format(value);
-};
-  const [products, setProducts] = useState([]);
-  const [quoteIndex, setQuoteIndex] = useState(0);
-const baseURL = import.meta.env.VITE_API_URL;
- useEffect(() => {
-  const loadProducts = async () => {
-    try {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/api/products`
-      );
-
-      const data = await response.json();
-
-      setProducts(data);
-    } catch (err) {
-      console.error(err);
-    }
+    if (value == null) return "";
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+      minimumFractionDigits: 0,
+    }).format(value);
   };
 
-  loadProducts();
-}, []);
+  const [products, setProducts] = useState([]);
+  const [quoteIndex, setQuoteIndex] = useState(0);
+  const baseURL = import.meta.env.VITE_API_URL;
+
+  useEffect(() => {
+    const loadProducts = async () => {
+      try {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
+        const data = await response.json();
+        setProducts(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    loadProducts();
+  }, []);
 
   const quotes = [
-    `“Perfume is the art that completes your presence.\nA silent introduction before you speak.\nA memory that lingers beyond time.\nA signature of identity.”`,
-    `“Skincare is not vanity — it is power.\nA ritual of self-respect.\nA commitment to elegance.\nA foundation of confidence.”`,
-    `“Makeup is expression.\nNot to hide, but to reveal.\nTo define, not to disguise.\nTo elevate identity.”`,
+    `"Perfume is the art that completes your presence.\nA silent introduction before you speak.\nA memory that lingers beyond time.\nA signature of identity."`,
+    `"Skincare is not vanity — it is power.\nA ritual of self-respect.\nA commitment to elegance.\nA foundation of confidence."`,
+    `"Makeup is expression.\nNot to hide, but to reveal.\nTo define, not to disguise.\nTo elevate identity."`,
   ];
 
   useEffect(() => {
@@ -56,557 +54,631 @@ const baseURL = import.meta.env.VITE_API_URL;
   const skincare = products.filter(p => p.category === "skincare");
   const accessories = products.filter(p => p.category === "accessories");
 
-  // Editorial content — unchanged
- const editorialPosts = [
-  {
-    slug: "architecture-of-a-signature-scent",
-    title: "The Architecture of a Signature Scent",
-    excerpt:
-      "Layering is deliberate construction. Base notes anchor like black cashmere. Heart notes unfold in quiet revelation. Top notes command the entrance. One drop — and presence is rewritten.",
-    date: "March 2026",
-    readTime: "7 min",
-    image: "/images/BLACK BOTTLE.jpeg",
-  },
-  {
-    slug: "nocturnal-ritual-oud-and-amber",
-    title: "Nocturnal Ritual — Oud, Amber, After Dark",
-    excerpt:
-      "As light fades, heavier compositions awaken. Smoked leather meets rich oud; amber glows like embers. A fragrance not worn — but inhabited. For evenings that demand memory.",
-    date: "February 2026",
-    readTime: "9 min",
-    image: "/images/LOUIS VITTON.jpeg",
-  },
-  {
-    slug: "the-restraint-of-radiance",
-    title: "The Restraint of Radiance — Skincare as Power",
-    excerpt:
-      "True luxury is subtraction. One precise serum, applied with ceremony. Rare botanicals meet clinical precision. Skin doesn't shout — it commands quietly, eternally luminous.",
-    date: "January 2026",
-    readTime: "6 min",
-    image: "/images/LOUIS VITTON2.jpeg",
-  },
-];
+  const editorialPosts = [
+    {
+      slug: "architecture-of-a-signature-scent",
+      title: "The Architecture of a Signature Scent",
+      excerpt:
+        "Layering is deliberate construction. Base notes anchor like black cashmere. Heart notes unfold in quiet revelation. Top notes command the entrance. One drop — and presence is rewritten.",
+      date: "March 2026",
+      readTime: "7 min",
+      image: "/images/BLACK BOTTLE.jpeg",
+    },
+    {
+      slug: "nocturnal-ritual-oud-and-amber",
+      title: "Nocturnal Ritual — Oud, Amber, After Dark",
+      excerpt:
+        "As light fades, heavier compositions awaken. Smoked leather meets rich oud; amber glows like embers. A fragrance not worn — but inhabited. For evenings that demand memory.",
+      date: "February 2026",
+      readTime: "9 min",
+      image: "/images/LOUIS VITTON.jpeg",
+    },
+    {
+      slug: "the-restraint-of-radiance",
+      title: "The Restraint of Radiance — Skincare as Power",
+      excerpt:
+        "True luxury is subtraction. One precise serum, applied with ceremony. Rare botanicals meet clinical precision. Skin doesn't shout — it commands quietly, eternally luminous.",
+      date: "January 2026",
+      readTime: "6 min",
+      image: "/images/LOUIS VITTON2.jpeg",
+    },
+  ];
 
   return (
     <div className="overflow-x-hidden bg-softwhite text-darktext relative">
-      {/* ── Global luxurious overlay (subtle film grain / depth) ── */}
-      <div className="fixed inset-0 pointer-events-none bg-[url('https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=2000&q=10&fm=jpg')] opacity-[0.015] mix-blend-overlay z-[-1]" />
 
-      {/* ================= HERO ================= */}
+      {/* ── Noise grain overlay ── */}
+      <div className="fixed inset-0 pointer-events-none opacity-[0.018] z-[-1]"
+        style={{ backgroundImage: "url('https://images.unsplash.com/photo-1553356084-58ef4a67b2a7?w=2000&q=10&fm=jpg')", backgroundSize: "cover", mixBlendMode: "overlay" }}
+      />
+
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Tenor+Sans&family=Montserrat:wght@300;400;500;600&display=swap');
+
+        :root {
+          --gold: #b8965a;
+          --gold-light: #d4af72;
+          --gold-dim: rgba(184,150,90,0.3);
+          --ink: #0e0c0a;
+          --cream: #faf8f4;
+          --warm-grey: #8a8178;
+        }
+
+        .font-display  { font-family: 'Cormorant Garamond', serif; }
+        .font-label    { font-family: 'Tenor Sans', sans-serif; }
+        .font-body     { font-family: 'Montserrat', sans-serif; }
+
+        /* ── Gold divider ── */
+        .divider-gold {
+          width: 60px; height: 1px;
+          background: linear-gradient(90deg, transparent, var(--gold), transparent);
+          margin: 0 auto;
+        }
+
+        /* ── Quote animation ── */
+        @keyframes quoteAnim {
+          0%   { transform: translateY(32px); opacity: 0; filter: blur(6px); }
+          18%  { transform: translateY(0);    opacity: 1; filter: blur(0); }
+          78%  { transform: translateY(0);    opacity: 1; filter: blur(0); }
+          100% { transform: translateY(-32px);opacity: 0; filter: blur(6px); }
+        }
+        .animate-quote { animation: quoteAnim 7s cubic-bezier(0.42,0,0.58,1) 1; }
+
+        /* ── Scrolling strip ── */
+        @keyframes luxScroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-lux-scroll {
+          display: flex;
+          animation: luxScroll 60s linear infinite;
+        }
+
+        /* ── Hover lift ── */
+        .lux-card { transition: transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94), box-shadow 0.6s ease; }
+        .lux-card:hover { transform: translateY(-6px); box-shadow: 0 24px 60px rgba(0,0,0,0.18); }
+
+        /* ── Section reveal ── */
+        @keyframes fadeUp {
+          from { opacity: 0; transform: translateY(40px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .reveal { animation: fadeUp 0.9s cubic-bezier(0.22,1,0.36,1) both; }
+
+        /* ── Gold shimmer on hover ── */
+        .gold-hover:hover { color: var(--gold); transition: color 0.3s ease; }
+
+        /* ── Thin gold border button ── */
+        .btn-gold {
+          display: inline-block;
+          padding: 14px 48px;
+          border: 1px solid var(--gold);
+          color: var(--gold);
+          font-family: 'Tenor Sans', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.35em;
+          text-transform: uppercase;
+          transition: background 0.4s ease, color 0.4s ease;
+          text-decoration: none;
+        }
+        .btn-gold:hover { background: var(--gold); color: #fff; }
+
+        .btn-gold-inv {
+          display: inline-block;
+          padding: 14px 48px;
+          border: 1px solid rgba(255,255,255,0.5);
+          color: rgba(255,255,255,0.9);
+          font-family: 'Tenor Sans', sans-serif;
+          font-size: 11px;
+          letter-spacing: 0.35em;
+          text-transform: uppercase;
+          transition: background 0.4s ease, border-color 0.4s ease;
+          text-decoration: none;
+          backdrop-filter: blur(4px);
+        }
+        .btn-gold-inv:hover { background: rgba(184,150,90,0.15); border-color: var(--gold); }
+
+        /* ── Product card image zoom ── */
+        .img-zoom img { transition: transform 0.9s cubic-bezier(0.25,0.46,0.45,0.94); }
+        .img-zoom:hover img { transform: scale(1.08); }
+
+        /* ── Thin rule ── */
+        .rule { width: 100%; height: 1px; background: rgba(0,0,0,0.08); }
+        .rule-white { width: 100%; height: 1px; background: rgba(255,255,255,0.12); }
+
+        /* ── Tag pill ── */
+        .tag-pill {
+          font-family: 'Tenor Sans', sans-serif;
+          font-size: 9px;
+          letter-spacing: 0.2em;
+          text-transform: uppercase;
+          padding: 3px 10px;
+          border: 1px solid var(--gold);
+          color: var(--gold);
+          border-radius: 999px;
+        }
+
+        /* ── Section label ── */
+        .sec-label {
+          font-family: 'Tenor Sans', sans-serif;
+          font-size: 10px;
+          letter-spacing: 0.4em;
+          text-transform: uppercase;
+          color: var(--gold);
+        }
+
+        /* ── Big section heading ── */
+        .sec-heading {
+          font-family: 'Cormorant Garamond', serif;
+          font-weight: 300;
+          letter-spacing: 0.15em;
+          text-transform: uppercase;
+          line-height: 1.05;
+        }
+      `}</style>
+
+      {/* ═══════════════════════════ HERO ═══════════════════════════ */}
       <section
         className="relative h-screen"
-        style={{
-          backgroundImage: `url(/images/CEO3.jpeg)`,
-          backgroundSize: "cover",
-          backgroundPosition: "center"
-        }}
+        style={{ backgroundImage: `url(/images/CEO3.jpeg)`, backgroundSize: "cover", backgroundPosition: "center" }}
       >
-        <div className="absolute inset-0 bg-black/40" />
+        {/* Dark vignette — deeper at bottom */}
+        <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.75) 100%)" }} />
+
+        {/* Thin gold horizontal rule — editorial accent */}
+        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, var(--gold), transparent)" }} />
 
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
-          <h1 className="text-6xl md:text-8xl font-luxury text-white uppercase tracking-[0.25em] leading-tight drop-shadow-2xl">
-            DISCOVER <span className="text-primary">LUXURY</span>
+
+          {/* Eyebrow label */}
+          <p className="sec-label text-white/60 mb-8 tracking-[0.5em]">Maison de Luxe</p>
+
+          <h1 className="sec-heading text-white"
+            style={{ fontSize: "clamp(52px, 9vw, 120px)", textShadow: "0 4px 40px rgba(0,0,0,0.4)" }}>
+            DISCOVER <span style={{ color: "var(--gold)", fontStyle: "italic" }}>LUXURY</span>
           </h1>
 
-          <div className="mt-10 h-[180px] overflow-hidden flex items-center justify-center">
+          {/* Gold rule */}
+          <div className="divider-gold my-10" />
+
+          {/* Rotating quote */}
+          <div className="h-[160px] overflow-hidden flex items-center justify-center max-w-3xl">
             <p
               key={quoteIndex}
-              className="text-white/90 text-xl md:text-3xl italic font-luxury tracking-wide whitespace-pre-line leading-relaxed animate-quote"
+              className="text-white/80 animate-quote font-display whitespace-pre-line leading-relaxed"
+              style={{ fontSize: "clamp(14px, 2vw, 20px)", fontStyle: "italic", fontWeight: 300, letterSpacing: "0.05em" }}
             >
               {quotes[quoteIndex]}
             </p>
           </div>
 
-          <Link
-            to="/fragrances"
-            className="mt-12 inline-block border border-white/70 px-12 py-5 text-white uppercase tracking-[0.3em] hover:bg-white/10 hover:border-white transition-all duration-500 backdrop-blur-sm"
-          >
+          <Link to="/fragrances" className="btn-gold-inv mt-10">
             Enter the Collection
           </Link>
+
+          {/* Scroll indicator */}
+          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 opacity-50">
+            <p className="sec-label text-white" style={{ fontSize: "9px", letterSpacing: "0.4em" }}>Scroll</p>
+            <div style={{ width: "1px", height: "40px", background: "linear-gradient(to bottom, white, transparent)" }} />
+          </div>
         </div>
 
-        <style>{`
-          @keyframes quoteAnim {
-            0% { transform: translateY(40px); opacity: 0; filter: blur(4px); }
-            20% { transform: translateY(0); opacity: 1; filter: blur(0); }
-            75% { transform: translateY(0); opacity: 1; filter: blur(0); }
-            100% { transform: translateY(-40px); opacity: 0; filter: blur(4px); }
-          }
-          .animate-quote {
-            animation: quoteAnim 7s cubic-bezier(0.42, 0, 0.58, 1) 1;
-          }
-        `}</style>
+        {/* Gold rule bottom */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px]" style={{ background: "linear-gradient(90deg, transparent, var(--gold-dim), transparent)" }} />
       </section>
 
-   <section className="py-12 relative">
-  <div className="absolute top-0 left-0 w-full h-[3px] bg-red-600/80"></div>
-  <div className="absolute bottom-0 left-0 w-full h-[3px] bg-red-600/80"></div>
-
-  <div className="overflow-hidden">
-    <div className="flex animate-scroll gap-6 px-6 md:px-16">
-      {[
-        ...pickRandom(fragrances, 2),
-        ...pickRandom(makeup, 2),
-        ...pickRandom(skincare, 2),
-        ...pickRandom(accessories, 2),
-      ].map((p) => (
-        <Link
-          key={p?._id}
-          to={`/product/${p?._id}`}
-          className="flex-shrink-0 w-64 bg-white rounded-xl overflow-hidden shadow-md hover:shadow-xl transition duration-500 group"
-        >
-          {/* IMAGE */}
-          <div className="relative w-full h-64 overflow-hidden">
-     <img
-  loading="lazy"
-  src={p?.image ? (p.image.startsWith("http") ? p.image : `${baseURL}${p.image}`) : "/images/placeholder.png"}
-  className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
-  alt={p?.name}
-/>
-
-            {/* NEW BADGE top-left white rounded */}
-            {p?.isNew && (
-              <span className="absolute top-2 left-2 bg-white text-black text-[10px] font-semibold px-2 py-1 rounded tracking-widest shadow-md select-none">
-                NEW
-              </span>
-            )}
-
-            {/* 5-STAR RATING bottom-left black box */}
-            <div className="absolute bottom-2 left-2 bg-black bg-opacity-75 text-white rounded-md px-2 py-[2px] flex items-center space-x-1 select-none">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="#FFD700"
-                viewBox="0 0 24 24"
-                stroke="#FFD700"
-                strokeWidth="1"
-                className="w-4 h-4"
-              >
-                <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-              </svg>
-              <span className="text-xs font-semibold">{p?.rating ? p.rating.toFixed(1) : "4.0"}</span>
-            </div>
-          </div>
-
-          {/* DETAILS */}
-          <div className="p-4 text-black">
-            {/* NAME */}
-            <h3 className="uppercase font-semibold tracking-wider text-sm leading-tight">{p?.name}</h3>
-
-            {/* DESCRIPTION */}
-            <p className="text-xs text-gray-600 mt-2 line-clamp-2">{p?.description}</p>
-
-            {/* PRICE */}
-            <p className="mt-3 font-semibold text-sm">{formatNaira(p?.price)}</p>
-          </div>
-        </Link>
-      ))}
-    </div>
-  </div>
-
-  <style>{`
-    @keyframes scroll {
-      0% { transform: translateX(0); }
-      100% { transform: translateX(-50%); }
-    }
-    .animate-scroll {
-      display: flex;
-      animation: scroll 55s linear infinite;
-    }
-  `}</style>
-</section>
-
-<SectionVideo
-  src="/videos/fragrance.mp4"
-  title="Fragrance"
-  subtitle="A signature that enters before you do — and lingers after you leave."
-/>
-
- {/* ================= FRAGRANCES ================= */}
-<section className="py-28 px-6 md:px-16 bg-gradient-to-b from-softwhite to-white relative overflow-hidden">
-  {/* Subtle section vignette for depth */}
-  <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-black/5 pointer-events-none" />
-
-  <div className="text-center mb-20 relative z-10">
-    <div className="w-24 h-[2px] bg-primary/70 mx-auto mb-8"></div>
-
-    <h2 className="text-5xl md:text-7xl font-luxury font-semibold uppercase tracking-[0.25em] text-darktext"> 
-      LUXURY </h2>
-
-    <p className="text-darktext/80 mt-6 tracking-[0.2em] max-w-2xl mx-auto text-sm md:text-base font-medium italic leading-relaxed">
-      Crafted for presence. Designed to be remembered.  
-      A signature that enters before you do — and lingers after you leave.
-    </p>
-
-    <div className="w-24 h-[2px] bg-primary/70 mx-auto mt-8"></div>
-  </div>
-
-  {/* Big featured */}
-  <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
-    {fragrances.slice(0, 4).map(product => (
-      <Link
-        key={product._id}
-        to={`/product/${product._id}`}
-        className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-700"
-      >
-    <img
-  loading="lazy"
-  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
-/>
-
-        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-
-        <div className="absolute inset-0 flex flex-col justify-end p-10 text-white">
-          <h3 className="text-3xl md:text-4xl font-luxury font-semibold uppercase tracking-wide group-hover:text-primary transition-colors duration-500">
-            {product.name}
-          </h3>
-
-          <p className="mt-4 text-sm md:text-base text-white/85 max-w-md leading-relaxed">
-            {product.description?.slice(0, 100)}...
-          </p>
-
-          <p className="mt-4 text-lg font-semibold">
-            ₦{Number(product.price || 0).toLocaleString()}
-          </p>
-
-          <span className="mt-6 inline-block text-xs uppercase tracking-[0.35em] border border-white/60 px-10 py-3 hover:bg-white/10 hover:border-primary transition-all duration-500 backdrop-blur-sm">
-            Discover This Elixir
-          </span>
-        </div>
-      </Link>
-    ))}
-  </div>
-
-  {/* Mini cards (exclude first 4) */}
-  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-5 mb-20">
-    {fragrances.slice(6, 15).map(product => (
-      <Link
-        key={product._id}
-        to={`/product/${product._id}`}
-        className="group relative border bg-white/70 backdrop-blur-md hover:shadow-2xl hover:border-primary/40 transition-all duration-500 rounded-lg overflow-hidden flex flex-col"
-      >
-      <div className="h-44 overflow-hidden relative">
-  <img
-    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-    alt={product.name}
-    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
-  />
-
-
-          {/* Desktop hover overlay */}
-          <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-60 transition-opacity duration-500 hidden md:block" />
-        </div>
-
-        <div className="p-4 flex flex-col flex-grow">
-          <h3 className="text-[12px] md:text-sm uppercase tracking-[0.15em] font-semibold text-darktext group-hover:text-primary transition-colors">
-            {product.name}
-          </h3>
-
-          <p className="text-[11px] text-black/70 mt-2 line-clamp-2 leading-relaxed">
-            {product.description}
-          </p>
-
-          <div className="text-[11px] text-yellow-500 mt-2">
-            {"★".repeat(product.rating || 4)}
-            <span className="text-black/60 ml-1">
-              ({product.rating || 4}/5)
-            </span>
-          </div>
-
-          <p className="text-sm font-bold mt-3 text-black">
-            ₦{Number(product.price || 0).toLocaleString()}
-          </p>
-
-          {/* CTA */}
-          <div className="mt-auto pt-4">
-            <span className="block w-full text-center text-[10px] uppercase tracking-[0.25em] py-2 border border-black/30 hover:border-primary hover:text-primary hover:bg-black/5 transition-all duration-400 rounded-sm md:opacity-0 md:group-hover:opacity-100">
-              Claim Your Signature
-            </span>
-          </div>
-        </div>
-      </Link>
-    ))}
-  </div>
-
-  <div className="text-center relative z-10">
-    <Link
-      to="/fragrances"
-      className="inline-block border border-black/50 px-14 py-5 uppercase tracking-[0.3em] text-sm hover:bg-black hover:text-white transition-all duration-500 shadow-sm hover:shadow-2xl"
-    >
-      View All Compositions
-    </Link>
-  </div>
-</section>
-
-<SectionVideo
-  src="/videos/makeup.mp4"
-  title="Makeup"
-  subtitle="Sculpt. Define. Command attention without speaking."
-/>
-
-{/* ================= MAKEUP ================= */}
-{makeup[0] && (
- <section
-  className="relative group overflow-hidden py-28"
-  style={{
-    backgroundImage: `url(${baseURL}${makeup[5].image})`,
-    backgroundSize: "contain",
-    backgroundPosition: "center"
-  }}
->
-    <div className="absolute inset-0 bg-black/50" />
-
-    <div className="relative z-10 text-white text-center px-6 md:px-16">
-
-      {/* HEADER */}
-      <div className="text-center mb-16">
-        <h2 className="text-5xl md:text-7xl font-luxury uppercase tracking-[0.25em]">
-          The Art of Expression
-        </h2>
-
-        <p className="mt-6 text-white/80 italic tracking-wide text-lg">
-          Sculpt. Define. Command attention without speaking.
-        </p>
-      </div>
-
-      {/* BIG FEATURED */}
-      <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
-        {makeup.slice(0, 2).map(product => (
-          <Link
-            key={product._id}
-            to={`/product/${product._id}`}
-            className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-700"
-          >
-      <img
-  loading="lazy"
-  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
-/>
-
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
-            <div className="absolute inset-0 flex flex-col justify-end p-8">
-              <h3 className="text-2xl font-luxury uppercase">
-                {product.name}
-              </h3>
-
-              <span className="mt-4 inline-block text-xs uppercase tracking-widest border border-white px-6 py-2">
-                View Product
-              </span>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* SMALL CARDS (exclude first 2) */}
-      <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
-        {makeup.slice(2, 8).map(product => (
-          <Link
-            key={product._id}
-            to={`/product/${product._id}`}
-            className="group relative bg-white/10 backdrop-blur border border-white/20 hover:border-white/70 transition-all duration-500 rounded-md overflow-hidden flex flex-col"
-          >
-            <div className="h-32 overflow-hidden">
-  <img
-    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-    alt={product.name}
-    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-  />
-</div>
-
-            <div className="p-3 flex flex-col flex-grow">
-              <p className="text-[11px] uppercase tracking-wider">
-                {product.name}
-              </p>
-
-              {/* 💎 CTA WITH PULSE */}
-              <div className="mt-auto pt-2 flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest text-white/80">
-
-                View Details
-
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-70"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-white"></span>
-                </span>
-
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      <Link
-        to="/makeup"
-        className="mt-10 inline-block border border-white px-12 py-5 uppercase"
-      >
-        Enter the Atelier
-      </Link>
-
-    </div>
-  </section>
-)}
-
-
-<SectionVideo
-  src="/videos/skincare.mp4"
-  title="Skincare"
-  subtitle="Where discipline meets glow — and skin becomes legacy."
-/>
-
-{/* ================= SKINCARE ================= */}
-{skincare[0] && (
-  <section className="py-28 px-6 md:px-16 bg-white">
-
-    {/* 💎 HEADER WITH DESIGN */}
-    <div className="text-center mb-16 relative">
-
-      <div className="absolute left-1/2 -translate-x-1/2 -top-6 w-24 h-[2px] bg-red-500/70 rounded-full"></div>
-
-      <h2 className="text-6xl md:text-7xl font-luxury uppercase tracking-[0.25em]">
-        Rituals of Radiance
-      </h2>
-
-      <p className="mt-6 text-darktext/70 italic tracking-wide text-lg">
-        Where discipline meets glow — and skin becomes legacy.
-      </p>
-
-      <div className="absolute left-1/2 -translate-x-1/2 mt-6 w-24 h-[2px] bg-red-500/70 rounded-full"></div>
-
-    </div>
-
-    {/* BIG FEATURED */}
-   <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-2 mb-16">
-      {skincare.slice(0, 2).map(product => (
-        <Link
-          key={product._id}
-          to={`/product/${product._id}`}
-          className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-700"
-        >
-       <img
-  loading="lazy"
-  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-  className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
-/>
-
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
-
-          <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
-            <h3 className="text-2xl font-luxury uppercase">
-              {product.name}
-            </h3>
-
-            <span className="mt-4 inline-block text-xs uppercase tracking-widest border border-white px-6 py-2">
-              Discover
-            </span>
-          </div>
-        </Link>
-      ))}
-    </div>
-
-    {/* SMALL CARDS */}
-    <div className="grid grid-cols-2 md:grid-cols-5 gap-5">
-      {skincare.slice(3, 12).map(product => (
-        <Link
-          key={product._id}
-          to={`/product/${product._id}`}
-          className="group border bg-white hover:shadow-xl transition-all duration-500 rounded overflow-hidden flex flex-col"
-        >
-         <div className="h-32 overflow-hidden">
-  <img
-    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
-    alt={product.name}
-    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-  />
-</div>
-
-          <div className="p-3 flex flex-col flex-grow">
-            <p className="text-[11px] uppercase">
-              {product.name}
-            </p>
-
-            {/* 💎 CTA WITH PULSE */}
-            <div className="mt-auto pt-2 flex items-center justify-center gap-2 text-[10px] uppercase tracking-widest text-black/70">
-
-              Explore More
-
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-black opacity-70"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-black"></span>
-              </span>
-
-            </div>
-          </div>
-        </Link>
-      ))}
-    </div>
-
-    <div className="text-center">
-      <Link
-        to="/skincare"
-        className="mt-10 inline-block border border-black px-12 py-5 uppercase"
-      >
-        Initiate Radiance
-      </Link>
-    </div>
-
-  </section>
-)}
-      {/* ================= PRIVATE NOTES — EDITORIAL ================= */}
-      <section className="py-28 px-6 md:px-16 bg-black text-white relative overflow-hidden">
-        {/* Subtle gold vignette */}
-        <div className="absolute inset-0 bg-gradient-to-br from-primary/5 via-transparent to-primary/5 pointer-events-none opacity-30" />
-
-        <div className="max-w-6xl mx-auto relative z-10">
-          <div className="text-center mb-20">
-            <div className="w-16 h-[1px] bg-primary/70 mx-auto mb-6"></div>
-            <h2 className="text-5xl md:text-6xl font-luxury uppercase tracking-[0.2em]">
-              Private Notes
-            </h2>
-            <p className="mt-6 text-white/70 tracking-widest max-w-2xl mx-auto font-light italic">
-              On scent as identity. Ritual as reverence. Products that linger long after the moment.
-            </p>
-            <div className="w-16 h-[1px] bg-primary/70 mx-auto mt-6"></div>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-10 lg:gap-16">
-            {editorialPosts.map(post => (
+      {/* ═══════════════════ SCROLLING PRODUCT STRIP ═══════════════════ */}
+      <section className="py-10 relative" style={{ background: "var(--ink)" }}>
+        <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: "linear-gradient(90deg, transparent, var(--gold-dim), transparent)" }} />
+        <div className="absolute bottom-0 left-0 w-full h-[1px]" style={{ background: "linear-gradient(90deg, transparent, var(--gold-dim), transparent)" }} />
+
+        <div className="overflow-hidden">
+          <div className="animate-lux-scroll gap-5 px-5">
+            {[
+              ...pickRandom(fragrances, 2),
+              ...pickRandom(makeup, 2),
+              ...pickRandom(skincare, 2),
+              ...pickRandom(accessories, 2),
+            ].map((p) => (
               <Link
-                key={post.slug}
-                to={`/editorial/${post.slug}`}
-                className="group block relative rounded-xl overflow-hidden shadow-2xl hover:shadow-gold transition-shadow duration-700"
+                key={p?._id}
+                to={`/product/${p?._id}`}
+                className="flex-shrink-0 w-56 lux-card img-zoom"
+                style={{ background: "#171410", border: "1px solid rgba(184,150,90,0.15)", borderRadius: "4px", overflow: "hidden", textDecoration: "none" }}
               >
-                <div className="relative aspect-[4/5] overflow-hidden">
+                <div className="relative w-full overflow-hidden" style={{ height: "220px" }}>
                   <img
-                    src={post.image}
-                    alt={post.title}
-                    className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    loading="lazy"
+                    src={p?.image ? (p.image.startsWith("http") ? p.image : `${baseURL}${p.image}`) : "/images/placeholder.png"}
+                    className="w-full h-full object-cover"
+                    alt={p?.name}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent opacity-90 group-hover:opacity-100 transition-opacity duration-500" />
+                  {p?.isNew && (
+                    <span className="absolute top-3 left-3 tag-pill" style={{ background: "var(--ink)" }}>New</span>
+                  )}
+                  <div className="absolute bottom-3 left-3 flex items-center gap-1"
+                    style={{ background: "rgba(0,0,0,0.7)", padding: "3px 8px", borderRadius: "3px" }}>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="#b8965a" viewBox="0 0 24 24" className="w-3 h-3">
+                      <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                    </svg>
+                    <span className="font-label text-white/80" style={{ fontSize: "10px" }}>{p?.rating ? p.rating.toFixed(1) : "4.0"}</span>
+                  </div>
                 </div>
+                <div className="p-4">
+                  <p className="font-label text-white/80 uppercase truncate" style={{ fontSize: "10px", letterSpacing: "0.15em" }}>{p?.name}</p>
+                  <p className="font-body text-white/40 mt-1 line-clamp-1" style={{ fontSize: "10px" }}>{p?.description}</p>
+                  <p className="font-label mt-2" style={{ fontSize: "12px", color: "var(--gold)" }}>{formatNaira(p?.price)}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
 
-                <div className="absolute inset-0 flex flex-col justify-end p-8 text-white">
-                  <time className="text-xs uppercase tracking-widest text-white/60 block mb-3">
-                    {post.date} • {post.readTime}
-                  </time>
+      <SectionVideo
+        src="/videos/fragrance.mp4"
+        title="Fragrance"
+        subtitle="A signature that enters before you do — and lingers after you leave."
+      />
 
-                  <h3 className="text-2xl font-luxury uppercase tracking-wide group-hover:text-primary transition-colors duration-500">
-                    {post.title}
-                  </h3>
+      {/* ═══════════════════════ FRAGRANCES ═══════════════════════ */}
+      <section className="relative" style={{ background: "var(--cream)", paddingTop: "100px", paddingBottom: "100px" }}>
 
-                  <p className="text-white/80 text-sm leading-relaxed line-clamp-3 mt-3 opacity-90 group-hover:opacity-100 transition">
-                    {post.excerpt}
+        {/* Section header */}
+        <div className="text-center mb-20 px-6" style={{ animationDelay: "0.1s" }}>
+          <p className="sec-label mb-5" style={{ color: "var(--gold)" }}>Collection I</p>
+          <h2 className="sec-heading" style={{ fontSize: "clamp(42px, 7vw, 88px)", color: "var(--ink)" }}>
+            LUXURY
+          </h2>
+          <div className="divider-gold my-6" />
+          <p className="font-body text-center mx-auto" style={{ color: "var(--warm-grey)", fontSize: "13px", letterSpacing: "0.12em", maxWidth: "500px", lineHeight: "1.9", fontStyle: "italic" }}>
+            Crafted for presence. Designed to be remembered.<br />
+            A signature that enters before you do.
+          </p>
+        </div>
+
+        {/* Big featured grid — full bleed */}
+        <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-[3px] mb-4">
+          {fragrances.slice(0, 4).map((product, i) => (
+            <Link
+              key={product._id}
+              to={`/product/${product._id}`}
+              className="group relative block img-zoom"
+              style={{ overflow: "hidden" }}
+            >
+              <img
+                loading="lazy"
+                src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+                className="w-full object-cover"
+                style={{ height: "540px", display: "block" }}
+              />
+              <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,8,6,0.85) 0%, rgba(10,8,6,0.2) 50%, transparent 100%)" }} />
+
+              <div className="absolute inset-0 flex flex-col justify-end p-10 text-white">
+                <span className="tag-pill mb-4" style={{ alignSelf: "flex-start", borderColor: "rgba(255,255,255,0.3)", color: "rgba(255,255,255,0.6)" }}>
+                  {product.category}
+                </span>
+                <h3 className="sec-heading text-white group-hover:text-yellow-200 transition-colors duration-500"
+                  style={{ fontSize: "clamp(22px, 3vw, 34px)" }}>
+                  {product.name}
+                </h3>
+                <p className="font-body text-white/60 mt-3 line-clamp-2" style={{ fontSize: "12px", letterSpacing: "0.05em", maxWidth: "380px" }}>
+                  {product.description?.slice(0, 100)}…
+                </p>
+                <div className="flex items-center justify-between mt-6">
+                  <p className="font-label" style={{ color: "var(--gold-light)", fontSize: "14px" }}>
+                    ₦{Number(product.price || 0).toLocaleString()}
                   </p>
+                  <span className="font-label text-white/50 group-hover:text-white transition-colors duration-400"
+                    style={{ fontSize: "10px", letterSpacing: "0.3em", textTransform: "uppercase", borderBottom: "1px solid rgba(184,150,90,0.4)", paddingBottom: "2px" }}>
+                    Discover →
+                  </span>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
 
-                  <span className="inline-block mt-6 text-xs uppercase tracking-[0.25em] border-b-2 border-primary/50 pb-1 group-hover:border-primary group-hover:text-primary transition duration-400">
-                    Read in Full
+        {/* Mini cards */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-[2px] mb-16 relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen">
+          {fragrances.slice(6, 15).map(product => (
+            <Link
+              key={product._id}
+              to={`/product/${product._id}`}
+              className="group relative block img-zoom"
+              style={{ background: "#f5f3ef", overflow: "hidden" }}
+            >
+              <div style={{ height: "180px", overflow: "hidden" }}>
+                <img
+                  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+                  alt={product.name}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+              <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                style={{ background: "rgba(10,8,6,0.5)" }} />
+              <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                <p className="font-label text-white uppercase truncate" style={{ fontSize: "10px", letterSpacing: "0.15em" }}>{product.name}</p>
+                <p className="font-label mt-1" style={{ fontSize: "11px", color: "var(--gold-light)" }}>
+                  ₦{Number(product.price || 0).toLocaleString()}
+                </p>
+              </div>
+              {/* Visible name below on mobile */}
+              <div className="p-3 md:hidden">
+                <p className="font-label text-black/80 uppercase truncate" style={{ fontSize: "9px", letterSpacing: "0.15em" }}>{product.name}</p>
+                <p style={{ fontSize: "10px", color: "var(--gold)", marginTop: "2px" }}>₦{Number(product.price || 0).toLocaleString()}</p>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="text-center px-6">
+          <Link to="/fragrances" className="btn-gold">
+            View All Compositions
+          </Link>
+        </div>
+      </section>
+
+      <SectionVideo
+        src="/videos/makeup.mp4"
+        title="Makeup"
+        subtitle="Sculpt. Define. Command attention without speaking."
+      />
+
+      {/* ═══════════════════════ MAKEUP ═══════════════════════ */}
+      {makeup[0] && (
+        <section
+          className="relative"
+          style={{
+            backgroundImage: `url(${baseURL}${makeup[5]?.image})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            paddingTop: "110px",
+            paddingBottom: "110px",
+          }}
+        >
+          <div className="absolute inset-0" style={{ background: "rgba(6,4,2,0.72)" }} />
+
+          <div className="relative z-10 text-white px-6 md:px-16">
+
+            <div className="text-center mb-20">
+              <p className="sec-label mb-5" style={{ color: "var(--gold)", opacity: 0.85 }}>Collection II</p>
+              <h2 className="sec-heading" style={{ fontSize: "clamp(42px, 7vw, 88px)" }}>
+                The Art of Expression
+              </h2>
+              <div className="divider-gold my-6" />
+              <p className="font-body italic text-white/50" style={{ fontSize: "13px", letterSpacing: "0.1em" }}>
+                Sculpt. Define. Command attention without speaking.
+              </p>
+            </div>
+
+            {/* Big featured */}
+            <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-[3px] mb-4">
+              {makeup.slice(0, 2).map(product => (
+                <Link
+                  key={product._id}
+                  to={`/product/${product._id}`}
+                  className="group relative block img-zoom"
+                  style={{ overflow: "hidden" }}
+                >
+                  <img
+                    loading="lazy"
+                    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+                    className="w-full object-cover"
+                    style={{ height: "520px", display: "block" }}
+                  />
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)" }} />
+                  <div className="absolute inset-0 flex flex-col justify-end p-10">
+                    <h3 className="sec-heading text-white" style={{ fontSize: "clamp(20px, 2.5vw, 30px)" }}>
+                      {product.name}
+                    </h3>
+                    <span className="font-label mt-4 self-start text-white/60 group-hover:text-white transition-colors"
+                      style={{ fontSize: "10px", letterSpacing: "0.3em", textTransform: "uppercase", borderBottom: "1px solid rgba(184,150,90,0.5)", paddingBottom: "2px" }}>
+                      View Product →
+                    </span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            {/* Small cards */}
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-[2px] relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen mb-14">
+              {makeup.slice(2, 8).map(product => (
+                <Link
+                  key={product._id}
+                  to={`/product/${product._id}`}
+                  className="group relative block img-zoom"
+                  style={{ overflow: "hidden", background: "rgba(255,255,255,0.04)" }}
+                >
+                  <div style={{ height: "160px", overflow: "hidden" }}>
+                    <img
+                      src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+                      alt={product.name}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <p className="font-label text-white/60 uppercase truncate group-hover:text-white transition-colors"
+                      style={{ fontSize: "9px", letterSpacing: "0.15em" }}>
+                      {product.name}
+                    </p>
+                    <div className="flex items-center gap-1 mt-2">
+                      <span className="relative flex h-[6px] w-[6px]">
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-60"></span>
+                        <span className="relative inline-flex rounded-full h-[6px] w-[6px] bg-yellow-400"></span>
+                      </span>
+                      <span className="font-label text-white/40" style={{ fontSize: "9px", letterSpacing: "0.2em" }}>View Details</span>
+                    </div>
+                  </div>
+                </Link>
+              ))}
+            </div>
+
+            <div className="text-center">
+              <Link to="/makeup" className="btn-gold-inv">Enter the Atelier</Link>
+            </div>
+          </div>
+        </section>
+      )}
+
+      <SectionVideo
+        src="/videos/skincare.mp4"
+        title="Skincare"
+        subtitle="Where discipline meets glow — and skin becomes legacy."
+      />
+
+      {/* ═══════════════════════ SKINCARE ═══════════════════════ */}
+      {skincare[0] && (
+        <section style={{ background: "#faf9f6", paddingTop: "100px", paddingBottom: "100px" }}>
+
+          <div className="text-center mb-20 px-6">
+            <p className="sec-label mb-5" style={{ color: "var(--gold)" }}>Collection III</p>
+            <h2 className="sec-heading" style={{ fontSize: "clamp(42px, 7vw, 88px)", color: "var(--ink)" }}>
+              Rituals of Radiance
+            </h2>
+            <div className="divider-gold my-6" />
+            <p className="font-body italic text-center mx-auto" style={{ color: "var(--warm-grey)", fontSize: "13px", letterSpacing: "0.08em", maxWidth: "440px", lineHeight: "1.9" }}>
+              Where discipline meets glow — and skin becomes legacy.
+            </p>
+          </div>
+
+          {/* Big featured */}
+          <div className="relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen grid md:grid-cols-2 gap-[3px] mb-4">
+            {skincare.slice(0, 2).map(product => (
+              <Link
+                key={product._id}
+                to={`/product/${product._id}`}
+                className="group relative block img-zoom"
+                style={{ overflow: "hidden" }}
+              >
+                <img
+                  loading="lazy"
+                  src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+                  className="w-full object-cover"
+                  style={{ height: "520px", display: "block" }}
+                />
+                <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(10,8,6,0.75) 0%, transparent 55%)" }} />
+                <div className="absolute inset-0 flex flex-col justify-end p-10 text-white">
+                  <h3 className="sec-heading" style={{ fontSize: "clamp(20px, 2.5vw, 30px)" }}>{product.name}</h3>
+                  <span className="font-label mt-4 self-start text-white/50 group-hover:text-white transition-colors"
+                    style={{ fontSize: "10px", letterSpacing: "0.3em", borderBottom: "1px solid rgba(184,150,90,0.4)", paddingBottom: "2px", textTransform: "uppercase" }}>
+                    Discover →
                   </span>
                 </div>
               </Link>
             ))}
           </div>
 
-  
+          {/* Small cards */}
+          <div className="grid grid-cols-2 md:grid-cols-5 gap-[2px] relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] w-screen mb-16">
+            {skincare.slice(3, 12).map(product => (
+              <Link
+                key={product._id}
+                to={`/product/${product._id}`}
+                className="group relative block img-zoom"
+                style={{ overflow: "hidden", background: "#f0ede8" }}
+              >
+                <div style={{ height: "170px", overflow: "hidden" }}>
+                  <img
+                    src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+                    alt={product.name}
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500"
+                  style={{ background: "rgba(10,8,6,0.55)" }} />
+                <div className="absolute inset-0 flex flex-col justify-end p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
+                  <p className="font-label text-white uppercase truncate" style={{ fontSize: "9px", letterSpacing: "0.15em" }}>{product.name}</p>
+                  <p style={{ fontSize: "10px", color: "var(--gold-light)", marginTop: "3px", fontFamily: "'Tenor Sans', sans-serif" }}>
+                    ₦{Number(product.price || 0).toLocaleString()}
+                  </p>
+                </div>
+                {/* Mobile visible info */}
+                <div className="p-3 md:hidden">
+                  <p className="font-label uppercase truncate" style={{ fontSize: "9px", letterSpacing: "0.12em", color: "var(--ink)" }}>{product.name}</p>
+                  <p style={{ fontSize: "10px", color: "var(--gold)", marginTop: "2px", fontFamily: "'Tenor Sans', sans-serif" }}>₦{Number(product.price || 0).toLocaleString()}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+
+          <div className="text-center px-6">
+            <Link to="/skincare" className="btn-gold">Initiate Radiance</Link>
+          </div>
+        </section>
+      )}
+
+      {/* ═══════════════════ PRIVATE NOTES — EDITORIAL ═══════════════════ */}
+      <section style={{ background: "var(--ink)", paddingTop: "110px", paddingBottom: "110px" }} className="relative overflow-hidden">
+
+        {/* Atmospheric background glow */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{ background: "radial-gradient(ellipse at 50% 0%, rgba(184,150,90,0.06) 0%, transparent 70%)" }} />
+
+        <div className="max-w-6xl mx-auto px-6 md:px-16 relative z-10">
+
+          <div className="text-center mb-20">
+            <p className="sec-label mb-5" style={{ color: "var(--gold)", opacity: 0.7 }}>The Journal</p>
+            <h2 className="sec-heading text-white" style={{ fontSize: "clamp(42px, 6vw, 80px)" }}>
+              Private Notes
+            </h2>
+            <div className="divider-gold my-6" />
+            <p className="font-body italic text-white/40 mx-auto" style={{ fontSize: "13px", letterSpacing: "0.08em", maxWidth: "480px", lineHeight: "1.9" }}>
+              On scent as identity. Ritual as reverence.<br />Products that linger long after the moment.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
+            {editorialPosts.map((post, i) => (
+              <Link
+                key={post.slug}
+                to={`/editorial/${post.slug}`}
+                className="group block lux-card"
+                style={{ borderRadius: "2px", overflow: "hidden", textDecoration: "none",
+                  border: "1px solid rgba(184,150,90,0.12)" }}
+              >
+                <div className="relative img-zoom" style={{ aspectRatio: "4/5", overflow: "hidden" }}>
+                  <img
+                    src={post.image}
+                    alt={post.title}
+                    className="w-full h-full object-cover"
+                  />
+                  {/* Multi-layer overlay for depth */}
+                  <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(6,4,2,0.92) 0%, rgba(6,4,2,0.4) 50%, transparent 100%)" }} />
+                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700"
+                    style={{ background: "rgba(184,150,90,0.06)" }} />
+                </div>
+
+                <div className="absolute inset-0 flex flex-col justify-end p-8 text-white" style={{ position: "absolute" }}>
+                  <time className="font-label text-white/40 block mb-3" style={{ fontSize: "9px", letterSpacing: "0.3em", textTransform: "uppercase" }}>
+                    {post.date} &nbsp;·&nbsp; {post.readTime}
+                  </time>
+
+                  <h3 className="sec-heading text-white group-hover:text-yellow-200 transition-colors duration-500"
+                    style={{ fontSize: "clamp(17px, 2vw, 22px)" }}>
+                    {post.title}
+                  </h3>
+
+                  <p className="font-body text-white/55 leading-relaxed mt-3 line-clamp-3"
+                    style={{ fontSize: "12px", letterSpacing: "0.02em" }}>
+                    {post.excerpt}
+                  </p>
+
+                  <span className="font-label mt-6 self-start text-white/40 group-hover:text-yellow-300 transition-colors duration-400"
+                    style={{ fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase",
+                      borderBottom: "1px solid rgba(184,150,90,0.35)", paddingBottom: "3px" }}>
+                    Read in Full →
+                  </span>
+                </div>
+              </Link>
+            ))}
+          </div>
+
         </div>
+
+        {/* Bottom gold rule */}
+        <div className="absolute bottom-0 left-0 right-0 h-[1px]"
+          style={{ background: "linear-gradient(90deg, transparent, rgba(184,150,90,0.3), transparent)" }} />
       </section>
 
     </div>
