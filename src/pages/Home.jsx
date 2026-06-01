@@ -20,12 +20,23 @@ function Home({ addToWishlist }) {
   const [products, setProducts] = useState([]);
   const [quoteIndex, setQuoteIndex] = useState(0);
 const baseURL = import.meta.env.VITE_API_URL;
-  useEffect(() => {
-    fetch(`${import.meta.env.VITE_API_URL}/api/products`)
-      .then(res => res.json())
-      .then(data => setProducts(data))
-      .catch(err => console.error(err));
-  }, []);
+ useEffect(() => {
+  const loadProducts = async () => {
+    try {
+      const response = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/products`
+      );
+
+      const data = await response.json();
+
+      setProducts(data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  loadProducts();
+}, []);
 
   const quotes = [
     `“Perfume is the art that completes your presence.\nA silent introduction before you speak.\nA memory that lingers beyond time.\nA signature of identity.”`,
@@ -146,7 +157,8 @@ const baseURL = import.meta.env.VITE_API_URL;
         >
           {/* IMAGE */}
           <div className="relative w-full h-64 overflow-hidden">
-         <img
+     <img
+  loading="lazy"
   src={p?.image ? (p.image.startsWith("http") ? p.image : `${baseURL}${p.image}`) : "/images/placeholder.png"}
   className="w-full h-full object-cover group-hover:scale-105 transition duration-700"
   alt={p?.name}
@@ -236,7 +248,8 @@ const baseURL = import.meta.env.VITE_API_URL;
         to={`/product/${product._id}`}
         className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-700"
       >
-      <img
+    <img
+  loading="lazy"
   src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
   className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
 />
@@ -364,7 +377,8 @@ const baseURL = import.meta.env.VITE_API_URL;
             to={`/product/${product._id}`}
             className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-700"
           >
-        <img
+      <img
+  loading="lazy"
   src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
   className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
 />
@@ -468,7 +482,8 @@ const baseURL = import.meta.env.VITE_API_URL;
           to={`/product/${product._id}`}
           className="group relative block overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition duration-700"
         >
-         <img
+       <img
+  loading="lazy"
   src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
   className="w-full h-[520px] object-cover transition-transform duration-1000 group-hover:scale-110"
 />
