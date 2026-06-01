@@ -102,14 +102,24 @@ function Home({ addToWishlist }) {
           --ink: #0e0c0a;
           --cream: #faf8f4;
           --warm-grey: #8a8178;
+          --red: #c0392b;
+          --red-dim: rgba(192,57,43,0.25);
+          --red-soft: rgba(192,57,43,0.08);
         }
 
         .font-display  { font-family: 'Cormorant Garamond', serif; }
         .font-label    { font-family: 'Tenor Sans', sans-serif; }
         .font-body     { font-family: 'Montserrat', sans-serif; }
 
-        /* ── Gold divider ── */
+        /* ── Red divider (section structure) ── */
         .divider-gold {
+          width: 60px; height: 1px;
+          background: linear-gradient(90deg, transparent, var(--red), transparent);
+          margin: 0 auto;
+        }
+
+        /* ── Gold divider (price / luxury accent) ── */
+        .divider-red {
           width: 60px; height: 1px;
           background: linear-gradient(90deg, transparent, var(--gold), transparent);
           margin: 0 auto;
@@ -148,12 +158,12 @@ function Home({ addToWishlist }) {
         /* ── Gold shimmer on hover ── */
         .gold-hover:hover { color: var(--gold); transition: color 0.3s ease; }
 
-        /* ── Thin gold border button ── */
+        /* ── Red border button (light bg sections) ── */
         .btn-gold {
           display: inline-block;
           padding: 14px 48px;
-          border: 1px solid var(--gold);
-          color: var(--gold);
+          border: 1px solid var(--red);
+          color: var(--red);
           font-family: 'Tenor Sans', sans-serif;
           font-size: 11px;
           letter-spacing: 0.35em;
@@ -161,7 +171,7 @@ function Home({ addToWishlist }) {
           transition: background 0.4s ease, color 0.4s ease;
           text-decoration: none;
         }
-        .btn-gold:hover { background: var(--gold); color: #fff; }
+        .btn-gold:hover { background: var(--red); color: #fff; }
 
         .btn-gold-inv {
           display: inline-block;
@@ -193,8 +203,8 @@ function Home({ addToWishlist }) {
           letter-spacing: 0.2em;
           text-transform: uppercase;
           padding: 3px 10px;
-          border: 1px solid var(--gold);
-          color: var(--gold);
+          border: 1px solid var(--red);
+          color: var(--red);
           border-radius: 999px;
         }
 
@@ -204,7 +214,7 @@ function Home({ addToWishlist }) {
           font-size: 10px;
           letter-spacing: 0.4em;
           text-transform: uppercase;
-          color: var(--gold);
+          color: var(--red);
         }
 
         /* ── Big section heading ── */
@@ -225,8 +235,8 @@ function Home({ addToWishlist }) {
         {/* Dark vignette — deeper at bottom */}
         <div className="absolute inset-0" style={{ background: "linear-gradient(to bottom, rgba(0,0,0,0.25) 0%, rgba(0,0,0,0.55) 60%, rgba(0,0,0,0.75) 100%)" }} />
 
-        {/* Thin gold horizontal rule — editorial accent */}
-        <div className="absolute top-0 left-0 right-0 h-[2px]" style={{ background: "linear-gradient(90deg, transparent, var(--gold), transparent)" }} />
+        {/* Thin red horizontal rule — brand accent */}
+        <div className="absolute top-0 left-0 right-0 h-[3px]" style={{ background: "var(--red)" }} />
 
         <div className="relative z-10 flex flex-col items-center justify-center h-full text-center px-6">
 
@@ -268,9 +278,9 @@ function Home({ addToWishlist }) {
       </section>
 
       {/* ═══════════════════ SCROLLING PRODUCT STRIP ═══════════════════ */}
-      <section className="py-10 relative" style={{ background: "var(--ink)" }}>
-        <div className="absolute top-0 left-0 w-full h-[1px]" style={{ background: "linear-gradient(90deg, transparent, var(--gold-dim), transparent)" }} />
-        <div className="absolute bottom-0 left-0 w-full h-[1px]" style={{ background: "linear-gradient(90deg, transparent, var(--gold-dim), transparent)" }} />
+      <section className="py-10 relative" style={{ background: "#fff" }}>
+        <div className="absolute top-0 left-0 w-full h-[2px]" style={{ background: "var(--red)" }} />
+        <div className="absolute bottom-0 left-0 w-full h-[2px]" style={{ background: "var(--red)" }} />
 
         <div className="overflow-hidden">
           <div className="animate-lux-scroll gap-5 px-5">
@@ -284,7 +294,7 @@ function Home({ addToWishlist }) {
                 key={p?._id}
                 to={`/product/${p?._id}`}
                 className="flex-shrink-0 w-56 lux-card img-zoom"
-                style={{ background: "#171410", border: "1px solid rgba(184,150,90,0.15)", borderRadius: "4px", overflow: "hidden", textDecoration: "none" }}
+                style={{ background: "#fff", border: "1px solid rgba(0,0,0,0.08)", borderRadius: "4px", overflow: "hidden", textDecoration: "none" }}
               >
                 <div className="relative w-full overflow-hidden" style={{ height: "220px" }}>
                   <img
@@ -294,10 +304,10 @@ function Home({ addToWishlist }) {
                     alt={p?.name}
                   />
                   {p?.isNew && (
-                    <span className="absolute top-3 left-3 tag-pill" style={{ background: "var(--ink)" }}>New</span>
+                    <span className="absolute top-3 left-3 tag-pill" style={{ background: "#fff", borderColor: "var(--red)", color: "var(--red)" }}>New</span>
                   )}
                   <div className="absolute bottom-3 left-3 flex items-center gap-1"
-                    style={{ background: "rgba(0,0,0,0.7)", padding: "3px 8px", borderRadius: "3px" }}>
+                    style={{ background: "rgba(0,0,0,0.65)", padding: "3px 8px", borderRadius: "3px" }}>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#b8965a" viewBox="0 0 24 24" className="w-3 h-3">
                       <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
                     </svg>
@@ -305,8 +315,8 @@ function Home({ addToWishlist }) {
                   </div>
                 </div>
                 <div className="p-4">
-                  <p className="font-label text-white/80 uppercase truncate" style={{ fontSize: "10px", letterSpacing: "0.15em" }}>{p?.name}</p>
-                  <p className="font-body text-white/40 mt-1 line-clamp-1" style={{ fontSize: "10px" }}>{p?.description}</p>
+                  <p className="font-label uppercase truncate" style={{ fontSize: "10px", letterSpacing: "0.15em", color: "var(--ink)" }}>{p?.name}</p>
+                  <p className="font-body mt-1 line-clamp-1" style={{ fontSize: "10px", color: "var(--warm-grey)" }}>{p?.description}</p>
                   <p className="font-label mt-2" style={{ fontSize: "12px", color: "var(--gold)" }}>{formatNaira(p?.price)}</p>
                 </div>
               </Link>
@@ -326,7 +336,7 @@ function Home({ addToWishlist }) {
 
         {/* Section header */}
         <div className="text-center mb-20 px-6" style={{ animationDelay: "0.1s" }}>
-          <p className="sec-label mb-5" style={{ color: "var(--gold)" }}>Collection I</p>
+          <p className="sec-label mb-5" style={{ color: "var(--red)" }}>Collection I</p>
           <h2 className="sec-heading" style={{ fontSize: "clamp(42px, 7vw, 88px)", color: "var(--ink)" }}>
             LUXURY
           </h2>
@@ -442,7 +452,7 @@ function Home({ addToWishlist }) {
           <div className="relative z-10 text-white px-6 md:px-16">
 
             <div className="text-center mb-20">
-              <p className="sec-label mb-5" style={{ color: "var(--gold)", opacity: 0.85 }}>Collection II</p>
+              <p className="sec-label mb-5" style={{ color: "var(--red)", opacity: 0.9 }}>Collection II</p>
               <h2 className="sec-heading" style={{ fontSize: "clamp(42px, 7vw, 88px)" }}>
                 The Art of Expression
               </h2>
@@ -532,7 +542,7 @@ function Home({ addToWishlist }) {
         <section style={{ background: "#faf9f6", paddingTop: "100px", paddingBottom: "100px" }}>
 
           <div className="text-center mb-20 px-6">
-            <p className="sec-label mb-5" style={{ color: "var(--gold)" }}>Collection III</p>
+            <p className="sec-label mb-5" style={{ color: "var(--red)" }}>Collection III</p>
             <h2 className="sec-heading" style={{ fontSize: "clamp(42px, 7vw, 88px)", color: "var(--ink)" }}>
               Rituals of Radiance
             </h2>
@@ -618,7 +628,7 @@ function Home({ addToWishlist }) {
         <div className="max-w-6xl mx-auto px-6 md:px-16 relative z-10">
 
           <div className="text-center mb-20">
-            <p className="sec-label mb-5" style={{ color: "var(--gold)", opacity: 0.7 }}>The Journal</p>
+            <p className="sec-label mb-5" style={{ color: "var(--red)", opacity: 0.85 }}>The Journal</p>
             <h2 className="sec-heading text-white" style={{ fontSize: "clamp(42px, 6vw, 80px)" }}>
               Private Notes
             </h2>
@@ -635,7 +645,7 @@ function Home({ addToWishlist }) {
                 to={`/editorial/${post.slug}`}
                 className="group block lux-card"
                 style={{ borderRadius: "2px", overflow: "hidden", textDecoration: "none",
-                  border: "1px solid rgba(184,150,90,0.12)" }}
+                  border: "1px solid rgba(192,57,43,0.15)" }}
               >
                 <div className="relative img-zoom" style={{ aspectRatio: "4/5", overflow: "hidden" }}>
                   <img
@@ -664,9 +674,9 @@ function Home({ addToWishlist }) {
                     {post.excerpt}
                   </p>
 
-                  <span className="font-label mt-6 self-start text-white/40 group-hover:text-yellow-300 transition-colors duration-400"
+                  <span className="font-label mt-6 self-start text-white/40 group-hover:text-red-400 transition-colors duration-400"
                     style={{ fontSize: "9px", letterSpacing: "0.35em", textTransform: "uppercase",
-                      borderBottom: "1px solid rgba(184,150,90,0.35)", paddingBottom: "3px" }}>
+                      borderBottom: "1px solid rgba(192,57,43,0.4)", paddingBottom: "3px" }}>
                     Read in Full →
                   </span>
                 </div>
@@ -676,9 +686,9 @@ function Home({ addToWishlist }) {
 
         </div>
 
-        {/* Bottom gold rule */}
-        <div className="absolute bottom-0 left-0 right-0 h-[1px]"
-          style={{ background: "linear-gradient(90deg, transparent, rgba(184,150,90,0.3), transparent)" }} />
+        {/* Bottom red rule */}
+        <div className="absolute bottom-0 left-0 right-0 h-[2px]"
+          style={{ background: "var(--red)" }} />
       </section>
 
     </div>
