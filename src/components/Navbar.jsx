@@ -346,24 +346,18 @@ function Navbar({ wishlist }) {
         <TopTicker />
         <PromoBar />
 
-        {/* ── MAIN NAV ROW ── */}
+        {/* ── MAIN NAV ── */}
         <nav style={{ borderBottom: "1px solid rgba(0,0,0,0.07)" }}>
           <div style={{ maxWidth: "1440px", margin: "0 auto", padding: "0 32px" }}>
-            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "88px" }}>
 
-              {/* LEFT: hamburger + search */}
-              <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
+            {/* ── ROW 1: Search | Logo | Icons ── */}
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", height: "80px", position: "relative" }}>
 
-                {/* Hamburger — mobile only */}
-                <button
-                  className="lg:hidden nb-icon"
-                  onClick={() => setOpen(true)}
-                  aria-label="Open menu"
-                >
+              {/* LEFT: hamburger (mobile) + search */}
+              <div style={{ display: "flex", alignItems: "center", gap: "20px", flex: 1 }}>
+                <button className="lg:hidden nb-icon" onClick={() => setOpen(true)} aria-label="Open menu">
                   <Menu size={22} />
                 </button>
-
-                {/* Search */}
                 <button
                   className="nb-icon"
                   onClick={() => { setSearchOpen(true); setTimeout(() => searchRef.current?.focus(), 100); }}
@@ -373,78 +367,78 @@ function Navbar({ wishlist }) {
                 </button>
               </div>
 
-              {/* CENTER: Logo */}
-              <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)" }}>
+              {/* CENTER: Logo — absolutely centered so it's always perfectly mid */}
+              <div style={{ position: "absolute", left: "50%", transform: "translateX(-50%)", zIndex: 1 }}>
                 <Link to="/" style={{ display: "block" }}>
                   <img
                     src="/images/logo.jpeg"
                     alt="logo"
-                    style={{ height: "72px", width: "auto", objectFit: "contain" }}
+                    style={{ height: "68px", width: "auto", objectFit: "contain" }}
                   />
                 </Link>
               </div>
 
-              {/* RIGHT: desktop nav links + icons */}
-              <div style={{ display: "flex", alignItems: "center", gap: "20px" }}>
-
-                {/* Desktop nav — hidden on mobile */}
-                <div className="hidden lg:flex" style={{ alignItems: "center", gap: "28px", marginRight: "12px" }}>
-                  {navItems.map((item) => (
-                    <div key={item.name} style={{ position: "relative" }} className="group">
-                      <Link to={item.path} className="nb-navlink">
-                        {item.name}
-                        {item.subItems?.length > 0 && (
-                          <ChevronDown size={10} style={{ display: "inline", marginLeft: "3px", verticalAlign: "middle", opacity: 0.5 }} />
-                        )}
-                      </Link>
-
-                      {/* Dropdown */}
-                      {item.subItems?.length > 0 && (
-                        <div style={{
-                          position: "absolute", top: "calc(100% + 16px)",
-                          left: "50%", transform: "translateX(-50%)",
-                          width: "220px",
-                          background: "#faf8f4",
-                          border: "1px solid rgba(0,0,0,0.07)",
-                          borderTop: "2px solid var(--red)",
-                          boxShadow: "0 16px 40px rgba(0,0,0,0.1)",
-                          padding: "16px 24px",
-                          zIndex: 100,
-                          animation: "nb-dropIn 0.2s ease both",
-                        }}
-                          className="opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
-                        >
-                          {item.subItems.map((sub, i) => (
-                            <Link
-                              key={i}
-                              to={`${item.path}?sub=${sub.slug}`}
-                              className="nb-drop-item"
-                            >
-                              {sub.label}
-                            </Link>
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-
-                {/* Thin vertical rule */}
-                <div className="hidden lg:block" style={{ width: "1px", height: "20px", background: "rgba(0,0,0,0.12)" }} />
-
-                {/* Wishlist */}
+              {/* RIGHT: wishlist + cart */}
+              <div style={{ display: "flex", alignItems: "center", gap: "20px", flex: 1, justifyContent: "flex-end" }}>
                 <Link to="/wishlist" style={{ position: "relative", display: "flex" }} className="nb-icon">
                   <Heart size={20} />
                   {wishlistCount > 0 && <span className="nb-badge">{wishlistCount}</span>}
                 </Link>
-
-                {/* Cart */}
                 <Link to="/cart" style={{ position: "relative", display: "flex" }} className="nb-icon">
                   <ShoppingBag size={20} />
                   {cartCount > 0 && <span className="nb-badge">{cartCount}</span>}
                 </Link>
               </div>
             </div>
+
+            {/* ── ROW 2: Desktop nav links — centered, hidden on mobile ── */}
+            <div
+              className="hidden lg:flex"
+              style={{
+                justifyContent: "center",
+                alignItems: "center",
+                gap: "32px",
+                paddingBottom: "16px",
+                flexWrap: "wrap",
+              }}
+            >
+              {navItems.map((item) => (
+                <div key={item.name} style={{ position: "relative" }} className="group">
+                  <Link to={item.path} className="nb-navlink">
+                    {item.name}
+                    {item.subItems?.length > 0 && (
+                      <ChevronDown size={10} style={{ display: "inline", marginLeft: "3px", verticalAlign: "middle", opacity: 0.45 }} />
+                    )}
+                  </Link>
+
+                  {/* Dropdown */}
+                  {item.subItems?.length > 0 && (
+                    <div
+                      className="opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200"
+                      style={{
+                        position: "absolute", top: "calc(100% + 12px)",
+                        left: "50%", transform: "translateX(-50%)",
+                        width: "220px",
+                        background: "#faf8f4",
+                        border: "1px solid rgba(0,0,0,0.07)",
+                        borderTop: "2px solid var(--red)",
+                        boxShadow: "0 16px 40px rgba(0,0,0,0.1)",
+                        padding: "16px 24px",
+                        zIndex: 100,
+                        animation: "nb-dropIn 0.2s ease both",
+                      }}
+                    >
+                      {item.subItems.map((sub, i) => (
+                        <Link key={i} to={`${item.path}?sub=${sub.slug}`} className="nb-drop-item">
+                          {sub.label}
+                        </Link>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              ))}
+            </div>
+
           </div>
         </nav>
 
@@ -655,8 +649,8 @@ function Navbar({ wishlist }) {
 
       </header>
 
-      {/* Body offset — same height as before */}
-      <div style={{ paddingTop: "130px" }} />
+      {/* Body offset — accounts for ticker + promo + logo row + nav row */}
+      <div style={{ paddingTop: "160px" }} />
     </>
   );
 }
