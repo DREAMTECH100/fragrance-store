@@ -1,11 +1,172 @@
 import { Link } from "react-router-dom"
-import { Heart, Star, ShoppingBag, MessageCircle } from "lucide-react"
+import { Heart, Star } from "lucide-react"
 import { useCart } from "../context/CartContext"
+
+const CARD_STYLES = `
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Tenor+Sans&display=swap');
+
+  :root {
+    --red: #c0392b;
+    --gold: #b8965a;
+    --ink: #0e0c0a;
+    --warm-grey: #8a8178;
+  }
+
+  .pc-card {
+    display: block;
+    background: #fff;
+    position: relative;
+    text-decoration: none;
+    color: var(--ink);
+    transition: box-shadow 0.4s ease, transform 0.4s ease;
+    border: 1px solid rgba(0,0,0,0.07);
+    overflow: hidden;
+  }
+  .pc-card:hover {
+    box-shadow: 0 20px 50px rgba(0,0,0,0.11);
+    transform: translateY(-3px);
+  }
+
+  /* Thin red bottom sweep on hover */
+  .pc-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--red);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.45s ease;
+  }
+  .pc-card:hover::after { transform: scaleX(1); }
+
+  /* Image zoom */
+  .pc-img {
+    transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .pc-card:hover .pc-img { transform: scale(1.06); }
+
+  /* Overlay */
+  .pc-overlay {
+    position: absolute; inset: 0;
+    background: rgba(0,0,0,0);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.35s ease;
+    pointer-events: none;
+  }
+  .pc-card:hover .pc-overlay { background: rgba(0,0,0,0.32); }
+
+  .pc-overlay-label {
+    opacity: 0;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 10px;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.75);
+    padding: 10px 24px;
+    transition: opacity 0.3s ease;
+  }
+  .pc-card:hover .pc-overlay-label { opacity: 1; }
+
+  /* Wishlist */
+  .pc-wishlist {
+    position: absolute; top: 12px; right: 12px; z-index: 20;
+    width: 32px; height: 32px;
+    background: #fff;
+    border: 1px solid rgba(0,0,0,0.09);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    transition: background 0.25s, border-color 0.25s;
+  }
+  .pc-wishlist:hover { background: var(--red); border-color: var(--red); }
+  .pc-wishlist:hover svg { stroke: #fff !important; }
+
+  /* Pre-order badge */
+  .pc-preorder-badge {
+    position: absolute; top: 12px; left: 12px; z-index: 20;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
+    background: var(--red); color: #fff;
+    padding: 4px 10px;
+  }
+
+  /* Rating */
+  .pc-rating {
+    position: absolute; bottom: 12px; left: 12px; z-index: 10;
+    display: flex; align-items: center; gap: 4px;
+    background: #fff; padding: 4px 8px;
+    font-family: 'Tenor Sans', sans-serif; font-size: 11px; color: var(--ink);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    border: 1px solid rgba(0,0,0,0.06);
+  }
+
+  /* Info */
+  .pc-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 16px; font-weight: 500;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--ink); line-height: 1.3; margin: 0 0 6px;
+  }
+  .pc-price {
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 13px; color: var(--gold);
+    letter-spacing: 0.06em; margin: 0 0 6px;
+  }
+  .pc-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 13px; font-style: italic;
+    color: var(--warm-grey); line-height: 1.6; margin: 0 0 16px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .pc-preorder-note {
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 9px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--red); margin: 4px 0 12px;
+  }
+
+  /* Buttons */
+  .pc-btn {
+    display: block; width: 100%; text-align: center;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    padding: 11px 0;
+    border: 1px solid var(--red); color: var(--red);
+    background: transparent; cursor: pointer;
+    transition: background 0.3s, color 0.3s;
+    text-decoration: none;
+  }
+  .pc-btn:hover { background: var(--red); color: #fff; }
+
+  .pc-btn-preorder {
+    display: block; width: 100%; text-align: center;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 10px; letter-spacing: 0.3em; text-transform: uppercase;
+    padding: 11px 0;
+    border: 1px solid rgba(0,0,0,0.18); color: var(--warm-grey);
+    background: transparent; cursor: pointer;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+    text-decoration: none;
+  }
+  .pc-btn-preorder:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  .pc-mobile-cta {
+    position: absolute; bottom: 12px; right: 12px; z-index: 10;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 9px; letter-spacing: 0.2em; text-transform: uppercase;
+    background: rgba(0,0,0,0.6); color: #fff;
+    padding: 4px 10px;
+  }
+`
 
 function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", buttonLink }) {
   const { addToCart } = useCart()
   const baseURL = import.meta.env.VITE_API_URL
-
   const WHATSAPP_NUMBER = "2348062392555"
 
   const handleWishlist = (e) => {
@@ -18,221 +179,92 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
   const handleCartClick = (e) => {
     e.preventDefault()
     e.stopPropagation()
-
     if (product.isPreorder) {
       const message = `Hi, I want to confirm preorder for: ${product.name}`
-      window.open(
-        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
-        "_blank"
-      )
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank")
       return
     }
-
     addToCart(product)
   }
 
   return (
-    <Link
-      to={`/product/${product._id}`}
-      className="group block relative cursor-pointer"
-      style={{ fontFamily: "inherit" }}
-    >
-      <div
-        className="relative bg-[#faf9f7] overflow-hidden"
-        style={{
-          boxShadow: "0 2px 8px 0 rgba(0,0,0,0.06)",
-          transition: "box-shadow 0.35s ease, transform 0.35s ease",
-        }}
-        onMouseEnter={e => {
-          e.currentTarget.style.boxShadow = "0 12px 40px 0 rgba(0,0,0,0.13)"
-          e.currentTarget.style.transform = "translateY(-3px)"
-        }}
-        onMouseLeave={e => {
-          e.currentTarget.style.boxShadow = "0 2px 8px 0 rgba(0,0,0,0.06)"
-          e.currentTarget.style.transform = "translateY(0)"
-        }}
-      >
-        {/* ── IMAGE AREA ── */}
-        <div className="relative overflow-hidden bg-[#f4f2ef]" style={{ aspectRatio: "1 / 1" }}>
+    <>
+      <style>{CARD_STYLES}</style>
 
-          {/* PREORDER BADGE */}
+      <Link to={`/product/${product._id}`} className="pc-card">
+
+        {/* ── IMAGE ── */}
+        <div style={{ position: "relative", overflow: "hidden", background: "#fff" }}>
+
           {product.isPreorder && (
-            <div
-              className="absolute top-0 left-0 z-20 text-white text-[9px] px-3 py-[5px] uppercase tracking-[0.18em] font-semibold"
-              style={{ background: "#b91c1c", letterSpacing: "0.18em" }}
-            >
-              Pre-order
-            </div>
+            <div className="pc-preorder-badge">Pre-order</div>
           )}
 
-          {/* WISHLIST */}
           {addToWishlist && (
-            <button
-              onClick={handleWishlist}
-              className="absolute top-3 right-3 z-20 rounded-full p-2 transition-all duration-200"
-              style={{
-                background: "rgba(255,255,255,0.92)",
-                backdropFilter: "blur(4px)",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.10)",
-                color: "#9ca3af",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.color = "#dc2626"; e.currentTarget.style.transform = "scale(1.12)" }}
-              onMouseLeave={e => { e.currentTarget.style.color = "#9ca3af"; e.currentTarget.style.transform = "scale(1)" }}
-            >
-              <Heart size={16} />
+            <button onClick={handleWishlist} className="pc-wishlist" aria-label="Add to wishlist">
+              <Heart size={14} style={{ color: "var(--ink)" }} />
             </button>
           )}
 
-          {/* PRODUCT IMAGE */}
-          <img
-            src={
-              product.image?.startsWith("http")
-                ? product.image
-                : `${baseURL}${product.image}`
-            }
-            alt={product.name}
-            className="w-full h-full object-contain transition-transform duration-700 ease-out group-hover:scale-[1.06]"
-            style={{ padding: "12px" }}
-          />
-
-          {/* HOVER OVERLAY */}
-          <div
-            className="absolute inset-0 flex items-end justify-center pb-5 transition-all duration-300"
-            style={{ background: "rgba(0,0,0,0)", pointerEvents: "none" }}
-          >
-            <span
-              className="text-white text-[11px] tracking-[0.22em] uppercase border border-white/80 px-5 py-2 transition-all duration-300 opacity-0 group-hover:opacity-100"
-              style={{ background: "rgba(0,0,0,0.22)", backdropFilter: "blur(2px)", transform: "translateY(8px)" }}
-            >
-              View Product
-            </span>
-          </div>
-          {/* Fix pointer events on overlay above (CSS-only trick via group) */}
-          <style>{`
-            .group:hover .hover-overlay { background: rgba(0,0,0,0.28); }
-            .group:hover .hover-label { opacity: 1; transform: translateY(0); }
-          `}</style>
-
-          {/* RATING BADGE */}
-          <div
-            className="absolute bottom-3 left-3 flex items-center gap-1 text-[11px] font-semibold"
-            style={{
-              background: "rgba(255,255,255,0.96)",
-              padding: "3px 8px",
-              boxShadow: "0 1px 6px rgba(0,0,0,0.10)",
-              letterSpacing: "0.04em",
-            }}
-          >
-            <Star size={11} fill="#1a1a1a" strokeWidth={0} />
-            <span style={{ color: "#1a1a1a" }}>{rating.toFixed(1)}</span>
+          <div style={{ width: "100%", aspectRatio: "1/1", display: "flex", alignItems: "center", justifyContent: "center", background: "#fff", overflow: "hidden" }}>
+            <img
+              src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+              alt={product.name}
+              className="pc-img"
+              style={{ maxHeight: "100%", maxWidth: "100%", objectFit: "contain" }}
+            />
           </div>
 
-          {/* MOBILE CTA DOT */}
-          <div className="absolute bottom-3 right-3 md:hidden">
-            <span className="block w-2 h-2 bg-white rounded-full animate-ping"></span>
+          <div className="pc-overlay">
+            <span className="pc-overlay-label">View Product</span>
+          </div>
+
+          <div className="pc-mobile-cta md:hidden">View →</div>
+
+          <div className="pc-rating">
+            <Star size={12} fill="#b8965a" stroke="none" />
+            <span>{rating.toFixed(1)}</span>
           </div>
         </div>
 
-        {/* ── INFO AREA ── */}
-        <div
-          className="p-4 pb-5"
-          style={{ borderTop: "1px solid #ede9e3", background: "#fff" }}
-        >
-          {/* NAME */}
-          <h3
-            className="text-[13px] uppercase font-bold tracking-[0.12em] leading-tight font-playfair"
-            style={{ color: "#1a1a1a" }}
-          >
-            {product.name}
-          </h3>
+        {/* ── INFO ── */}
+        <div style={{ padding: "16px 16px 20px" }}>
 
-          {/* PRICE */}
-          <p
-            className="mt-1 text-[15px] font-semibold font-playfair"
-            style={{ color: "#1a1a1a", letterSpacing: "0.02em" }}
-          >
-            ₦{Number(product.price || 0).toLocaleString()}
-          </p>
+          {/* Red accent rule */}
+          <div style={{ width: "24px", height: "1px", background: "var(--red)", marginBottom: "10px", opacity: 0.65 }} />
 
-          {/* PREORDER NOTE */}
+          <h3 className="pc-name">{product.name}</h3>
+          <p className="pc-price">₦{Number(product.price || 0).toLocaleString()}</p>
+
           {product.isPreorder && (
-            <p
-              className="text-[10px] uppercase tracking-[0.14em] mt-1"
-              style={{ color: "#b91c1c" }}
-            >
-              Pre-order — chat admin to confirm
-            </p>
+            <p className="pc-preorder-note">Pre-order — chat admin to confirm availability</p>
           )}
 
-          {/* DESCRIPTION */}
           {product.description && (
-            <p
-              className="text-[12px] mt-2 line-clamp-2 font-cormorant"
-              style={{ color: "#6b7280", lineHeight: "1.55" }}
-            >
-              {product.description}
-            </p>
+            <p className="pc-desc">{product.description}</p>
           )}
 
-          {/* DIVIDER */}
-          <div className="mt-3 mb-3" style={{ height: "1px", background: "#ede9e3" }} />
-
-          {/* BUTTON */}
           {buttonLink ? (
             <Link
               to={buttonLink}
               onClick={(e) => e.stopPropagation()}
-              className="flex items-center justify-center gap-2 w-full text-center py-[10px] text-[11px] tracking-[0.18em] uppercase font-cormorant transition-all duration-200"
-              style={{
-                border: "1.5px solid #dc2626",
-                color: "#dc2626",
-                background: "transparent",
-              }}
-              onMouseEnter={e => { e.currentTarget.style.background = "#dc2626"; e.currentTarget.style.color = "#fff" }}
-              onMouseLeave={e => { e.currentTarget.style.background = "transparent"; e.currentTarget.style.color = "#dc2626" }}
+              className="pc-btn"
             >
-              <ShoppingBag size={13} />
               {buttonText}
             </Link>
           ) : (
             <button
               onClick={handleCartClick}
-              className="flex items-center justify-center gap-2 w-full py-[10px] text-[11px] tracking-[0.18em] uppercase font-cormorant transition-all duration-200"
-              style={
-                product.isPreorder
-                  ? { border: "1.5px solid #9ca3af", color: "#6b7280", background: "transparent" }
-                  : { border: "1.5px solid #dc2626", color: "#dc2626", background: "transparent" }
-              }
-              onMouseEnter={e => {
-                if (product.isPreorder) {
-                  e.currentTarget.style.background = "#1a1a1a"
-                  e.currentTarget.style.color = "#fff"
-                  e.currentTarget.style.borderColor = "#1a1a1a"
-                } else {
-                  e.currentTarget.style.background = "#dc2626"
-                  e.currentTarget.style.color = "#fff"
-                }
-              }}
-              onMouseLeave={e => {
-                if (product.isPreorder) {
-                  e.currentTarget.style.background = "transparent"
-                  e.currentTarget.style.color = "#6b7280"
-                  e.currentTarget.style.borderColor = "#9ca3af"
-                } else {
-                  e.currentTarget.style.background = "transparent"
-                  e.currentTarget.style.color = "#dc2626"
-                }
-              }}
+              className={product.isPreorder ? "pc-btn-preorder" : "pc-btn"}
+              style={{ width: "100%" }}
             >
-              {product.isPreorder
-                ? <><MessageCircle size={13} /> Pre-order via WhatsApp</>
-                : <><ShoppingBag size={13} /> {buttonText}</>
-              }
+              {product.isPreorder ? "Pre-order via WhatsApp" : buttonText}
             </button>
           )}
         </div>
-      </div>
-    </Link>
+
+      </Link>
+    </>
   )
 }
 
