@@ -33,6 +33,7 @@ function Orders() {
               <th className="p-3">Subtotal</th>
               <th className="p-3">Total</th>
               <th className="p-3">Status</th>
+              <th className="p-3">Date</th>
               <th className="p-3">Ref</th>
             </tr>
           </thead>
@@ -78,8 +79,8 @@ function Orders() {
                       {(item.selectedSize || item.size) && (
                         <p className="text-xs text-gray-400">
                           Size: {
-                            item.selectedSize?.label || 
-                            item.selectedSize || 
+                            item.selectedSize?.label ||
+                            item.selectedSize ||
                             item.size
                           }
                         </p>
@@ -109,6 +110,19 @@ function Orders() {
                   <span className="text-green-600 text-sm">
                     {order.status}
                   </span>
+                </td>
+
+                {/* DATE */}
+                <td className="p-3 text-sm whitespace-nowrap">
+                  {order.createdAt
+                    ? new Date(order.createdAt).toLocaleString("en-NG", {
+                        day: "numeric",
+                        month: "short",
+                        year: "numeric",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                      })
+                    : "-"}
                 </td>
 
                 {/* REF */}
