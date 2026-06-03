@@ -33,7 +33,7 @@ const CARD_STYLES = `
     transform: translateY(-4px);
   }
 
-  /* ── Gold bottom line sweep ── */
+  /* ── Gold/red bottom sweep on hover ── */
   .pc-card::before {
     content: '';
     position: absolute;
@@ -120,49 +120,50 @@ const CARD_STYLES = `
     box-shadow: 0 2px 8px rgba(0,0,0,0.07);
   }
 
-  /* ── GOLD INFO PANEL ── */
+  /* ── OFF-WHITE INFO PANEL ── */
   .pc-info {
-    background: linear-gradient(160deg, #1a1108 0%, #2a1d0e 40%, #1e150a 100%);
+    background: #faf7f2;
     padding: 0;
     position: relative;
     overflow: hidden;
+    border-top: 1px solid rgba(184,150,90,0.18);
   }
 
   /* Subtle gold shimmer line at top of panel */
   .pc-info::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 1px;
-    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    background: linear-gradient(90deg, transparent, rgba(184,150,90,0.45), transparent);
   }
 
-  /* Decorative gold corner accent */
+  /* Decorative warm radial glow at bottom-right */
   .pc-info::after {
     content: '';
     position: absolute; bottom: -30px; right: -30px;
     width: 100px; height: 100px;
-    background: radial-gradient(circle, rgba(184,150,90,0.12) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(184,150,90,0.07) 0%, transparent 70%);
     border-radius: 50%;
     pointer-events: none;
   }
 
   /* Inner padding wrapper */
   .pc-info-inner {
-    padding: 16px 16px 0;
+    padding: 14px 16px 0;
     position: relative; z-index: 1;
   }
 
   .pc-name {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 15px; font-weight: 500;
+    font-size: 14px; font-weight: 500;
     letter-spacing: 0.1em; text-transform: uppercase;
-    color: #f5ede0;
+    color: var(--ink);
     line-height: 1.25; margin: 0 0 5px;
   }
 
   .pc-price {
     font-family: 'Tenor Sans', sans-serif;
-    font-size: 15px;
-    color: var(--gold-light);
+    font-size: 13px;
+    color: var(--gold);
     letter-spacing: 0.04em;
     margin: 0 0 7px;
     display: flex; align-items: center; gap: 6px;
@@ -170,13 +171,13 @@ const CARD_STYLES = `
   .pc-price::before {
     content: '';
     display: inline-block; width: 16px; height: 1px;
-    background: var(--gold); opacity: 0.6;
+    background: var(--gold); opacity: 0.5;
   }
 
   .pc-desc {
     font-family: 'Cormorant Garamond', serif;
-    font-size: 12.5px; font-style: italic;
-    color: rgba(245,237,224,0.5);
+    font-size: 12px; font-style: italic;
+    color: var(--warm-grey);
     line-height: 1.55; margin: 0;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -187,10 +188,10 @@ const CARD_STYLES = `
   .pc-preorder-note {
     font-family: 'Tenor Sans', sans-serif;
     font-size: 8.5px; letter-spacing: 0.18em; text-transform: uppercase;
-    color: #e88; margin: 5px 0 0;
+    color: var(--red); margin: 5px 0 0; opacity: 0.8;
   }
 
-  /* ── ADD TO BAG BUTTON — luxury treatment ── */
+  /* ── ADD TO BAG BUTTON ── */
   .pc-btn-wrap {
     margin-top: 14px;
     position: relative;
@@ -205,8 +206,8 @@ const CARD_STYLES = `
     padding: 13px 0;
     background: transparent;
     border: none;
-    border-top: 1px solid rgba(184,150,90,0.25);
-    color: rgba(245,237,224,0.7);
+    border-top: 1px solid rgba(184,150,90,0.22);
+    color: var(--warm-grey);
     cursor: pointer;
     position: relative;
     transition: color 0.35s ease;
@@ -235,8 +236,8 @@ const CARD_STYLES = `
     padding: 13px 0;
     background: transparent;
     border: none;
-    border-top: 1px solid rgba(184,150,90,0.2);
-    color: rgba(245,237,224,0.55);
+    border-top: 1px solid rgba(184,150,90,0.18);
+    color: var(--warm-grey);
     cursor: pointer;
     position: relative;
     transition: color 0.35s ease;
@@ -337,28 +338,24 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
           </div>
         </div>
 
-        {/* ── GOLD DARK INFO PANEL ── */}
+        {/* ── OFF-WHITE INFO PANEL ── */}
         <div className="pc-info">
           <div className="pc-info-inner">
 
-            {/* Name */}
             <h3 className="pc-name">{product.name}</h3>
 
-            {/* Price */}
             <p className="pc-price">₦{Number(product.price || 0).toLocaleString()}</p>
 
-            {/* Pre-order note */}
             {product.isPreorder && (
               <p className="pc-preorder-note">Pre-order — chat admin to confirm availability</p>
             )}
 
-            {/* Description */}
             {product.description && (
               <p className="pc-desc">{product.description}</p>
             )}
           </div>
 
-          {/* ── ADD TO BAG ── */}
+          {/* ── CTA BUTTON ── */}
           <div className="pc-btn-wrap">
             {buttonLink ? (
               <Link
