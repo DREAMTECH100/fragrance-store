@@ -341,6 +341,17 @@ const PD_STYLES = `
     font-size: clamp(22px, 3vw, 32px); font-weight: 400;
     letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink);
   }
+/* ── Responsive product grid ── */
+.pd-product-grid {
+  grid-template-columns: 1fr;
+}
+@media (min-width: 768px) {
+  .pd-product-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+  }
+}
+
   .pd-related-label {
     font-family: 'Tenor Sans', sans-serif;
     font-size: 10px; letter-spacing: 0.4em; text-transform: uppercase;
@@ -435,8 +446,8 @@ function ProductDetails({ addToWishlist }) {
         </div>
 
         {/* ── TOP: Image + Details ── */}
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "64px", alignItems: "start" }}
-          className="block md:grid">
+       <div style={{ display: "grid", gap: "40px", alignItems: "start" }}
+  className="pd-product-grid">
 
           {/* IMAGE */}
           <div className="pd-img-wrap" style={{ width: "100%", aspectRatio: "1/1", display: "flex", alignItems: "center", justifyContent: "center" }}>
