@@ -349,7 +349,7 @@ function Checkout() {
     let baseByQty = 7000;
     if (quantity === 3) baseByQty = 8500;
     if (quantity >= 4) baseByQty = 9000;
-    if (!isLagos) return 7000;
+    if (!isLagos) return 8000;
     if (isIsland) {
       if (quantity <= 2) return 5000;
       if (quantity === 3) return 5500;
