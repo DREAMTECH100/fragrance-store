@@ -67,8 +67,15 @@ function AdminDashboard() {
 
   // 💰 TOTAL REVENUE (FIXED)
 const totalRevenue = orders
-  .filter(order => order.status === "paid")
-  .reduce((sum, order) => sum + (order.totalAmount || 0), 0);
+  .filter(
+    order =>
+      order.status === "paid" ||
+      order.status === "success"
+  )
+  .reduce(
+    (sum, order) => sum + Number(order.totalAmount || 0),
+    0
+  );
 
   return (
     <div>
