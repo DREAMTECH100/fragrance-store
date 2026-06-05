@@ -575,7 +575,7 @@ function About() {
             </div>
 
             <div className="ab-story-img-wrap ab-reveal" style={{ transitionDelay: "0.15s" }}>
-              <img src="/images/brand-story.png" alt="Our story" />
+              <img src="/images/CEO2.jpeg" alt="Our story" />
             </div>
           </div>
         </div>
