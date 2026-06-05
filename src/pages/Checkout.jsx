@@ -335,33 +335,119 @@ function Checkout() {
     (sum, item) => sum + item.quantity, 0
   );
 
-  const calculateShipping = (address, state, total, quantity) => {
-    if (!address || !state) return 0;
-    const lowerAddress = address.toLowerCase();
-    const lowerState = state.toLowerCase();
-    if (total >= 1000000) return 0;
-    if (lowerState === "lagos" && total >= 300000) return 0;
-    const isLagos = lowerState === "lagos";
-    const islandAreas = ["lekki", "ajah", "ikoyi", "victoria island", "vi"];
-    const mainlandAreas = ["ikeja", "yaba", "surulere", "maryland", "ogba", "alimosho", "festac", "oshodi"];
-    const isIsland = islandAreas.some(a => lowerAddress.includes(a));
-    const isMainland = mainlandAreas.some(a => lowerAddress.includes(a));
-    let baseByQty = 7000;
-    if (quantity === 3) baseByQty = 8500;
-    if (quantity >= 4) baseByQty = 9000;
-    if (!isLagos) return 8000;
-    if (isIsland) {
-      if (quantity <= 2) return 5000;
-      if (quantity === 3) return 5500;
-      return 6000;
-    }
-    if (isMainland) {
-      if (quantity <= 2) return 7000;
-      if (quantity === 3) return 7500;
-      return 8000;
-    }
-    return baseByQty;
-  };
+ const calculateShipping = (address, state, total, quantity) => {
+  if (!address || !state) return 0;
+
+  const lowerAddress = address.toLowerCase();
+  const lowerState = state.toLowerCase();
+
+  if (total >= 1000000) return 0;
+  if (lowerState === "lagos" && total >= 300000) return 0;
+
+  const isLagos = lowerState === "lagos";
+
+  const islandAreas = [
+    "lekki",
+    "lekki phase 1",
+    "lekki phase 2",
+    "ajah",
+    "sangotedo",
+    "abraham adesanya",
+    "ikota",
+    "vgc",
+    "chevron",
+    "jakande",
+    "ikate",
+    "oniru",
+    "ikoyi",
+    "banana island",
+    "parkview",
+    "victoria island",
+    "vi",
+    "eko atlantic",
+    "marina",
+    "cms",
+    "apongbon",
+    "lagos island",
+    "obalende",
+    "falomo"
+  ];
+
+  const mainlandAreas = [
+    "ikeja",
+    "maryland",
+    "anthony",
+    "gbagada",
+    "ketu",
+    "mile 12",
+    "ojota",
+    "yaba",
+    "sabo",
+    "surulere",
+    "mushin",
+    "oshodi",
+    "isolo",
+    "egbeda",
+    "ipaja",
+    "alimosho",
+    "agege",
+    "ogba",
+    "berger",
+    "ikorodu",
+    "magodo",
+    "omole",
+    "ojodu",
+    "abule egba",
+    "iyana ipaja",
+    "festac",
+    "amuwo odofin",
+    "trade fair",
+    "orile",
+    "ajegunle",
+    "ebute metta",
+    "bariga",
+    "shomolu",
+    "somolu",
+    "akoka",
+    "unilag",
+    "ilupeju",
+    "palmgrove",
+    "fadeyi",
+    "ikorodu road",
+    "aguda",
+    "ojuelegba",
+    "dopemu"
+  ];
+
+  const isIsland = islandAreas.some(a =>
+    lowerAddress.includes(a)
+  );
+
+  const isMainland = mainlandAreas.some(a =>
+    lowerAddress.includes(a)
+  );
+
+  let baseByQty = 7000;
+
+  if (quantity === 3) baseByQty = 8500;
+  if (quantity >= 4) baseByQty = 9000;
+
+  if (!isLagos) return 8000;
+
+  if (isIsland) {
+    if (quantity <= 2) return 5000;
+    if (quantity === 3) return 5500;
+    return 6000;
+  }
+
+  if (isMainland) {
+    if (quantity <= 2) return 7000;
+    if (quantity === 3) return 7500;
+    return 8000;
+  }
+
+  return baseByQty;
+};
 
   const shippingFee = calculateShipping(form.address, form.state, subtotal, totalQuantity);
   const totalAmount = subtotal + shippingFee;
