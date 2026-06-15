@@ -133,7 +133,7 @@ function Footer() {
 
       {/* BOTTOM COPYRIGHT */}
       <div className="mt-12 border-t border-gray-800 pt-6 text-center text-gray-500 text-sm">
-        © {new Date().getFullYear()} Your Brand Name. All Rights Reserved.
+        © {new Date().getFullYear()} Fragrance Solution. All Rights Reserved.
       </div>
     </footer>
   );

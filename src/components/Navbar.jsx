@@ -211,11 +211,11 @@ function PromoBar() {
       letterSpacing: "0.35em",
       textTransform: "uppercase",
     }}>
-      Luxury Season Sale&nbsp;&nbsp;
+      FREE DELIVERY&nbsp;&nbsp;
       <span style={{ color: "var(--gold)" }}>✦</span>
-      &nbsp;&nbsp;Up to 30% Off Select Items&nbsp;&nbsp;
+      &nbsp;&nbsp;ORDERS ABOVE ONE MILLION NAIRA&nbsp;&nbsp;
       <span style={{ color: "var(--gold)" }}>✦</span>
-      &nbsp;&nbsp;Limited Time Only
+      &nbsp;&nbsp;LIMITED TIME ONLY
     </div>
   );
 }
