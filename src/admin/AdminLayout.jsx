@@ -123,29 +123,29 @@ const ADMIN_STYLES = `
     position: fixed; top: 0; right: 0;
     left: 0;
     height: 56px;
-    background: var(--cream);
-    border-bottom: 1px solid var(--border);
+    background: linear-gradient(175deg, #0e0c0a 0%, #1a1108 60%, #120d06 100%);
+    border-bottom: 1px solid rgba(184,150,90,0.15);
     display: flex; align-items: center;
     padding: 0 24px;
     z-index: 30;
-    box-shadow: 0 2px 16px rgba(0,0,0,0.05);
+    box-shadow: 0 2px 20px rgba(0,0,0,0.25);
   }
   @media (min-width: 768px) {
     .adm-topbar { left: 240px; }
   }
 
-  /* Top bar red rule */
+  /* Top bar red+gold rule — matches AdminLogin card bar */
   .adm-topbar::before {
     content: '';
     position: absolute; top: 0; left: 0; right: 0; height: 2px;
-    background: var(--red);
+    background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
   }
 
   .adm-topbar-title {
     font-family: 'Cormorant Garamond', serif;
     font-size: 20px; font-weight: 400;
-    letter-spacing: 0.1em; text-transform: uppercase;
-    color: var(--ink); margin: 0;
+    letter-spacing: 0.15em; text-transform: uppercase;
+    color: #f5ede0; margin: 0;
   }
   .adm-topbar-right {
     margin-left: auto; display: flex; align-items: center; gap: 12px;
@@ -153,20 +153,20 @@ const ADMIN_STYLES = `
   .adm-topbar-badge {
     font-family: 'Tenor Sans', sans-serif;
     font-size: 9px; letter-spacing: 0.25em; text-transform: uppercase;
-    background: rgba(181,43,30,0.08);
-    border: 1px solid rgba(181,43,30,0.2);
-    color: var(--red);
+    background: rgba(184,150,90,0.12);
+    border: 1px solid rgba(184,150,90,0.3);
+    color: var(--gold);
     padding: 4px 12px;
   }
 
   /* Hamburger */
   .adm-hamburger {
     background: none; border: none; cursor: pointer;
-    color: var(--ink); padding: 4px; margin-right: 14px;
+    color: rgba(245,237,224,0.6); padding: 4px; margin-right: 14px;
     display: flex; align-items: center; justify-content: center;
     transition: color 0.2s;
   }
-  .adm-hamburger:hover { color: var(--red); }
+  .adm-hamburger:hover { color: var(--gold); }
   @media (min-width: 768px) {
     .adm-hamburger { display: none; }
   }
@@ -174,28 +174,48 @@ const ADMIN_STYLES = `
   /* Overlay */
   .adm-overlay {
     position: fixed; inset: 0;
-    background: rgba(14,12,10,0.5);
-    backdrop-filter: blur(2px);
+    background: rgba(14,12,10,0.55);
+    backdrop-filter: blur(3px);
     z-index: 35;
   }
   @media (min-width: 768px) {
     .adm-overlay { display: none !important; }
   }
 
-  /* Main content */
+  /* Main content — matches AdminLogin offwhite + warm glows */
   .adm-main {
     margin-left: 0;
     padding-top: 56px;
     min-height: 100vh;
-    background: var(--cream);
+    background: #faf7f2;
+    position: relative;
+    overflow-x: hidden;
     transition: margin-left 0.3s;
   }
   @media (min-width: 768px) {
     .adm-main { margin-left: 240px; }
   }
+
+  /* Warm ambient glows — same as AdminLogin */
+  .adm-main::before {
+    content: '';
+    position: fixed; top: -100px; right: -100px;
+    width: 400px; height: 400px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,150,90,0.06) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+  .adm-main::after {
+    content: '';
+    position: fixed; bottom: -120px; left: 140px;
+    width: 420px; height: 420px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(181,43,30,0.04) 0%, transparent 70%);
+    pointer-events: none; z-index: 0;
+  }
+
   .adm-content {
     padding: 36px 28px;
     max-width: 1200px;
+    position: relative; z-index: 1;
   }
 `;
 
