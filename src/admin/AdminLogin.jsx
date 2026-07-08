@@ -21,7 +21,7 @@ const STYLES = `
   /* ─── Page ─── */
   .al-page {
     min-height: 100vh;
-    background: var(--ink);
+    background: var(--offwhite);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -30,23 +30,23 @@ const STYLES = `
     overflow: hidden;
   }
 
-  /* Atmospheric radial glows */
+  /* Subtle warm radial glows on cream bg */
   .al-glow-1 {
     position: absolute; top: -120px; left: -120px;
     width: 400px; height: 400px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(181,43,30,0.14) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(181,43,30,0.06) 0%, transparent 70%);
     pointer-events: none;
   }
   .al-glow-2 {
     position: absolute; bottom: -140px; right: -140px;
     width: 500px; height: 500px; border-radius: 50%;
-    background: radial-gradient(circle, rgba(184,150,90,0.09) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(184,150,90,0.07) 0%, transparent 70%);
     pointer-events: none;
   }
   /* Fine noise grain overlay */
   .al-grain {
     position: absolute; inset: 0;
-    opacity: 0.025;
+    opacity: 0.018;
     background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
     pointer-events: none;
   }
@@ -55,9 +55,10 @@ const STYLES = `
   .al-card {
     position: relative; z-index: 10;
     width: 100%; max-width: 420px;
-    background: #fff;
+    background: var(--cream);
     border: 1px solid var(--border);
     overflow: hidden;
+    box-shadow: 0 24px 60px rgba(0,0,0,0.08), 0 0 0 1px rgba(184,150,90,0.15);
   }
 
   /* Gold shimmer line at top */
@@ -75,7 +76,8 @@ const STYLES = `
 
   /* ─── Card header ─── */
   .al-card-head {
-    background: linear-gradient(160deg, #1a1108 0%, #2a1d0e 45%, #1e150a 100%);
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
     padding: 32px 32px 28px;
     text-align: center;
     position: relative;
@@ -89,11 +91,11 @@ const STYLES = `
   /* Icon */
   .al-icon-ring {
     width: 52px; height: 52px;
-    border: 1px solid rgba(184,150,90,0.35);
+    border: 1px solid rgba(184,150,90,0.4);
     border-radius: 50%;
     display: flex; align-items: center; justify-content: center;
     margin: 0 auto 18px;
-    background: rgba(184,150,90,0.08);
+    background: rgba(184,150,90,0.1);
     color: var(--gold);
   }
 
@@ -106,16 +108,16 @@ const STYLES = `
     font-family: 'Cormorant Garamond', serif;
     font-weight: 300; font-size: 1.9rem;
     letter-spacing: 0.2em; text-transform: uppercase;
-    color: #f5ede0; margin: 0 0 4px;
+    color: var(--ink); margin: 0 0 4px;
   }
   .al-card-sub {
     font-family: 'Montserrat', sans-serif;
-    font-size: 10px; color: rgba(245,237,224,0.4);
+    font-size: 10px; color: var(--warm-grey);
     letter-spacing: 0.06em;
   }
 
   /* ─── Form body ─── */
-  .al-body { padding: 32px; background: var(--cream); }
+  .al-body { padding: 32px; background: var(--cream); border-top: none; }
 
   /* ─── Mode label ─── */
   .al-mode-label {
@@ -238,7 +240,7 @@ const STYLES = `
   .al-footer {
     padding: 16px 32px;
     border-top: 1px solid var(--border);
-    background: var(--offwhite);
+    background: var(--cream);
     display: flex; align-items: center; justify-content: center; gap: 6px;
     font-family: 'Tenor Sans', sans-serif;
     font-size: 9px; letter-spacing: 0.22em; text-transform: uppercase;
