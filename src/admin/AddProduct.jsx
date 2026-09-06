@@ -279,6 +279,7 @@ function AddProduct() {
   const [product, setProduct] = useState({
     name: "", price: "", category: "", subCategory: "",
     description: "", image: "", stock: "", sizes: [], isPreorder: false,
+    outOfStock: false,
   });
   const [preview, setPreview] = useState(null);
   const [uploading, setUploading] = useState(false);
@@ -374,7 +375,7 @@ function AddProduct() {
       });
       if (!res.ok) throw new Error("Failed");
       alert("Product added successfully!");
-      setProduct({ name: "", price: "", category: "", subCategory: "", description: "", image: "", stock: "", sizes: [], isPreorder: false });
+      setProduct({ name: "", price: "", category: "", subCategory: "", description: "", image: "", stock: "", sizes: [], isPreorder: false, outOfStock: false });
       setSizes([{ label: "", price: "" }]);
       setPreview(null);
     } catch { alert("Error adding product"); }
@@ -541,6 +542,32 @@ function AddProduct() {
                 padding: "3px 10px", border: "1px solid rgba(181,43,30,0.3)",
                 color: "var(--red)", background: "rgba(181,43,30,0.07)"
               }}>Pre-order</span>
+            )}
+          </label>
+
+          {/* ── 6. Out of Stock toggle ── */}
+          <label className="ap-toggle-wrap" style={{ marginTop: "3px" }}>
+            <input type="checkbox" style={{ display: "none" }}
+              checked={product.outOfStock}
+              onChange={e => setProduct(prev => ({ ...prev, outOfStock: e.target.checked }))}
+            />
+            <span className={`ap-toggle-box${product.outOfStock ? " checked" : ""}`}>
+              {product.outOfStock && (
+                <svg width="10" height="8" viewBox="0 0 10 8" fill="none">
+                  <path d="M1 4L3.5 6.5L9 1" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+              )}
+            </span>
+            <span className="ap-toggle-label">
+              {product.outOfStock ? "Marked as Out of Stock" : "Mark as Out of Stock"}
+            </span>
+            {product.outOfStock && (
+              <span style={{
+                marginLeft: "auto", fontFamily: "'Tenor Sans', sans-serif",
+                fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase",
+                padding: "3px 10px", border: "1px solid rgba(181,43,30,0.3)",
+                color: "var(--red)", background: "rgba(181,43,30,0.07)"
+              }}>Out of Stock</span>
             )}
           </label>
  
