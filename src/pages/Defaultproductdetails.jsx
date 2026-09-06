@@ -69,20 +69,6 @@ const PD_STYLES = `
     z-index: 5;
   }
 
-  /* ── Out of stock ribbon + image dim (mirrors ProductCard) ── */
-  .pd-outofstock-ribbon {
-    position: absolute; top: 20px; left: 20px;
-    font-family: 'Tenor Sans', sans-serif;
-    font-size: 9px; letter-spacing: 0.28em; text-transform: uppercase;
-    background: var(--ink); color: #fff; padding: 5px 14px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-    z-index: 5;
-  }
-  .pd-img-outofstock {
-    opacity: 0.45;
-    filter: grayscale(35%);
-  }
-
   /* ── Detail side ── */
   .pd-category-label {
     font-family: 'Tenor Sans', sans-serif;
@@ -182,10 +168,6 @@ const PD_STYLES = `
     display: flex; align-items: center; justify-content: center;
   }
   .pd-qty-btn:hover { background: var(--gold-pale); color: var(--red); }
-  .pd-qty-btn:disabled {
-    cursor: not-allowed; color: rgba(14,12,10,0.3);
-  }
-  .pd-qty-btn:disabled:hover { background: transparent; color: rgba(14,12,10,0.3); }
   .pd-qty-num {
     width: 48px; height: 42px;
     display: flex; align-items: center; justify-content: center;
@@ -423,16 +405,11 @@ function ProductDetails({ addToWishlist }) {
     );
   }
 
-  // Same rule as ProductCard: preorder items are allowed through regardless
-  // of stock; everything else respects the outOfStock flag.
-  const isOutOfStock = Boolean(product.outOfStock) && !product.isPreorder;
-
   const increase = () => setQuantity((q) => q + 1);
   const decrease = () => { if (quantity > 1) setQuantity((q) => q - 1); };
   const activePrice = selectedSize?.price || product.price;
 
   const handleAddToCart = () => {
-    if (isOutOfStock) return;
     addToCart({ ...product, quantity, selectedSize, price: activePrice });
     navigate("/cart");
   };
@@ -475,13 +452,11 @@ function ProductDetails({ addToWishlist }) {
           {/* IMAGE */}
           <div className="pd-img-wrap" style={{ width: "100%", aspectRatio: "1/1", display: "flex", alignItems: "center", justifyContent: "center" }}>
             {product.isPreorder && <div className="pd-preorder-ribbon">Pre-order</div>}
-            {isOutOfStock && <div className="pd-outofstock-ribbon">Out of Stock</div>}
             <img
               src={product?.image
                 ? product.image.startsWith("http") ? product.image : `${baseURL}${product.image}`
                 : "/images/placeholder.png"}
               alt={product.name}
-              className={isOutOfStock ? "pd-img-outofstock" : ""}
               style={{ maxWidth: "88%", maxHeight: "88%", objectFit: "contain" }}
             />
           </div>
@@ -524,13 +499,6 @@ function ProductDetails({ addToWishlist }) {
               </p>
             )}
 
-            {/* Out-of-stock notice */}
-            {isOutOfStock && (
-              <p style={{ fontFamily: "'Tenor Sans', sans-serif", fontSize: "9px", letterSpacing: "0.2em", textTransform: "uppercase", color: "var(--warm-grey)", marginTop: "4px", marginBottom: "12px" }}>
-                Currently unavailable — check back soon
-              </p>
-            )}
-
             <div className="pd-rule" />
 
             {/* Description */}
@@ -558,9 +526,9 @@ function ProductDetails({ addToWishlist }) {
             <div style={{ marginTop: "28px" }}>
               <p className="pd-size-label" style={{ marginBottom: "12px" }}>Quantity</p>
               <div className="pd-qty-wrap">
-                <button className="pd-qty-btn" onClick={decrease} disabled={isOutOfStock}>−</button>
+                <button className="pd-qty-btn" onClick={decrease}>−</button>
                 <div className="pd-qty-num">{quantity}</div>
-                <button className="pd-qty-btn" onClick={increase} disabled={isOutOfStock}>+</button>
+                <button className="pd-qty-btn" onClick={increase}>+</button>
               </div>
             </div>
 
@@ -568,17 +536,11 @@ function ProductDetails({ addToWishlist }) {
             <div style={{ marginTop: "28px" }}>
               <button
                 onClick={handleAddToCart}
-                disabled={product.isPreorder || isOutOfStock}
+                disabled={product.isPreorder}
                 className="pd-atb"
               >
                 <ShoppingBag size={15} />
-                <span>
-                  {product.isPreorder
-                    ? "Pre-order — Contact Admin"
-                    : isOutOfStock
-                      ? "Out of Stock"
-                      : "Add to Bag"}
-                </span>
+                <span>{product.isPreorder ? "Pre-order — Contact Admin" : "Add to Bag"}</span>
               </button>
 
               {/* WhatsApp for preorder */}
@@ -594,11 +556,7 @@ function ProductDetails({ addToWishlist }) {
                 </a>
               )}
 
-              <p className="pd-note">
-                {isOutOfStock
-                  ? "This item is currently unavailable."
-                  : "Authentic luxury — delivered to your door."}
-              </p>
+              <p className="pd-note">Authentic luxury — delivered to your door.</p>
             </div>
           </div>
         </div>
