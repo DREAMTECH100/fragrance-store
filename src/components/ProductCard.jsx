@@ -108,6 +108,36 @@ const CARD_STYLES = `
     box-shadow: 0 2px 8px rgba(181,43,30,0.3);
   }
 
+  /* ── Out of stock badge ── */
+  .pc-outofstock-badge {
+    position: absolute; top: 12px; left: 12px; z-index: 20;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 8.5px; letter-spacing: 0.28em; text-transform: uppercase;
+    background: var(--ink); color: #fff; padding: 4px 11px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+
+  /* ── Out of stock image dimming ── */
+  .pc-img-outofstock {
+    opacity: 0.45;
+    filter: grayscale(35%);
+  }
+  .pc-card:hover .pc-img-outofstock { transform: none; }
+
+  /* ── Disabled CTA button (out of stock) ── */
+  .pc-btn-disabled {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 9.5px; letter-spacing: 0.35em; text-transform: uppercase;
+    padding: 13px 0;
+    background: rgba(122,112,101,0.08);
+    border: none;
+    border-top: 1px solid rgba(184,150,90,0.18);
+    color: rgba(122,112,101,0.6);
+    cursor: not-allowed;
+  }
+
   /* ── Rating ── */
   .pc-rating {
     position: absolute; bottom: 12px; left: 12px; z-index: 10;
@@ -278,6 +308,10 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
 
   const rating = Number(product.rating || product.averageRating || 4)
 
+  // Preorder items are allowed through regardless of stock — they're sold
+  // ahead of restock. Everything else respects the outOfStock flag.
+  const isOutOfStock = Boolean(product.outOfStock) && !product.isPreorder
+
   const handleCartClick = (e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -286,6 +320,7 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
       window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank")
       return
     }
+    if (isOutOfStock) return
     addToCart(product)
   }
 
@@ -300,6 +335,10 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
 
           {product.isPreorder && (
             <div className="pc-preorder-badge">Pre-order</div>
+          )}
+
+          {isOutOfStock && (
+            <div className="pc-outofstock-badge">Out of Stock</div>
           )}
 
           {addToWishlist && (
@@ -318,7 +357,7 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
             <img
               src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
               alt={product.name}
-              className="pc-img"
+              className={`pc-img${isOutOfStock ? " pc-img-outofstock" : ""}`}
               style={{ maxHeight: "92%", maxWidth: "92%", objectFit: "contain" }}
             />
           </div>
@@ -357,7 +396,11 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
 
           {/* ── CTA BUTTON ── */}
           <div className="pc-btn-wrap">
-            {buttonLink ? (
+            {isOutOfStock ? (
+              <button className="pc-btn-disabled" disabled style={{ width: "100%" }}>
+                <span>Out of Stock</span>
+              </button>
+            ) : buttonLink ? (
               <Link
                 to={buttonLink}
                 onClick={(e) => e.stopPropagation()}

@@ -1,11 +1,274 @@
 import { Link } from "react-router-dom"
-import { Heart, Star } from "lucide-react"
+import { Heart, Star, ShoppingBag, MessageCircle } from "lucide-react"
 import { useCart } from "../context/CartContext"
+
+const CARD_STYLES = `
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Tenor+Sans&display=swap');
+
+  :root {
+    --red:        #b52b1e;
+    --red-deep:   #8b1f15;
+    --gold:       #b8965a;
+    --gold-light: #d4af72;
+    --gold-pale:  #f5ede0;
+    --gold-dim:   rgba(184,150,90,0.18);
+    --ink:        #0e0c0a;
+    --cream:      #fdfaf5;
+    --warm-grey:  #7a7065;
+  }
+
+  /* ── Card shell ── */
+  .pc-card {
+    display: block;
+    background: var(--cream);
+    position: relative;
+    text-decoration: none;
+    color: var(--ink);
+    transition: box-shadow 0.45s ease, transform 0.45s ease;
+    border: 1px solid rgba(184,150,90,0.2);
+    overflow: hidden;
+  }
+  .pc-card:hover {
+    box-shadow: 0 24px 60px rgba(0,0,0,0.13), 0 0 0 1px rgba(184,150,90,0.3);
+    transform: translateY(-4px);
+  }
+
+  /* ── Gold/red bottom sweep on hover ── */
+  .pc-card::before {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0; height: 2px;
+    background: linear-gradient(90deg, var(--red), var(--gold), var(--red));
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s ease;
+    z-index: 10;
+  }
+  .pc-card:hover::before { transform: scaleX(1); }
+
+  /* ── Image zoom ── */
+  .pc-img {
+    transition: transform 0.8s cubic-bezier(0.25,0.46,0.45,0.94);
+  }
+  .pc-card:hover .pc-img { transform: scale(1.07); }
+
+  /* ── Hover overlay ── */
+  .pc-overlay {
+    position: absolute; inset: 0;
+    background: rgba(14,12,10,0);
+    display: flex; align-items: center; justify-content: center;
+    transition: background 0.4s ease;
+    pointer-events: none;
+  }
+  .pc-card:hover .pc-overlay {
+    background: rgba(14,12,10,0.28);
+  }
+  .pc-overlay-label {
+    opacity: 0;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 9.5px; letter-spacing: 0.4em; text-transform: uppercase;
+    color: #fff;
+    border: 1px solid rgba(212,175,114,0.8);
+    padding: 10px 26px;
+    background: rgba(14,12,10,0.25);
+    backdrop-filter: blur(4px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    transform: translateY(6px);
+  }
+  .pc-card:hover .pc-overlay-label {
+    opacity: 1; transform: translateY(0);
+  }
+
+  /* ── Wishlist ── */
+  .pc-wishlist {
+    position: absolute; top: 12px; right: 12px; z-index: 20;
+    width: 32px; height: 32px;
+    background: rgba(253,250,245,0.92);
+    border: 1px solid rgba(184,150,90,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.25s ease;
+    backdrop-filter: blur(4px);
+  }
+  .pc-wishlist:hover {
+    background: var(--red);
+    border-color: var(--red);
+    box-shadow: 0 4px 16px rgba(181,43,30,0.35);
+  }
+  .pc-wishlist:hover svg { stroke: #fff !important; }
+
+  /* ── Pre-order badge ── */
+  .pc-preorder-badge {
+    position: absolute; top: 12px; left: 12px; z-index: 20;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 8.5px; letter-spacing: 0.28em; text-transform: uppercase;
+    background: var(--red); color: #fff; padding: 4px 11px;
+    box-shadow: 0 2px 8px rgba(181,43,30,0.3);
+  }
+
+  /* ── Rating ── */
+  .pc-rating {
+    position: absolute; bottom: 12px; left: 12px; z-index: 10;
+    display: flex; align-items: center; gap: 4px;
+    background: rgba(253,250,245,0.92);
+    padding: 4px 9px;
+    font-family: 'Tenor Sans', sans-serif; font-size: 10.5px; color: var(--ink);
+    border: 1px solid rgba(184,150,90,0.25);
+    backdrop-filter: blur(4px);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  }
+
+  /* ── OFF-WHITE INFO PANEL ── */
+  .pc-info {
+    background: #faf7f2;
+    padding: 0;
+    position: relative;
+    overflow: hidden;
+    border-top: 1px solid rgba(184,150,90,0.18);
+  }
+
+  /* Subtle gold shimmer line at top of panel */
+  .pc-info::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(184,150,90,0.45), transparent);
+  }
+
+  /* Decorative warm radial glow at bottom-right */
+  .pc-info::after {
+    content: '';
+    position: absolute; bottom: -30px; right: -30px;
+    width: 100px; height: 100px;
+    background: radial-gradient(circle, rgba(184,150,90,0.07) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* Inner padding wrapper */
+  .pc-info-inner {
+    padding: 14px 16px 0;
+    position: relative; z-index: 1;
+  }
+
+  .pc-name {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 14px; font-weight: 500;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--ink);
+    line-height: 1.25; margin: 0 0 5px;
+  }
+
+  .pc-price {
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 13px;
+    color: var(--gold);
+    letter-spacing: 0.04em;
+    margin: 0 0 7px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .pc-price::before {
+    content: '';
+    display: inline-block; width: 16px; height: 1px;
+    background: var(--gold); opacity: 0.5;
+  }
+
+  .pc-desc {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 12px; font-style: italic;
+    color: var(--warm-grey);
+    line-height: 1.55; margin: 0;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .pc-preorder-note {
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 8.5px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--red); margin: 5px 0 0; opacity: 0.8;
+  }
+
+  /* ── ADD TO BAG BUTTON ── */
+  .pc-btn-wrap {
+    margin-top: 14px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pc-btn {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 9.5px; letter-spacing: 0.35em; text-transform: uppercase;
+    padding: 13px 0;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(184,150,90,0.22);
+    color: var(--warm-grey);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.35s ease;
+    text-decoration: none;
+    overflow: hidden;
+  }
+
+  /* Gold fill slides up from bottom */
+  .pc-btn::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; top: 100%;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    transition: top 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    z-index: 0;
+  }
+  .pc-btn:hover::before { top: 0; }
+  .pc-btn:hover { color: var(--ink); }
+  .pc-btn > * { position: relative; z-index: 1; }
+
+  /* Pre-order variant — red fill */
+  .pc-btn-preorder {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    width: 100%;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 9.5px; letter-spacing: 0.35em; text-transform: uppercase;
+    padding: 13px 0;
+    background: transparent;
+    border: none;
+    border-top: 1px solid rgba(184,150,90,0.18);
+    color: var(--warm-grey);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.35s ease;
+    text-decoration: none;
+    overflow: hidden;
+  }
+  .pc-btn-preorder::before {
+    content: '';
+    position: absolute; bottom: 0; left: 0; right: 0; top: 100%;
+    background: linear-gradient(135deg, var(--red), var(--red-deep));
+    transition: top 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+    z-index: 0;
+  }
+  .pc-btn-preorder:hover::before { top: 0; }
+  .pc-btn-preorder:hover { color: #fff; }
+  .pc-btn-preorder > * { position: relative; z-index: 1; }
+
+  /* Mobile hint */
+  .pc-mobile-cta {
+    position: absolute; bottom: 12px; right: 12px; z-index: 10;
+    font-family: 'Tenor Sans', sans-serif;
+    font-size: 8.5px; letter-spacing: 0.22em; text-transform: uppercase;
+    background: rgba(14,12,10,0.65); color: rgba(212,175,114,0.9);
+    padding: 4px 10px; backdrop-filter: blur(4px);
+    border: 1px solid rgba(184,150,90,0.2);
+  }
+`
 
 function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", buttonLink }) {
   const { addToCart } = useCart()
   const baseURL = import.meta.env.VITE_API_URL
-
   const WHATSAPP_NUMBER = "2348062392555"
 
   const handleWishlist = (e) => {
@@ -18,128 +281,109 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
   const handleCartClick = (e) => {
     e.preventDefault()
     e.stopPropagation()
-
-    // 🟡 PREORDER LOGIC (SAFE & CONSISTENT)
     if (product.isPreorder) {
       const message = `Hi, I want to confirm preorder for: ${product.name}`
-
-      window.open(
-        `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`,
-        "_blank"
-      )
+      window.open(`https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(message)}`, "_blank")
       return
     }
-
     addToCart(product)
   }
 
   return (
-    <Link
-      to={`/product/${product._id}`}
-      className="group block bg-white border border-gray-200 hover:shadow-xl transition duration-300 relative cursor-pointer"
-    >
-      {/* IMAGE SECTION */}
-     <div className="relative overflow-hidden bg-white">
+    <>
+      <style>{CARD_STYLES}</style>
 
-  {/* PREORDER BADGE */}
-  {product.isPreorder && (
-    <div className="absolute top-3 left-3 z-20 bg-red-600 text-white text-[10px] px-2 py-1 uppercase tracking-widest">
-      Pre-order
-    </div>
-  )}
+      <Link to={`/product/${product._id}`} className="pc-card">
 
-  {/* Wishlist */}
-  {addToWishlist && (
-    <button
-      onClick={handleWishlist}
-      className="absolute top-3 right-3 z-20 bg-white rounded-full p-2 shadow-md text-gray-600 hover:text-red-600 transition"
-    >
-      <Heart size={18} />
-    </button>
-  )}
+        {/* ── IMAGE SECTION ── */}
+        <div style={{ position: "relative", overflow: "hidden", background: "#f9f6f1" }}>
 
-  {/* ✅ ONLY IMAGE YOU SHOULD HAVE */}
- <div className="w-full aspect-square flex items-center justify-center bg-white">
-    <img
-      src={
-        product.image?.startsWith("http")
-          ? product.image
-          : `${baseURL}${product.image}`
-      }
-      alt={product.name}
-      className="max-h-full max-w-full object-contain transform group-hover:scale-105 transition duration-500"
-    />
-  </div>
+          {product.isPreorder && (
+            <div className="pc-preorder-badge">Pre-order</div>
+          )}
 
-        {/* HOVER OVERLAY */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition duration-300 flex items-center justify-center">
-          <span className="opacity-0 group-hover:opacity-100 text-white text-sm tracking-widest border border-white px-4 py-2 transition">
-            VIEW PRODUCT
-          </span>
+          {addToWishlist && (
+            <button onClick={handleWishlist} className="pc-wishlist" aria-label="Add to wishlist">
+              <Heart size={13} style={{ color: "var(--gold)", transition: "color 0.2s" }} />
+            </button>
+          )}
+
+          {/* Product image */}
+          <div style={{
+            width: "100%", aspectRatio: "1/1",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            background: "linear-gradient(145deg, #fdfaf5, #f5ede0)",
+            overflow: "hidden",
+          }}>
+            <img
+              src={product.image?.startsWith("http") ? product.image : `${baseURL}${product.image}`}
+              alt={product.name}
+              className="pc-img"
+              style={{ maxHeight: "92%", maxWidth: "92%", objectFit: "contain" }}
+            />
+          </div>
+
+          {/* Hover overlay */}
+          <div className="pc-overlay">
+            <span className="pc-overlay-label">View Product</span>
+          </div>
+
+          {/* Mobile CTA */}
+          <div className="pc-mobile-cta md:hidden">View →</div>
+
+          {/* Rating */}
+          <div className="pc-rating">
+            <Star size={11} fill="var(--gold)" stroke="none" />
+            <span>{rating.toFixed(1)}</span>
+          </div>
         </div>
 
-        {/* MOBILE CTA */}
-        <div className="absolute bottom-3 right-3 md:hidden flex items-center gap-1 bg-black/60 text-white text-[10px] px-2 py-1 tracking-widest">
-          VIEW →
+        {/* ── OFF-WHITE INFO PANEL ── */}
+        <div className="pc-info">
+          <div className="pc-info-inner">
+
+            <h3 className="pc-name">{product.name}</h3>
+
+            <p className="pc-price">₦{Number(product.price || 0).toLocaleString()}</p>
+
+            {product.isPreorder && (
+              <p className="pc-preorder-note">Pre-order — chat admin to confirm availability</p>
+            )}
+
+            {product.description && (
+              <p className="pc-desc">{product.description}</p>
+            )}
+          </div>
+
+          {/* ── CTA BUTTON ── */}
+          <div className="pc-btn-wrap">
+            {buttonLink ? (
+              <Link
+                to={buttonLink}
+                onClick={(e) => e.stopPropagation()}
+                className="pc-btn"
+              >
+                <ShoppingBag size={12} />
+                <span>{buttonText}</span>
+              </Link>
+            ) : (
+              <button
+                onClick={handleCartClick}
+                className={product.isPreorder ? "pc-btn-preorder" : "pc-btn"}
+                style={{ width: "100%" }}
+              >
+                {product.isPreorder
+                  ? <><MessageCircle size={12} /><span>Pre-order via WhatsApp</span></>
+                  : <><ShoppingBag size={12} /><span>{buttonText}</span></>
+                }
+              </button>
+            )}
+          </div>
+
         </div>
 
-        <div className="absolute bottom-3 right-3 md:hidden">
-          <span className="block w-2 h-2 bg-white rounded-full animate-ping"></span>
-        </div>
-
-        {/* Rating */}
-        <div className="absolute bottom-3 left-3 bg-white px-2 py-1 flex items-center gap-1 shadow text-sm">
-          <Star size={14} fill="black" />
-          <span>{rating.toFixed(1)}</span>
-        </div>
-      </div>
-
-      {/* INFO */}
-      <div className="p-4">
-        <h3 className="text-[15px] tracking-wide font-bold uppercase font-playfair">
-          {product.name}
-        </h3>
-
-        <p className="mt-2 font-semibold text-black font-playfair">
-          ₦{Number(product.price || 0).toLocaleString()}
-        </p>
-
-        {/* 🆕 PREORDER MESSAGE (CUSTOMER FACING) */}
-        {product.isPreorder && (
-          <p className="text-[11px] text-red-500 mt-1 uppercase tracking-wide">
-            Pre-order item — chat admin to confirm availability
-          </p>
-        )}
-
-        {product.description && (
-          <p className="text-sm text-gray-700 mt-1 line-clamp-2 font-cormorant">
-            {product.description}
-          </p>
-        )}
-
-        {/* BUTTON */}
-        {buttonLink ? (
-          <Link
-            to={buttonLink}
-            onClick={(e) => e.stopPropagation()}
-            className="mt-4 block w-full text-center border border-red-600 text-red-600 py-2 text-sm tracking-widest hover:bg-red-600 hover:text-white transition font-cormorant"
-          >
-            {buttonText}
-          </Link>
-        ) : (
-          <button
-            onClick={handleCartClick}
-            className={`mt-4 w-full border py-2 text-sm tracking-widest transition font-cormorant ${
-              product.isPreorder
-                ? "border-gray-400 text-gray-500 hover:bg-black hover:text-white"
-                : "border-red-600 text-red-600 hover:bg-red-600 hover:text-white"
-            }`}
-          >
-            {product.isPreorder ? "Pre-order via WhatsApp" : buttonText}
-          </button>
-        )}
-      </div>
-    </Link>
+      </Link>
+    </>
   )
 }
 
