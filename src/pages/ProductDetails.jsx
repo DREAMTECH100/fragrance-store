@@ -423,6 +423,8 @@ function ProductDetails({ addToWishlist }) {
     );
   }
 
+  console.log("product:", product);
+
   // Same rule as ProductCard: preorder items are allowed through regardless
   // of stock; everything else respects the outOfStock flag.
   const isOutOfStock = Boolean(product.outOfStock) && !product.isPreorder;
