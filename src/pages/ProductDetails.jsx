@@ -423,11 +423,10 @@ function ProductDetails({ addToWishlist }) {
     );
   }
 
-console.log("product:", JSON.stringify(product, null, 2));
-
-  // Same rule as ProductCard: preorder items are allowed through regardless
-  // of stock; everything else respects the outOfStock flag.
-  const isOutOfStock = Boolean(product.outOfStock) && !product.isPreorder;
+  // Same rule as ProductCard: preorder items are allowed through
+  // regardless of stock; everything else is out of stock when either the
+  // admin manually flagged it (outOfStock) or the stock count is 0.
+  const isOutOfStock = (Boolean(product.outOfStock) || Number(product.stock) <= 0) && !product.isPreorder;
 
   const increase = () => setQuantity((q) => q + 1);
   const decrease = () => { if (quantity > 1) setQuantity((q) => q - 1); };

@@ -309,8 +309,9 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
   const rating = Number(product.rating || product.averageRating || 4)
 
   // Preorder items are allowed through regardless of stock — they're sold
-  // ahead of restock. Everything else respects the outOfStock flag.
-  const isOutOfStock = Boolean(product.outOfStock) && !product.isPreorder
+  // ahead of restock. Everything else is out of stock when either the
+  // admin manually flagged it (outOfStock) or the stock count is 0.
+  const isOutOfStock = (Boolean(product.outOfStock) || Number(product.stock) <= 0) && !product.isPreorder
 
   const handleCartClick = (e) => {
     e.preventDefault()
