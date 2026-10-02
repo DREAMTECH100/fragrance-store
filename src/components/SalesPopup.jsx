@@ -1,46 +1,50 @@
 // src/components/SalesPopup.jsx
 import { useState, useEffect } from "react";
 
+const POPUP_IMAGE = "/Birthday.jpeg"; // file lives in fragrance-store/public/
+const INTERVAL_MS = 3 * 60 * 1000;    // show every 3 minutes
+const VISIBLE_MS = 4 * 1000;          // stay for 4 seconds
+
 export default function SalesPopup() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    let hideTimer;
+
     const interval = setInterval(() => {
       setVisible(true);
-      setTimeout(() => setVisible(false), 3000); // hide after 5s
-    }, 980000); // every 10s
+      clearTimeout(hideTimer);
+      hideTimer = setTimeout(() => setVisible(false), VISIBLE_MS);
+    }, INTERVAL_MS);
 
-    return () => clearInterval(interval);
+    // clean up both timers so they never stack up
+    return () => {
+      clearInterval(interval);
+      clearTimeout(hideTimer);
+    };
   }, []);
 
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none">
-      {/* semi-transparent background */}
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={() => setVisible(false)}
-      />
+    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none px-4">
+      {/* soft background */}
+      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
 
-      {/* popup card */}
-      <div className="relative pointer-events-auto max-w-sm w-full bg-gradient-to-tr from-yellow-300 via-orange-400 to-red-500 text-white rounded-2xl shadow-2xl overflow-hidden p-6 flex flex-col items-center justify-center animate-scaleIn">
-        {/* Decorative "map" style with CSS circles */}
-        <div className="absolute -top-16 -right-16 w-40 h-40 rounded-full bg-yellow-200 opacity-30 blur-3xl"></div>
-        <div className="absolute -bottom-16 -left-16 w-48 h-48 rounded-full bg-red-200 opacity-30 blur-3xl"></div>
-
-        <h3 className="text-2xl font-bold mb-2 text-center">Enjoy 2% OFF!</h3>
-        <p className="text-center mb-4 tracking-wide">
-          Get <span className="font-extrabold text-lg">2% OFF </span> on all purchases!<br />
-          Limited-time offer — shop now!
-        </p>
-
+      {/* image popup */}
+      <div className="relative pointer-events-auto max-w-sm w-full animate-scaleIn">
         <button
           onClick={() => setVisible(false)}
-          className="mt-2 bg-white/20 hover:bg-white/40 px-4 py-2 rounded-full text-sm font-semibold transition"
+          aria-label="Close"
+          className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-white text-black text-lg leading-none shadow-lg hover:bg-gray-200 transition"
         >
-          Close
+          ×
         </button>
+        <img
+          src={POPUP_IMAGE}
+          alt="Birthday offer"
+          className="w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
+        />
       </div>
 
       {/* animations */}
