@@ -1,8 +1,8 @@
 // src/components/SalesPopup.jsx
 import { useState, useEffect } from "react";
 
-const POPUP_IMAGE = "/Birthday.jpeg"; // file lives in fragrance-store/public/
-const INTERVAL_MS = 1 * 60 * 1000;    // show every 3 minutes
+const POPUP_IMAGE = "/images/Birthday.jpeg"; // file lives in fragrance-store/public/images/
+const INTERVAL_MS = 3 * 60 * 1000;    // show every 3 minutes
 const VISIBLE_MS = 4 * 1000;          // stay for 4 seconds
 
 export default function SalesPopup() {
@@ -11,11 +11,14 @@ export default function SalesPopup() {
   useEffect(() => {
     let hideTimer;
 
-    const interval = setInterval(() => {
+    const showPopup = () => {
       setVisible(true);
       clearTimeout(hideTimer);
       hideTimer = setTimeout(() => setVisible(false), VISIBLE_MS);
-    }, INTERVAL_MS);
+    };
+
+    showPopup(); // show as soon as the site loads
+    const interval = setInterval(showPopup, INTERVAL_MS); // then every 3 minutes
 
     // clean up both timers so they never stack up
     return () => {
