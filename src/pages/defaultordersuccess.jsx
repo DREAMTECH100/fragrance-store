@@ -77,25 +77,6 @@ function OrderSuccess() {
                 <span>₦{(item.price * item.quantity).toLocaleString()}</span>
               </div>
             ))}
-
-            {/* Promo breakdown: only shown when a discount was applied, so older orders look unchanged */}
-            {order.discountAmount > 0 && (
-              <div className="pt-2 text-sm">
-                <div className="flex justify-between text-gray-600">
-                  <span>Subtotal</span>
-                  <span>₦{Number(order.subtotal).toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-green-700">
-                  <span>Promo discount ({order.discountRate * 100}%)</span>
-                  <span>-₦{Number(order.discountAmount).toLocaleString()}</span>
-                </div>
-                <div className="flex justify-between text-gray-600">
-                  <span>Shipping</span>
-                  <span>{order.shippingFee ? `₦${Number(order.shippingFee).toLocaleString()}` : "Free"}</span>
-                </div>
-              </div>
-            )}
-
             <div className="flex justify-between font-bold mt-2">
               <span>Total</span>
               <span>₦{order.totalAmount.toLocaleString()}</span>

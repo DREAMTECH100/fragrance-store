@@ -128,7 +128,7 @@ const STYLES = `
     overflow: hidden; overflow-x: auto;
   }
   .or-table {
-    width: 100%; border-collapse: collapse; min-width: 1000px;
+    width: 100%; border-collapse: collapse; min-width: 900px;
   }
 
   /* Table head */
@@ -339,13 +339,12 @@ function Orders() {
                   <th>Items</th>
                   <th>Shipping</th>
                   <th>Subtotal</th>
-                  <th>Discount</th>
                   <th>Total</th>
                   <th>Status</th>
                   <th>Date</th>
                   <th>Ref</th>
                 </tr>
-                <tr><td colSpan={12} style={{ padding: 0 }}><div className="or-thead-rule" /></td></tr>
+                <tr><td colSpan={11} style={{ padding: 0 }}><div className="or-thead-rule" /></td></tr>
               </thead>
 
               <tbody>
@@ -401,20 +400,6 @@ function Orders() {
                     {/* Subtotal */}
                     <td>
                       <span className="or-td-amount">₦{order.subtotal?.toLocaleString()}</span>
-                    </td>
-
-                    {/* Discount (promo) */}
-                    <td>
-                      {order.discountAmount > 0 ? (
-                        <>
-                          <span className="or-td-amount" style={{ color: "#2d7a4f" }}>
-                            -₦{Number(order.discountAmount).toLocaleString()}
-                          </span>
-                          <span className="or-td-sub">{order.discountRate * 100}% promo</span>
-                        </>
-                      ) : (
-                        <span className="or-td-sub">—</span>
-                      )}
                     </td>
 
                     {/* Total */}
