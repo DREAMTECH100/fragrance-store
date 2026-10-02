@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 const POPUP_IMAGE = "/images/Birthday.jpeg"; // file lives in fragrance-store/public/images/
-const INTERVAL_MS = 3 * 60 * 1000;    // show every 3 minutes
+const INTERVAL_MS = 2 * 60 * 1000;    // show every 3 minutes
 const VISIBLE_MS = 4 * 1000;          // stay for 4 seconds
 
 export default function SalesPopup() {
