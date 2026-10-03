@@ -24,7 +24,6 @@ import Checkout from "./pages/Checkout";
 import ProductDetails from "./pages/ProductDetails";
 import OrderSuccess from "./pages/OrderSuccess";
 import Wishlist from "./pages/Wishlist";
-import SalesPopup from "./components/SalesPopup";
 import AdminLayout from "./admin/AdminLayout";
 import AdminLogin from "./admin/AdminLogin";
 import AdminDashboard from "./admin/AdminDashboard";
@@ -147,7 +146,6 @@ function App() {
   <Route path="edit-product/:id" element={<EditProduct />} />
 </Route>
         </Routes>
-        <SalesPopup/>
          <WhatsAppButton />
       </div>
     </Router>
