@@ -161,7 +161,6 @@ const NAV_STYLES = `
 ======================= */
 function TopTicker() {
   const messages = [
-    
     "BIRTHDAY SALE IS HERE! 🎉",
     "PROCEED TO CHECKOUT TO UNLOCK AMAZING DISCOUNTS",
     "72 HOURS NATIONWIDE DELIVERY",
