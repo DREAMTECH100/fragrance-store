@@ -22,7 +22,7 @@ const NAV_STYLES = `
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
-  .nb-ticker { animation: nb-ticker 32s linear infinite; }
+  .nb-ticker { animation: nb-ticker 22s linear infinite; }
 
   /* Search panel slide down */
   @keyframes nb-slideDown {
@@ -161,7 +161,7 @@ const NAV_STYLES = `
 ======================= */
 function TopTicker() {
   const messages = [
-    "100% AUTHENTIC FRAGRANCES",
+    
     "BIRTHDAY SALE IS HERE! 🎉",
     "PROCEED TO CHECKOUT TO UNLOCK AMAZING DISCOUNTS",
     "72 HOURS NATIONWIDE DELIVERY",
@@ -208,7 +208,7 @@ function PromoBar() {
       padding: "8px 20px",
       fontFamily: "'Tenor Sans', sans-serif",
       fontSize: "9.5px",
-      letterSpacing: "0.35em",
+      letterSpacing: "0.25em",
       textTransform: "uppercase",
     }}>
       FREE DELIVERY&nbsp;&nbsp;
