@@ -162,8 +162,8 @@ const NAV_STYLES = `
 function TopTicker() {
   const messages = [
     "100% AUTHENTIC FRAGRANCES",
-    "FREE DELIVERY ON ORDERS ABOVE ₦1,000,000",
-    "24 – 48 HOURS DELIVERY WITHIN LAGOS",
+    "BIRTHDAY SALE IS HERE! 🎉",
+    "PROCEED TO CHECKOUT TO UNLOCK AMAZING DISCOUNTS",
     "72 HOURS NATIONWIDE DELIVERY",
   ];
   const items = [...messages, ...messages];
