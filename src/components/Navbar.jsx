@@ -22,7 +22,7 @@ const NAV_STYLES = `
     0%   { transform: translateX(0); }
     100% { transform: translateX(-50%); }
   }
-  .nb-ticker { animation: nb-ticker 22s linear infinite; }
+  .nb-ticker { animation: nb-ticker 40s linear infinite; }
 
   /* Search panel slide down */
   @keyframes nb-slideDown {
@@ -165,11 +165,15 @@ function TopTicker() {
     "PROCEED TO CHECKOUT TO UNLOCK AMAZING DISCOUNTS",
     "72 HOURS NATIONWIDE DELIVERY",
   ];
-  const items = [...messages, ...messages];
+  // repeated 4x so the strip is always wider than the screen and loops seamlessly
+  const items = [...messages, ...messages, ...messages, ...messages];
 
   return (
     <div style={{ background: "var(--red)", overflow: "hidden" }}>
-      <div className="nb-ticker" style={{ display: "flex", whiteSpace: "nowrap", padding: "8px 0" }}>
+      <div
+        className="nb-ticker"
+        style={{ display: "flex", width: "max-content", whiteSpace: "nowrap", padding: "8px 0" }}
+      >
         {items.map((msg, i) => (
           <span
             key={i}
@@ -184,6 +188,7 @@ function TopTicker() {
               display: "inline-flex",
               alignItems: "center",
               gap: "24px",
+              flexShrink: 0,
             }}
           >
             {msg}
