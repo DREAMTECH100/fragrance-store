@@ -2,7 +2,7 @@
 import { useState, useEffect } from "react";
 
 const POPUP_IMAGE = "/images/Birthday.jpeg"; // file lives in fragrance-store/public/images/
-const INTERVAL_MS = 2 * 60 * 1000;    // show every 3 minutes
+const INTERVAL_MS = 3 * 60 * 1000;    // show every 3 minutes
 const VISIBLE_MS = 4 * 1000;          // stay for 4 seconds
 
 export default function SalesPopup() {
@@ -30,35 +30,28 @@ export default function SalesPopup() {
   if (!visible) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center pointer-events-none px-4">
-      {/* soft background */}
-      <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" />
+    // small ad-style card in the bottom-left corner; the rest of the site stays fully usable
+    <div className="fixed bottom-4 left-4 z-50 w-36 sm:w-48 animate-slideIn">
+      <button
+        onClick={() => setVisible(false)}
+        aria-label="Close"
+        className="absolute -top-2 -right-2 z-10 w-6 h-6 rounded-full bg-white text-black text-sm leading-none shadow-lg hover:bg-gray-200 transition"
+      >
+        ×
+      </button>
+      <img
+        src={POPUP_IMAGE}
+        alt="Birthday offer"
+        className="w-full max-h-[40vh] object-contain rounded-xl shadow-2xl"
+      />
 
-      {/* image popup */}
-      <div className="relative pointer-events-auto max-w-sm w-full animate-scaleIn">
-        <button
-          onClick={() => setVisible(false)}
-          aria-label="Close"
-          className="absolute -top-3 -right-3 z-10 w-8 h-8 rounded-full bg-white text-black text-lg leading-none shadow-lg hover:bg-gray-200 transition"
-        >
-          ×
-        </button>
-        <img
-          src={POPUP_IMAGE}
-          alt="Birthday offer"
-          className="w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
-        />
-      </div>
-
-      {/* animations */}
       <style>{`
-        @keyframes scaleIn {
-          0% { transform: scale(0.5); opacity: 0; }
-          50% { transform: scale(1.05); opacity: 1; }
-          100% { transform: scale(1); }
+        @keyframes slideIn {
+          0% { transform: translateX(-120%); opacity: 0; }
+          100% { transform: translateX(0); opacity: 1; }
         }
-        .animate-scaleIn {
-          animation: scaleIn 0.5s ease-out forwards;
+        .animate-slideIn {
+          animation: slideIn 0.5s ease-out forwards;
         }
       `}</style>
     </div>
