@@ -313,25 +313,6 @@ const NIGERIAN_STATES = [
   "Zamfara","FCT"
 ];
 
-// ─── PROMO (display only; the server recalculates and is the authority) ───
-// 5% off below ₦1,000,000, 7.5% off at/above ₦1,000,000. Oct 1–10, 2026 (Lagos time).
-const PROMO = {
-  start: new Date("2026-10-01T00:00:00+01:00"),
-  end: new Date("2026-10-10T23:59:59+01:00"),
-  threshold: 1000000,
-  lowRate: 0.05,
-  highRate: 0.075,
-};
-
-const getPromo = (subtotal) => {
-  const now = new Date();
-  if (subtotal <= 0 || now < PROMO.start || now > PROMO.end) {
-    return { rate: 0, discount: 0 };
-  }
-  const rate = subtotal >= PROMO.threshold ? PROMO.highRate : PROMO.lowRate;
-  return { rate, discount: Math.round(subtotal * rate) };
-};
-
 function Checkout() {
   const navigate = useNavigate();
   const [cartItems, setCartItems] = useState([]);
@@ -469,8 +450,7 @@ function Checkout() {
 };
 
   const shippingFee = calculateShipping(form.address, form.state, subtotal, totalQuantity);
-  const promo = getPromo(subtotal);
-  const totalAmount = subtotal - promo.discount + shippingFee;
+  const totalAmount = subtotal + shippingFee;
   const isFreeShipping = !!form.state && shippingFee === 0;
 
   const getDeliveryZone = () => {
@@ -504,11 +484,7 @@ function Checkout() {
             ...item,
             size: item.selectedSize?.label || item.size || null
           })),
-          subtotal,
-          shippingFee,
-          discount: promo.discount,
-          discountRate: promo.rate,
-          totalAmount
+          subtotal, shippingFee, totalAmount
         })
       });
       const data = await response.json();
@@ -654,16 +630,6 @@ function Checkout() {
                   <span className="sum-label">Subtotal</span>
                   <span className="sum-val">₦{subtotal.toLocaleString()}</span>
                 </div>
-
-                {promo.discount > 0 && (
-                  <div className="sum-row">
-                    <span className="sum-label">Promo ({promo.rate * 100}%)</span>
-                    <span className="sum-val" style={{ color: "#2d7a4f" }}>
-                      -₦{promo.discount.toLocaleString()}
-                    </span>
-                  </div>
-                )}
-
                 <div className="sum-row">
                   <span className="sum-label">Shipping</span>
                   {form.state
