@@ -98,6 +98,18 @@ function EditProduct() {
     }));
   };
 
+  // ================= SIZE HANDLERS =================
+  const handleSizeChange = (index, field, value) => {
+    setSizes(prev => prev.map((s, i) => (i === index ? { ...s, [field]: value } : s)));
+  };
+
+  const addSize = () => setSizes(prev => [...prev, { label: "", price: "" }]);
+
+  const removeSize = (index) =>
+    setSizes(prev =>
+      prev.length === 1 ? [{ label: "", price: "" }] : prev.filter((_, i) => i !== index)
+    );
+
   // ================= IMAGE UPLOAD (same logic as AddProduct) =================
   const handleFileChange = async (e) => {
     const file = e.target.files[0];
@@ -202,6 +214,42 @@ function EditProduct() {
         )}
 
         <input name="stock" value={product.stock} onChange={handleChange} className="w-full border p-2" placeholder="Stock" />
+
+        {/* SIZES — each size has its own price, and shoppers see the selected size's price */}
+        <div className="border p-3 space-y-2">
+          <p className="font-semibold">Sizes &amp; prices</p>
+          <p className="text-sm text-gray-500">
+            If a product has sizes, shoppers see the price of the selected size, not the main
+            price above. Leave empty if the product has no sizes.
+          </p>
+          {sizes.map((s, i) => (
+            <div key={i} className="flex gap-2">
+              <input
+                value={s.label}
+                onChange={(e) => handleSizeChange(i, "label", e.target.value)}
+                className="w-1/2 border p-2"
+                placeholder="Size (e.g. 50ml)"
+              />
+              <input
+                value={s.price}
+                onChange={(e) => handleSizeChange(i, "price", e.target.value)}
+                className="w-1/2 border p-2"
+                placeholder="Price"
+              />
+              <button
+                type="button"
+                onClick={() => removeSize(i)}
+                className="px-3 border text-red-600"
+                aria-label="Remove size"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          <button type="button" onClick={addSize} className="text-sm underline">
+            + Add size
+          </button>
+        </div>
 
         <textarea name="description" value={product.description} onChange={handleChange} className="w-full border p-2" placeholder="Description" />
 
