@@ -1,6 +1,8 @@
 import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
+// ===== CHRISTMAS SALE 2026 (remove this import in January if you delete the sale) =====
+import { getPricing } from "../utils/sale";
 
 const STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Tenor+Sans&family=Montserrat:wght@300;400;500&display=swap');
@@ -286,9 +288,16 @@ function Cart() {
   const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_API_URL;
 
-  const total = cart.reduce(
+  // ===== CHRISTMAS SALE: original vs discounted totals =====
+  // `total` is now the DISCOUNTED subtotal (same maths as Checkout.jsx).
+  // In January, restore: sum + Number(item.price) * item.quantity
+  const originalTotal = cart.reduce(
     (sum, item) => sum + Number(item.price) * item.quantity, 0
   );
+  const total = cart.reduce(
+    (sum, item) => sum + getPricing(item.price).final * item.quantity, 0
+  );
+  const discountAmount = originalTotal - total;
   const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -328,6 +337,7 @@ function Cart() {
 
                 {cart.map((item) => {
                   const sizeKey = item.selectedSize?.label || "default";
+                  const pricing = getPricing(item.price); // CHRISTMAS SALE
                   return (
                     <div key={`${item._id}-${sizeKey}`} className="cart-row">
 
@@ -347,11 +357,30 @@ function Cart() {
                         {item.selectedSize && (
                           <p className="cart-item-meta">Size: {item.selectedSize.label}</p>
                         )}
+
+                        {/* CHRISTMAS SALE: unit price */}
                         <p className="cart-item-unit">
-                          ₦{Number(item.price).toLocaleString()} each
+                          {pricing.discounted && (
+                            <span style={{ textDecoration: "line-through", opacity: 0.7, marginRight: "6px" }}>
+                              ₦{pricing.original.toLocaleString()}
+                            </span>
+                          )}
+                          ₦{pricing.final.toLocaleString()} each
+                          {pricing.discounted && (
+                            <span style={{ marginLeft: "8px", fontSize: "8.5px", letterSpacing: "0.12em", background: "var(--red)", color: "#fff", padding: "2px 7px" }}>
+                              -{pricing.percent}%
+                            </span>
+                          )}
                         </p>
+
+                        {/* CHRISTMAS SALE: line total */}
                         <p className="cart-item-total">
-                          ₦{(item.price * item.quantity).toLocaleString()}
+                          {pricing.discounted && (
+                            <span style={{ textDecoration: "line-through", color: "var(--warm-grey)", fontSize: "11px", opacity: 0.8, marginRight: "8px" }}>
+                              ₦{(pricing.original * item.quantity).toLocaleString()}
+                            </span>
+                          )}
+                          ₦{(pricing.final * item.quantity).toLocaleString()}
                         </p>
 
                         {/* Qty */}
@@ -385,10 +414,19 @@ function Cart() {
                 </div>
                 <div className="cart-summary-body">
 
+                  {/* CHRISTMAS SALE: subtotal shows original, then the discount line */}
                   <div className="sum-row">
                     <span className="sum-label">Subtotal</span>
-                    <span className="sum-val">₦{total.toLocaleString()}</span>
+                    <span className="sum-val">₦{originalTotal.toLocaleString()}</span>
                   </div>
+                  {discountAmount > 0 && (
+                    <div className="sum-row">
+                      <span className="sum-label">Christmas Sale</span>
+                      <span className="sum-val" style={{ color: "#2d7a4f" }}>
+                        −₦{discountAmount.toLocaleString()}
+                      </span>
+                    </div>
+                  )}
                   <div className="sum-row" style={{ marginBottom: 0 }}>
                     <span className="sum-label">Shipping</span>
                     <span className="sum-val" style={{ fontSize: "11px", color: "var(--warm-grey)", fontStyle: "italic" }}>
