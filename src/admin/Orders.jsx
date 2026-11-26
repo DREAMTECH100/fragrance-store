@@ -380,8 +380,19 @@ function Orders() {
                       {(order.items || []).map((item, i) => (
                         <div key={i} className="or-item">
                           <p className="or-item-name">{item.name}</p>
+                          {/* CHRISTMAS SALE: show original price struck through when discounted */}
                           <p className="or-item-detail">
-                            Qty {item.quantity} · ₦{Number(item.price).toLocaleString()}
+                            Qty {item.quantity} ·{" "}
+                            {item.originalPrice && item.originalPrice > item.price ? (
+                              <>
+                                <span style={{ textDecoration: "line-through", opacity: 0.6 }}>
+                                  ₦{Number(item.originalPrice).toLocaleString()}
+                                </span>{" "}
+                                ₦{Number(item.price).toLocaleString()}
+                              </>
+                            ) : (
+                              <>₦{Number(item.price).toLocaleString()}</>
+                            )}
                           </p>
                           {(item.selectedSize || item.size) && (
                             <p className="or-item-detail">
@@ -397,9 +408,19 @@ function Orders() {
                       <span className="or-td-amount">₦{order.shippingFee?.toLocaleString()}</span>
                     </td>
 
-                    {/* Subtotal */}
+                    {/* Subtotal — CHRISTMAS SALE: shows original, discounted and amount saved */}
                     <td>
+                      {order.discountAmount > 0 && (
+                        <span className="or-td-sub" style={{ textDecoration: "line-through" }}>
+                          ₦{order.originalSubtotal?.toLocaleString()}
+                        </span>
+                      )}
                       <span className="or-td-amount">₦{order.subtotal?.toLocaleString()}</span>
+                      {order.discountAmount > 0 && (
+                        <span className="or-td-sub" style={{ color: "#2d7a4f" }}>
+                          −₦{order.discountAmount?.toLocaleString()} ({order.discountPercent}% off)
+                        </span>
+                      )}
                     </td>
 
                     {/* Total */}

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom"
 import { Heart, Star, ShoppingBag, MessageCircle } from "lucide-react"
 import { useCart } from "../context/CartContext"
+import { getPricing } from "../utils/sale"
 
 const CARD_STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Tenor+Sans&display=swap');
@@ -285,6 +286,20 @@ const CARD_STYLES = `
   .pc-btn-preorder:hover { color: #fff; }
   .pc-btn-preorder > * { position: relative; z-index: 1; }
 
+
+  /* ── CHRISTMAS SALE ── */
+  .pc-price { flex-wrap: wrap; }
+  .pc-price-old {
+    text-decoration: line-through;
+    color: var(--warm-grey);
+    font-size: 11px; opacity: 0.8;
+  }
+  .pc-sale-tag {
+    font-size: 8.5px; letter-spacing: 0.12em;
+    background: var(--red); color: #fff;
+    padding: 2px 7px;
+  }
+
   /* Mobile hint */
   .pc-mobile-cta {
     position: absolute; bottom: 12px; right: 12px; z-index: 10;
@@ -307,6 +322,8 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
   }
 
   const rating = Number(product.rating || product.averageRating || 4)
+
+  const pricing = getPricing(product.price)
 
   // Preorder items are allowed through regardless of stock — they're sold
   // ahead of restock. Everything else is out of stock when either the
@@ -384,7 +401,17 @@ function ProductCard({ product, addToWishlist, buttonText = "ADD TO BAG", button
 
             <h3 className="pc-name">{product.name}</h3>
 
-            <p className="pc-price">₦{Number(product.price || 0).toLocaleString()}</p>
+           <p className="pc-price">
+  {pricing.discounted ? (
+    <>
+      <span className="pc-price-old">₦{pricing.original.toLocaleString()}</span>
+      <span>₦{pricing.final.toLocaleString()}</span>
+      <span className="pc-sale-tag">-{pricing.percent}%</span>
+    </>
+  ) : (
+    <>₦{pricing.original.toLocaleString()}</>
+  )}
+</p>
 
             {product.isPreorder && (
               <p className="pc-preorder-note">Pre-order — chat admin to confirm availability</p>

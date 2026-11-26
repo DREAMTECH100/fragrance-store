@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Lock, ChevronDown, ArrowRight, ShieldCheck, MapPin } from "lucide-react";
-
+import { getPricing } from "./../utils/sale";
 const STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Tenor+Sans&family=Montserrat:wght@300;400;500&display=swap');
 
@@ -328,9 +328,14 @@ function Checkout() {
     setCartItems(storedCart);
   }, []);
 
-  const subtotal = cartItems.reduce(
-    (sum, item) => sum + Number(item.price) * item.quantity, 0
-  );
+ const originalSubtotal = cartItems.reduce(
+  (sum, item) => sum + Number(item.price) * item.quantity, 0
+);
+const subtotal = cartItems.reduce(
+  (sum, item) => sum + getPricing(item.price).final * item.quantity, 0
+);
+const discountAmount = originalSubtotal - subtotal;
+
   const totalQuantity = cartItems.reduce(
     (sum, item) => sum + item.quantity, 0
   );
@@ -618,18 +623,30 @@ function Checkout() {
                         {item.selectedSize ? `${item.selectedSize.label} · ` : ""}Qty {item.quantity}
                       </span>
                     </div>
-                    <span className="co-item-price">
-                      ₦{(item.price * item.quantity).toLocaleString()}
-                    </span>
+                   <span className="co-item-price">
+  {getPricing(item.price).discounted && (
+    <span style={{ display: "block", textDecoration: "line-through", color: "var(--warm-grey)", fontSize: "10px", textAlign: "right" }}>
+      ₦{(item.price * item.quantity).toLocaleString()}
+    </span>
+  )}
+  ₦{(getPricing(item.price).final * item.quantity).toLocaleString()}
+</span>
                   </div>
                 ))}
 
                 <div className="sum-divider" />
 
-                <div className="sum-row">
-                  <span className="sum-label">Subtotal</span>
-                  <span className="sum-val">₦{subtotal.toLocaleString()}</span>
-                </div>
+               <div className="sum-row">
+  <span className="sum-label">Subtotal</span>
+  <span className="sum-val">₦{originalSubtotal.toLocaleString()}</span>
+</div>
+{discountAmount > 0 && (
+  <div className="sum-row">
+    <span className="sum-label">Christmas Sale</span>
+    <span className="sum-val" style={{ color: "#2d7a4f" }}>−₦{discountAmount.toLocaleString()}</span>
+  </div>
+)}
+
                 <div className="sum-row">
                   <span className="sum-label">Shipping</span>
                   {form.state

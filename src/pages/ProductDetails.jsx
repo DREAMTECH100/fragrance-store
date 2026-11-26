@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useCart } from "../context/CartContext";
 import ProductCard from "../components/ProductCard";
 import { ShoppingBag, MessageCircle, Star, X, ChevronLeft } from "lucide-react";
+import { getPricing } from "../utils/sale";
 
 const PD_STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=Tenor+Sans&display=swap');
@@ -431,7 +432,7 @@ function ProductDetails({ addToWishlist }) {
   const increase = () => setQuantity((q) => q + 1);
   const decrease = () => { if (quantity > 1) setQuantity((q) => q - 1); };
   const activePrice = selectedSize?.price || product.price;
-
+const pricing = getPricing(activePrice);
   const handleAddToCart = () => {
     if (isOutOfStock) return;
     addToCart({ ...product, quantity, selectedSize, price: activePrice });
@@ -516,7 +517,21 @@ function ProductDetails({ addToWishlist }) {
 
             {/* Price */}
             <div className="pd-price-label">Price</div>
-            <div className="pd-price">₦{activePrice?.toLocaleString()}</div>
+           <div className="pd-price">
+  {pricing.discounted ? (
+    <>
+      <span style={{ textDecoration: "line-through", fontSize: "16px", color: "var(--warm-grey)", opacity: 0.8 }}>
+        ₦{pricing.original.toLocaleString()}
+      </span>
+      <span>₦{pricing.final.toLocaleString()}</span>
+      <span style={{ fontSize: "10px", letterSpacing: "0.15em", background: "var(--red)", color: "#fff", padding: "3px 10px" }}>
+        -{pricing.percent}% CHRISTMAS SALE
+      </span>
+    </>
+  ) : (
+    <>₦{activePrice?.toLocaleString()}</>
+  )}
+</div>
 
             {/* Pre-order notice */}
             {product.isPreorder && (
