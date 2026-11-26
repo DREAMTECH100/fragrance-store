@@ -2,7 +2,7 @@ import { useCart } from "../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { Trash2, Plus, Minus, ShoppingBag, ArrowRight } from "lucide-react";
 // ===== CHRISTMAS SALE 2026 (remove this import in January if you delete the sale) =====
-import { getPricing } from "../utils/sale";
+import { getCartPricing } from "../utils/sale";
 
 const STYLES = `
   @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Tenor+Sans&family=Montserrat:wght@300;400;500&display=swap');
@@ -288,16 +288,18 @@ function Cart() {
   const navigate = useNavigate();
   const baseURL = import.meta.env.VITE_API_URL;
 
-  // ===== CHRISTMAS SALE: original vs discounted totals =====
-  // `total` is now the DISCOUNTED subtotal (same maths as Checkout.jsx).
-  // In January, restore: sum + Number(item.price) * item.quantity
-  const originalTotal = cart.reduce(
-    (sum, item) => sum + Number(item.price) * item.quantity, 0
-  );
-  const total = cart.reduce(
-    (sum, item) => sum + getPricing(item.price).final * item.quantity, 0
-  );
-  const discountAmount = originalTotal - total;
+  // ===== CHRISTMAS SALE: ONE tier for the whole cart, picked from the original subtotal =====
+  // Same maths as Checkout.jsx and the server.
+  // In January, replace with: total = sum of Number(item.price) * item.quantity
+  const {
+    items: saleItems,
+    originalSubtotal: originalTotal,
+    saleSubtotal: total,
+    discountAmount,
+    percent: salePercent,
+  } = getCartPricing(cart);
+  // ===== END SALE =====
+
   const totalQty = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
@@ -335,9 +337,10 @@ function Cart() {
                   <span className="cart-count-chip">{totalQty} {totalQty === 1 ? "piece" : "pieces"}</span>
                 </div>
 
-                {cart.map((item) => {
+                {cart.map((item, idx) => {
                   const sizeKey = item.selectedSize?.label || "default";
-                  const pricing = getPricing(item.price); // CHRISTMAS SALE
+                  const pricing = saleItems[idx]; // CHRISTMAS SALE
+                  const discounted = pricing.discountPercent > 0;
                   return (
                     <div key={`${item._id}-${sizeKey}`} className="cart-row">
 
@@ -360,27 +363,27 @@ function Cart() {
 
                         {/* CHRISTMAS SALE: unit price */}
                         <p className="cart-item-unit">
-                          {pricing.discounted && (
+                          {discounted && (
                             <span style={{ textDecoration: "line-through", opacity: 0.7, marginRight: "6px" }}>
-                              ₦{pricing.original.toLocaleString()}
+                              ₦{pricing.originalPrice.toLocaleString()}
                             </span>
                           )}
-                          ₦{pricing.final.toLocaleString()} each
-                          {pricing.discounted && (
+                          ₦{pricing.price.toLocaleString()} each
+                          {discounted && (
                             <span style={{ marginLeft: "8px", fontSize: "8.5px", letterSpacing: "0.12em", background: "var(--red)", color: "#fff", padding: "2px 7px" }}>
-                              -{pricing.percent}%
+                              -{pricing.discountPercent}%
                             </span>
                           )}
                         </p>
 
                         {/* CHRISTMAS SALE: line total */}
                         <p className="cart-item-total">
-                          {pricing.discounted && (
+                          {discounted && (
                             <span style={{ textDecoration: "line-through", color: "var(--warm-grey)", fontSize: "11px", opacity: 0.8, marginRight: "8px" }}>
-                              ₦{(pricing.original * item.quantity).toLocaleString()}
+                              ₦{(pricing.originalPrice * item.quantity).toLocaleString()}
                             </span>
                           )}
-                          ₦{(pricing.final * item.quantity).toLocaleString()}
+                          ₦{(pricing.price * item.quantity).toLocaleString()}
                         </p>
 
                         {/* Qty */}
@@ -421,7 +424,7 @@ function Cart() {
                   </div>
                   {discountAmount > 0 && (
                     <div className="sum-row">
-                      <span className="sum-label">Christmas Sale</span>
+                      <span className="sum-label">Christmas Sale{salePercent > 0 ? ` (${salePercent}%)` : ""}</span>
                       <span className="sum-val" style={{ color: "#2d7a4f" }}>
                         −₦{discountAmount.toLocaleString()}
                       </span>
