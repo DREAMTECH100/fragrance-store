@@ -31,7 +31,7 @@ import Orders from "./admin/Orders";
 import Products from "./admin/Products";
 import AddProduct from "./admin/AddProduct";
 import EditorialPost from "./pages/EditorialPost";
-
+import ChristmasFireworks from "./components/ChristmasFireworks";
 function App() {
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
