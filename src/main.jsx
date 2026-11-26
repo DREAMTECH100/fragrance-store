@@ -10,5 +10,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <CartProvider>
       <App />
     </CartProvider>
+    <ChristmasFireworks />
   </React.StrictMode>
 )
