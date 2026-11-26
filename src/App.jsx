@@ -146,7 +146,8 @@ function App() {
   <Route path="edit-product/:id" element={<EditProduct />} />
 </Route>
         </Routes>
-         <WhatsAppButton />
+                <WhatsAppButton />
+         <ChristmasFireworks />
       </div>
     </Router>
   );
